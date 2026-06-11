@@ -12,7 +12,7 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-export const upload = multer({
+export const uploadFile = multer({
   storage,
   limits: {
     fileSize: 5 * 1024 * 1024, // 5 MB
@@ -20,3 +20,19 @@ export const upload = multer({
   },
   fileFilter,
 });
+const imageFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith("image/")) {
+    cb(null, true);
+  } else {
+    cb(new Error("Only image files are allowed!"), false);
+  }
+};
+export const uploadImage = multer({
+  storage,
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 5 MB
+    files: 1,
+  },
+  fileFilter: imageFilter,
+});   
+

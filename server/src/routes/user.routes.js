@@ -39,7 +39,7 @@ router.route("/logout").get(logoutUser);
 router.route("/get-me").get(verifyJWT, getMe);
 
 /**
- * @route GET /api/v1/resumes
+ * @route GET /api/v1/user/resumes
  * @description get user resumes
  * @access Private
  */

@@ -169,12 +169,11 @@ const getMe = asyncHandler(async (req, res) => {
   });
 });
 
-
 /**
  * @name getUserResumes
  * @description controller for getting user resumes
  * @access Private
- * @path /api/v1/resumes
+ * @path /api/v1/user/resumes
  * @method GET
  */
 
@@ -186,4 +185,4 @@ const getUserResumes = asyncHandler(async (req, res) => {
     resumes,
   });
 });
-export { registerUser, loginUser, logoutUser, getMe };
+export { registerUser, loginUser, logoutUser, getMe, getUserResumes };
