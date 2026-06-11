@@ -3,6 +3,8 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { BlacklistToken } from "../models/blacklist.models.js";
 import asyncHandler from "../middlewares/asyncHandler.middleware.js";
+import { Resume } from "../models/resume.models.js";
+
 /**
  * @name registerUserController
  * @description register a new user ,expects username,email,and password
@@ -164,6 +166,24 @@ const getMe = asyncHandler(async (req, res) => {
   return res.status(200).json({
     message: "User fetched successfully",
     user: req.user,
+  });
+});
+
+
+/**
+ * @name getUserResumes
+ * @description controller for getting user resumes
+ * @access Private
+ * @path /api/v1/resumes
+ * @method GET
+ */
+
+const getUserResumes = asyncHandler(async (req, res) => {
+  const userId = req.user.id;
+  const resumes = await Resume.find({ owner: userId });
+  return res.status(200).json({
+    message: "User resumes fetched successfully",
+    resumes,
   });
 });
 export { registerUser, loginUser, logoutUser, getMe };
