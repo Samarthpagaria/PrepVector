@@ -19,10 +19,12 @@ app.use(express.static("public"));
 import userRouter from "./routes/user.routes.js";
 import interviewRouter from "./routes/interview.routes.js";
 import resumeRouter from "./routes/resume.routes.js";
+import aiRouter from "./routes/ai.routes.js";
 // Using al the routes here
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/interview", interviewRouter);
 app.use("/api/v1/resumes", resumeRouter);
+app.use("/api/v1/ai", aiRouter);
 
 
 
