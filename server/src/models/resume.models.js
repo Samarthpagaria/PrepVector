@@ -7,7 +7,7 @@ const ResumeScehma = new mongoose.Schema(
       ref: "User",
     },
     title: { type: String, default: "Untitled Resume" },
-    public: { type: Boolean, default: false },
+    isPublic: { type: Boolean, default: false },
     template: { type: String, default: "Classic" },
     accent_color: { type: String, default: "#3B82F6" },
     professional_summary: {

@@ -18,9 +18,11 @@ app.use(express.static("public"));
 // Require all routes here
 import userRouter from "./routes/user.routes.js";
 import interviewRouter from "./routes/interview.routes.js";
+import resumeRouter from "./routes/resume.routes.js";
 // Using al the routes here
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/interview", interviewRouter);
+app.use("/api/v1/resumes", resumeRouter);
 
 
 

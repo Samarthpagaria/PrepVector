@@ -1,6 +1,7 @@
 import asyncHandler from "../middlewares/asyncHandler.middleware.js";
 import { User } from "../models/user.models.js";
 import { Resume } from "../models/resume.models.js";
+import imagekit from "../utils/imagekit.js";
 
 /**
  * @name createResume
@@ -27,11 +28,11 @@ const createResume = asyncHandler(async (req, res) => {
  * @name deleteResume
  * @description controller for deleting a  resume
  * @access Private
- * @path /api/v1/resumes/delete/:id
+ * @path /api/v1/resumes/delete/:resumeId
  * @method DELETE
  */
 const deleteResume = asyncHandler(async (req, res) => {
-  const resumeId = req.params.id;
+  const resumeId = req.params.resumeId;
   const userId = req.user._id;
 
   const deletedResume = await Resume.findOneAndDelete({
@@ -58,7 +59,7 @@ const deleteResume = asyncHandler(async (req, res) => {
  * @method GET
  */
 const getResumeById = asyncHandler(async (req, res) => {
-  const resumeId = req.params.id;
+  const resumeId = req.params.resumeId;
   const userId = req.user._id;
   if (!userId) {
     return res.status(401).json({
@@ -89,11 +90,11 @@ const getResumeById = asyncHandler(async (req, res) => {
  * @name getPublicResumeById
  * @description controller to get resume by using id but for public users
  * @access Public
- * @path /api/v1/resumes/public/:id
+ * @path /api/v1/resumes/public/:resumeId
  * @method GET
  */
 const getPublicResumeById = asyncHandler(async (req, res) => {
-  const resumeId = req.params.id;
+  const resumeId = req.params.resumeId;
   if (!resumeId)
     return res.status(400).json({ message: "Resume id is required" });
   const resume = await Resume.findOne({
@@ -110,25 +111,38 @@ const getPublicResumeById = asyncHandler(async (req, res) => {
  * @name updateResumeById
  * @description controller for updating a resume.
  * @access Private
- * @path /api/v1/resumes/update/:id
+ * @path /api/v1/resumes/update
  * @method PUT
  */
 const updateResume = asyncHandler(async (req, res) => {
   const userId = req.user._id;
-  const { title, resumeId, resumeData, removebackground } = req.body;
+  const { resumeId, title, resumeData, removebackground } = req.body;
   const image = req.file;
   if (!userId) {
     return res.status(401).json({
       message: "Unauthorized",
     });
   }
-  if (!resumeId || !resumeData || title) {
+  if (!resumeId || !resumeData || !title) {
     return res.status(400).json({
       message: "Please provide resume id , data and title.",
     });
   }
   let resumeDataCopy = JSON.parse(resumeData);
-  const resume = await Resume.findByIdAndUpdate(
+  if (image) {
+    const response = await imagekit.files.upload({
+      file: image.buffer,
+      fileName: image.originalname,
+      folder:"user-resume",
+      transformation: {
+        pre:
+          "w-300,h-300,fo-face,z-0.75" +
+          (removebackground ? ",e-bgremove" : ""),
+      },
+    });
+    resumeDataCopy.professional_info.image = response.url;
+  }
+  const resume = await Resume.findOneAndUpdate(
     { userId, _id: resumeId },
     resumeDataCopy,
     {
@@ -145,4 +159,4 @@ const updateResume = asyncHandler(async (req, res) => {
     resume,
   });
 });
-export { createResume, deleteResume, getResumeById, getPublicResumeById };
+export { createResume, deleteResume, getResumeById, getPublicResumeById, updateResume };
