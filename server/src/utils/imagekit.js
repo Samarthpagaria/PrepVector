@@ -1,10 +1,10 @@
 // Install: npm install @imagekit/nodejs
 
 import ImageKit from "@imagekit/nodejs";
-import { 
+import {
   IMAGEKIT_PUBLIC_KEY,
   IMAGEKIT_PRIVATE_KEY,
-  IMAGEKIT_URL_ENDPOINT
+  IMAGEKIT_URL_ENDPOINT,
 } from "../constants.js";
 const imagekit = new ImageKit({
   publicKey: IMAGEKIT_PUBLIC_KEY,

@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { BlacklistToken } from "../models/blacklist.models.js";
 import asyncHandler from "../middlewares/asyncHandler.middleware.js";
-import { Resume } from "../models/resume.models.js";
+import Resume from "../models/resume.models.js";
 
 /**
  * @name registerUserController

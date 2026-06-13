@@ -18,7 +18,7 @@ import mongoose from "mongoose";
  * task:["string"]
  * },{}]
  */
-const technicalQuestionSchema = new mongoose.schema(
+const technicalQuestionSchema = new mongoose.Schema(
   {
     question: {
       type: String,
@@ -36,7 +36,7 @@ const technicalQuestionSchema = new mongoose.schema(
   { _id: false }
 );
 
-const behavioralQuestionSchema = new mongoose.schema(
+const behavioralQuestionSchema = new mongoose.Schema(
   {
     question: {
       type: String,
@@ -90,7 +90,7 @@ const preparationPlanSchema = new mongoose.Schema(
 const inteviewReportSechema = new mongoose.Schema(
   {
     jobDescription: {
-      type: string,
+      type: String,
       required: true,
     },
     resume: {
@@ -112,7 +112,7 @@ const inteviewReportSechema = new mongoose.Schema(
     preparationPlan: [preparationPlanSchema],
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
+      ref: "User",
     },
   },
   { timestamps: true }

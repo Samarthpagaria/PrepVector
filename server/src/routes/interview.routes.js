@@ -1,11 +1,11 @@
 import express from "express";
-import { authMiddleware } from "../middlewares/auth.js";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { uploadFile } from "../middlewares/multer.middleware.js";
 import { getInterviewReportController, generateResumePdfController } from "../controllers/interview.controller.js";
 
 const router = express.Router();
 
-router.use(authMiddleware);
+router.use(verifyJWT);
 /**
  * @route POST /api/interview/report
  * @desc Generates an interview report based on resume, job description, and self-description.

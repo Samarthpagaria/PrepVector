@@ -15,6 +15,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "password is required."],
     },
+    credits: {
+      type: Number,
+      default: 150,
+    },
   },
   { timestamps: true }
 );

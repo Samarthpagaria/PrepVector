@@ -1,6 +1,6 @@
 import asyncHandler from "../middlewares/asyncHandler.middleware.js";
 import { User } from "../models/user.models.js";
-import { Resume } from "../models/resume.models.js";
+import Resume from "../models/resume.models.js";
 import imagekit from "../utils/imagekit.js";
 
 /**
