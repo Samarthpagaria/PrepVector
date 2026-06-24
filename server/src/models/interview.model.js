@@ -32,13 +32,23 @@ const interviewSchema = new mongoose.Schema(
     },
     mode: {
       type: string,
-      enum: ["HR", "Technical", "Behavioral", "Coding", "Mixed"],
+      enum: ["HR", "Technical"]
     },
     resumeText: {
       type: String,
     },
-    question: {},
+    question: [questionsSchema],
+        finalScore: { type: Number, default: 0 },
+        status: {
+            type: String,
+            enum:["Incomplete","Completed"],
+            default:"Incomplete",
+        }
   },
 
   { timestamps: true }
 );
+
+
+const InterviewAgent = mongoose.model("InterviewAgent", interviewSchema);
+export default InterviewAgent 
