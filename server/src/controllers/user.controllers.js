@@ -27,7 +27,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   if (isUserAlreadyExist) {
     return res.status(400).json({
-      message: "Account already exist with this email address or username",
+      message: "Account already exist with this email address or username.Please try login.",
     });
   }
 
@@ -53,7 +53,7 @@ const registerUser = asyncHandler(async (req, res) => {
   );
 
   const createdUser = await User.findById(user._id).select(
-    "-password -refreshToken"
+    "-password"
   );
 
   const options = {
