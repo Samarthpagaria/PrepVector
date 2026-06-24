@@ -2,7 +2,7 @@ import express from "express";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { uploadFile } from "../middlewares/multer.middleware.js";
 import { getInterviewReportController, generateResumePdfController } from "../controllers/interview.controller.js";
-
+import { analyzeResume } from "../controllers/interviewAgent.controller.js";
 const router = express.Router();
 
 router.use(verifyJWT);
@@ -19,4 +19,6 @@ router.post("/", uploadFile.single("resume"), getInterviewReportController);
  */
 router.post("/resume/pdf/:interviewReportId", generateResumePdfController);
 
+// video 3 rputes of Ai agent inteview 
+router.post("/resume/analyze",uploadFile.single("resume"),analyzeResume);
 export default router;

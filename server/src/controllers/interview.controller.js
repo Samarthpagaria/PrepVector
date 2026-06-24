@@ -1,37 +1,16 @@
-// import pdfParse from "pdf-parse";
-import { PDFParse } from "pdf-parse";
 import { generateInterviewReport, generateResumePdf } from "../services/ai.services.js";
 import { InterviewReport } from "../models/interviewReport.model.js";
+import { extractTextFromPdf } from "../utils/pdf.utils.js";
+import asyncHandler from "../middlewares/asyncHandler.middleware.js";
 
-function cleanPdfText(text = "") {
-  return text
-    .replace(/\u0000/g, " ")
-    .replace(/\r/g, "\n")
-    .replace(/\t/g, " ")
-    .replace(/\u00A0/g, " ")
-    .replace(/[\u200B-\u200D\uFEFF]/g, "")
-    .replace(/[“”]/g, '"')
-    .replace(/[‘’]/g, "'")
-    .replace(/[–—]/g, "-")
-    .replace(/\s+\n/g, "\n")
-    .replace(/\n\s+/g, "\n")
-    .replace(/\n{3,}/g, "\n\n")
-    .replace(/[ ]{2,}/g, " ")
-    .trim();
-}
-const getInterviewReportController = async (req, res) => {
-  try {
+const getInterviewReportController = asyncHandler(async (req, res) => {
     if (!req.file || !req.file.buffer) {
       return res.status(400).json({
         message: "Resume PDF file is required",
       });
     }
 
-    // const pdfData = await pdfParse(req.file.buffer);
-    const parser = new PDFParse({ data: req.file.buffer });
-    const pdfData = await parser.getText();
-    await parser.destroy();
-    const resumeContent = cleanPdfText(pdfData.text);
+    const resumeContent = await extractTextFromPdf(req.file.buffer);
 
     const { selfDescription, jobDescription } = req.body;
 
@@ -53,20 +32,12 @@ const getInterviewReportController = async (req, res) => {
       message: "Interview report generated successfully!!",
       interviewReport,
     });
-  } catch (error) {
-    console.error("Error generating interview report:", error);
-
-    return res.status(500).json({
-      message: "Failed to generate interview report",
-      error: error.message,
-    });
-  }
-};
+});
 
 /**
  * @description Controller to generate resume PDF based on user self description, resume and jobDescription. 
  */
-const generateResumePdfController = async (req, res) => {
+const generateResumePdfController = asyncHandler(async (req, res) => {
     const { interviewReportId } = req.params;
     const report = await InterviewReport.findById(interviewReportId);
     
@@ -87,7 +58,5 @@ const generateResumePdfController = async (req, res) => {
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", `attachment; filename="resume.pdf"`);
     res.send(pdfBuffer);
-    
-    
-}
+});
 export { getInterviewReportController,generateResumePdfController };
