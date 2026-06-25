@@ -154,49 +154,49 @@ export const generateQuestion = asyncHandler(async (req, res) => {
   }
   user.credits -= 50;
   await user.save({ validateBeforeSave: true });
-  const interview =  await InterviewAgent.create({
+  const interview = await InterviewAgent.create({
     userId: user._id,
     role,
     experience,
     mode,
-      resumeText: safeResume,
+    resumeText: safeResume,
     projects: projectText,
     skills: skillText,
-      question: questionsArray.map((q, index) => {
-        const difficulties = [
-          "easy",
-          "easy-medium",
-          "project-based-hard",
-          "easy-hard",
-          "project-based medium",
-          "very hard",
-          "very hard"
-        ];
-        return {
-          question: q,
-          difficulty: difficulties[index] || "medium"
-        };
-      }),
-      timeLimit: [300,300,300,300,300,300,300][index],
+    question: questionsArray.map((q, index) => {
+      const difficulties = [
+        "easy",
+        "easy-medium",
+        "project-based-hard",
+        "easy-hard",
+        "project-based medium",
+        "very hard",
+        "very hard",
+      ];
+      return {
+        question: q,
+        difficulty: difficulties[index] || "medium",
+      };
+    }),
+    timeLimit: [300, 300, 300, 300, 300, 300, 300][index],
     finalScore: 0,
     status: "Incomplete",
   });
-    return res.status(200).json({
-      success: true,
-      message: "Questions generated successfully",
-      data: {
-        interviewId: interview._id,
-        creditsLeft: user.credits,
-        userName: user.name,
-        questions: interview.question
-      }
-    });
+  return res.status(200).json({
+    success: true,
+    message: "Questions generated successfully",
+    data: {
+      interviewId: interview._id,
+      creditsLeft: user.credits,
+      userName: user.name,
+      questions: interview.question,
+    },
+  });
 });
 
 export const submitAnswer = asyncHandler(async (req, res) => {
-  const { interviewId, questionIndex,answer,timeTaken } = req.body;
+  const { interviewId, questionIndex, answer, timeTaken } = req.body;
   const user = req.user.userId;
-  if (!interviewId || !questionIndex ||!answer ||!timeTaken) {
+  if (!interviewId || !questionIndex || !answer || !timeTaken) {
     return res.status(400).json({
       success: false,
       message: "Interview ID and questions are required",
@@ -208,32 +208,31 @@ export const submitAnswer = asyncHandler(async (req, res) => {
       success: false,
       message: "Interview not found",
     });
-    }
-    const question = InterviewAgent.questions[questionIndex]
-    if (!answer) {
-        question.score = 0;
-        question.feedback = "Answer not provided";
-        question.answer = "";
-        await InterviewAgent.save();
-        return res.json({
-            feedback:question.feedback
-        })
-    }
-    if (timeTaken > question.timeLimit) {
-        question.score = 0;
-        question.feedback = "Time limit exceeded. Answr not evaluated",
-            question.answer = answer
-        await InterviewAgent.save();
-        return res.json({
-            feedback:question.feedback
-        })
-    }
-    const messages = [
-        {
-          role:"system",
-            content: `
-          You are a professional human interviewer evaluating a candidate •s answer in a
-real interview.
+  }
+  const question = interview.question[questionIndex];
+  if (!answer) {
+    question.score = 0;
+    question.feedback = "Answer not provided";
+    question.answer = "";
+    await interview.save();
+    return res.json({
+      feedback: question.feedback,
+    });
+  }
+  if (timeTaken > question.timeLimit) {
+    question.score = 0;
+    question.feedback = "Time limit exceeded. Answer not evaluated";
+    question.answer = answer;
+    await interview.save();
+    return res.json({
+      feedback: question.feedback,
+    });
+  }
+  const messages = [
+    {
+      role: "system",
+      content: `
+          You are a professional human interviewer evaluating a candidate's answer in a real interview.
 Evaluate naturally and fairly, like a real person would.
 Score the answer in these areas (0 to 10) :
 
@@ -261,21 +260,89 @@ Feedback Rules :
 - Keep tone professional and honest.
 
 Return ONLY valid JSON in this format:
-"confidence".
-number ,
-"comunication- :
-number,
-"correctness". number,
-"finalScore" :
-number,
+{"confidence":number,
+"communication": number,
+"correctness": number,
+"finalScore" : number,
 "feedback": "short human feedback"
-`
-        }, {
-          role:"user",
-          content: `
+}
+`,
+    },
+    {
+      role: "user",
+      content: `
           Question :${question.question},
           Answer:${answer}
-          `
-        }
-  ]
-})
+          `,
+    },
+  ];
+  const evaluation = await askAI(messages);
+  const parsed = JSON.parse(evaluation);
+  question.answer = answer;
+  question.feedback = parsed.feedback;
+  question.score = parsed.finalScore;
+  question.confidence = parsed.confidence;
+  question.communication = parsed.communication;
+  question.correctness = parsed.correctness;
+  await interview.save();
+  return res.json({
+    feedback: question.feedback,
+    score: question.score,
+  });
+});
+
+export const finishInterview = asyncHandler(async (req, res) => {
+  const { interviewId } = req.body;
+  if (!interviewId) {
+    return res.status(400).json({
+      success: false,
+      message: "InterviewId is required",
+    });
+  }
+  const interview = await InterviewAgent.findById(interviewId);
+  if (!interview) {
+    return res.status(404).json({
+      success: false,
+      message: "Interview not found",
+    });
+  }
+  const totalQuestion = interview.question.length;
+  let totalScore = 0;
+  let totalConfidence = 0;
+  let totalCorrectness = 0;
+  let totalCommunication = 0;
+
+  interview.question.forEach((q) => {
+    totalScore += q.score || 0;
+    totalConfidence += q.confidence || 0;
+    totalCorrectness += q.correctness || 0;
+    totalCommunication += q.communication || 0;
+  });
+
+  const finalScore = totalQuestion ? totalScore / totalQuestion : 0;
+  const avgConfidence = totalQuestion ? totalConfidence / totalQuestion : 0;
+  const avgCorrectness = totalQuestion ? totalCorrectness / totalQuestion : 0;
+  const avgCommunication = totalQuestion ? totalCommunication / totalQuestion : 0;
+
+  interview.finalScore = finalScore;
+  interview.confidence = avgConfidence;
+  interview.correctness = avgCorrectness;
+  interview.communication = avgCommunication;
+
+  interview.status = "completed";
+  await interview.save({ validateBeforeSave: true });
+  return res.status(200).json({
+    finalScore: Number(finalScore.toFixed(1)),
+    confidence: Number(avgConfidence.toFixed(1)),
+    communication: Number(avgCommunication.toFixed(1)),
+    correctness: Number(avgCorrectness.toFixed(1)),
+    questionWiseScore: interview.question.map((q) => ({
+      question: q.question,
+      score: q.score || 0,
+      feedback: q.feedback || "",
+      confidence: q.confidence || 0,
+      communication: q.communication || 0,
+      correctness: q.correctness || 0,
+    })),
+  });
+});
