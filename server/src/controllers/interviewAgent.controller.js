@@ -1,7 +1,7 @@
 import asyncHandler from "../middlewares/asyncHandler.middleware.js";
 import { extractTextFromPdf } from "../utils/pdf.utils.js";
 import { askAI } from "../services/ai.interview.services.js";
-import User from "../models/user.model.js";
+import { User } from "../models/user.models.js";
 import InterviewAgent from "../models/interview.model.js";
 /**
  * @description: This is a controller that will analyze the resume and return the structured data.

@@ -1,18 +1,24 @@
 import React, { useState } from 'react'
 import { Button } from "@/components/ui/button"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
 import { useRegister } from '../hooks/useAuth'
 
 const SignUp = () => {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const navigate = useNavigate()
 
   const { mutate: registerUser, isPending, isError } = useRegister()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    registerUser({ username, email, password })
+    registerUser(
+      { username, email, password },
+      {
+        onSuccess: () => navigate('/'),
+      }
+    )
   }
 
   return (

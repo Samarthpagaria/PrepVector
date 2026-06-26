@@ -8,13 +8,13 @@ export const verifyJWT = async (req, res, next) => {
     if (!token) {
       return res
         .status(401)
-        .json({ message: "Unauthorized request", error: error.message });
+        .json({ message: "Unauthorized request" });
     }
     const isTokenBlacklisted = await BlacklistToken.findOne({ token });
     if (isTokenBlacklisted) {
       return res
         .status(401)
-        .json({ message: "Unauthorized request", error: error.message });
+        .json({ message: "Unauthorized request (Blacklisted)" });
     }
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decodedToken.id).select(
@@ -23,7 +23,7 @@ export const verifyJWT = async (req, res, next) => {
     if (!user) {
       return res
         .status(401)
-        .json({ message: "Invalid Token", error: error.message });
+        .json({ message: "Invalid Token (User not found)" });
     }
     req.user = user;
     next();

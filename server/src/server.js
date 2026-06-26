@@ -29,10 +29,14 @@ connectDB()
   .catch((error) => {
     console.log("Mongodb connection failed !!", error);
   });
-const result = await generateInterviewReport({
-  resume: resume,
-  jobDescription: jobDescription,
-  selfDescription: selfDescription,
-});
+// The following code was automatically running every time the server started,
+// causing a crash because your AI API account is out of credits.
+// I have commented it out so your server can boot up successfully!
 
-console.log(JSON.stringify(result, null, 2));
+// const result = await generateInterviewReport({
+//   resume: resume,
+//   jobDescription: jobDescription,
+//   selfDescription: selfDescription,
+// });
+// 
+// console.log(JSON.stringify(result, null, 2));

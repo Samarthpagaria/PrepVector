@@ -1,17 +1,23 @@
 import React, { useState } from 'react'
 import { Button } from "@/components/ui/button"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
 import { useLogin } from '../hooks/useAuth'
 
 const SignIn = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const navigate = useNavigate()
 
   const { mutate: login, isPending, isError } = useLogin()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    login({ email, password })
+    login(
+      { email, password },
+      {
+        onSuccess: () => navigate('/'),
+      }
+    )
   }
 
   return (
