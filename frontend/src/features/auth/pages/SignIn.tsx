@@ -1,8 +1,19 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Link } from "react-router"
+import { useLogin } from '../hooks/useAuth'
 
 const SignIn = () => {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const { mutate: login, isPending, isError } = useLogin()
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    login({ email, password })
+  }
+
   return (
     <main className="min-h-screen flex items-center justify-center bg-white p-4">
       <div className="w-full max-w-sm">
@@ -11,7 +22,7 @@ const SignIn = () => {
           <p className="text-sm text-zinc-500">Enter your credentials to access your account</p>
         </div>
         
-        <form className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
             <label htmlFor="email" className="text-sm font-medium text-zinc-700">
               Email
@@ -19,7 +30,10 @@ const SignIn = () => {
             <input 
               type="email" 
               id="email" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="name@example.com" 
+              required
               className="flex h-11 w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent transition-all"
             />
           </div>
@@ -36,14 +50,18 @@ const SignIn = () => {
             <input 
               type="password" 
               id="password" 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••" 
+              required
               className="flex h-11 w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent transition-all"
             />
           </div>
           
-          <Button className="w-full bg-zinc-900 text-white hover:bg-zinc-800 h-11 rounded-lg font-medium transition-colors mt-2">
-            Sign In
+          <Button disabled={isPending} type="submit" className="w-full bg-zinc-900 text-white hover:bg-zinc-800 h-11 rounded-lg font-medium transition-colors mt-2">
+            {isPending ? 'Signing In...' : 'Sign In'}
           </Button>
+          {isError && <p className="text-sm text-red-500 text-center mt-2">Invalid email or password.</p>}
         </form>
 
         <div className="mt-8 text-center text-sm text-zinc-500">
