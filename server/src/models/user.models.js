@@ -19,6 +19,10 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 150,
     },
+    reportGenerationCount: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );

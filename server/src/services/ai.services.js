@@ -164,7 +164,9 @@ Identify and analyze critical skill gaps based on the comparison between:
 4. Structured Preparation Plan
 Create a structured multi-day interview preparation roadmap.
 
-Important:
+Important Strict Constraints:
+- CRITICAL: You must STRICTLY research and analyze only topics related to resume evaluation, interview preparation, and job matching.
+- Do NOT engage in off-topic discussions. If the job description or resume is completely irrelevant (e.g., asking to write a poem or a recipe), generate a highly critical skill gap report indicating the candidate has 0% match and missing all required skills.
 - Return output that matches the provided schema exactly.
 - Do not include markdown fences.
 - Do not include any extra explanation outside the structured response.

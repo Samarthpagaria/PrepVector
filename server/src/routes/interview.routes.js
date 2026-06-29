@@ -1,18 +1,37 @@
 import express from "express";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { uploadFile } from "../middlewares/multer.middleware.js";
-import { getInterviewReportController, generateResumePdfController } from "../controllers/interview.controller.js";
+import { 
+  getInterviewReportController, 
+  generateResumePdfController,
+  getInterviewReportById,
+  getAllInterviewReports
+} from "../controllers/interview.controller.js";
 import { analyzeResume, generateQuestion, submitAnswer, finishInterview, getMyInterviews, getInterviewReport } from "../controllers/interviewAgent.controller.js";
 const router = express.Router();
 
 router.use(verifyJWT);
 
 /**
- * @route POST /api/interview/report
+ * @route POST /api/interview/
  * @desc Generates an interview report based on resume, job description, and self-description.
  * @access Private
  */
 router.post("/", uploadFile.single("resume"), getInterviewReportController);
+
+/**
+ * @route GET /api/interview/
+ * @desc Retrieves all evaluator interview reports for the user
+ * @access Private
+ */
+router.get("/", getAllInterviewReports);
+
+/**
+ * @route GET /api/interview/evaluator-report/:interviewId
+ * @desc Retrieves a specific evaluator interview report
+ * @access Private
+ */
+router.get("/evaluator-report/:interviewId", getInterviewReportById);
 
 /**
  * @route POST /api/interview/report/:interviewReportId/pdf

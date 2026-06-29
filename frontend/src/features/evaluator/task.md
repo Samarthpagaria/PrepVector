@@ -1,0 +1,6 @@
+- `[x]` Backend: Update User Model (reportGenerationCount)
+- `[x]` Backend: Update AI Services Prompt (strict instructions)
+- `[x]` Backend: Update Interview Controller (limits + GET routes)
+- `[x]` Backend: Update Interview Routes (wire GET routes)
+- `[x]` Frontend: Create AuthModal component
+- `[x]` Frontend: Update Home.tsx (lead magnet flow)
