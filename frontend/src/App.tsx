@@ -1,7 +1,7 @@
 import './App.css'
 import { RouterProvider } from "react-router";
 import { router } from './app.routes.tsx';
-import { useAuthStore } from './store/useAuthStore.ts';
+import { useAuthStore } from './store/useAuth.store.ts';
 import { useGetMe } from './features/auth/hooks/useAuth.ts';
 import { useEffect } from 'react';
 function App() {

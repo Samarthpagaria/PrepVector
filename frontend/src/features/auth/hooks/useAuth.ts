@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { registerUser, loginUser, logoutUser, getMeUser } from "../services/auth.api";
-import { useAuthStore } from "../../../store/useAuthStore";
+import { useAuthStore } from "../../../store/useAuth.store";
 
 export const useRegister = () => {
     // Bring in our Zustand setter

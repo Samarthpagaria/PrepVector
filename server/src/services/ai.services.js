@@ -13,6 +13,11 @@ const getModel = () => {
 };
 
 const interviewReportSchema = z.object({
+  title: z
+    .string()
+    .describe(
+      "A concise, professional job title based on the job description or candidate profile. E.g., 'Senior Frontend Engineer'"
+    ),
   matchScore: z
     .number()
     .describe(
@@ -121,6 +126,9 @@ Job Description: ${jobDescription}
 Self-Description: ${selfDescription}
 
 Create a structured interview preparation report that includes:
+
+0. Job Title
+Generate a concise, professional job title for this report based on the job description or candidate profile.
 
 1. Realistic Technical Interview Questions
 Generate a list of technical interview questions that an interviewer would realistically ask for this role. These questions should assess the candidate’s:

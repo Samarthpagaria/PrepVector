@@ -3,19 +3,31 @@ import { JobDescription } from '../components/JobDescription';
 import { UploadResume } from '../components/UploadResume';
 import { SelfDescription } from '../components/SelfDescription';
 import { HelperNote } from '../components/HelperNote';
-import { Star, User } from 'lucide-react';
+import { Star, User, Loader2 } from 'lucide-react';
+import { useGenerateReport } from '../hooks/useEvaluator';
 
 const Home = () => {
   const [jobDescription, setJobDescription] = useState('');
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [selfDescription, setSelfDescription] = useState('');
 
+  const { mutate: generateReport, isPending } = useGenerateReport();
+
   const handleGenerate = () => {
-    // Basic test logging to prove it works before connecting to backend
-    console.log("Submitting strategy generation...");
-    console.log("Job Description:", jobDescription.substring(0, 50) + "...");
-    console.log("Resume File:", resumeFile?.name || "None");
-    console.log("Self Description:", selfDescription);
+    if (!resumeFile) {
+      alert("Please upload your Resume (required by backend).");
+      return;
+    }
+    if (!jobDescription) {
+      alert("Please paste a Target Job Description.");
+      return;
+    }
+    
+    generateReport({
+      jobDescription,
+      selfDescription,
+      resumeFile
+    });
   };
 
   return (
@@ -72,10 +84,20 @@ const Home = () => {
           </span>
           <button 
             onClick={handleGenerate}
-            className="flex items-center gap-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+            disabled={isPending}
+            className="flex items-center gap-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 disabled:bg-emerald-600/50 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
           >
-            <Star className="w-4 h-4 fill-current" />
-            Generate Strategy
+            {isPending ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Generating...
+              </>
+            ) : (
+              <>
+                <Star className="w-4 h-4 fill-current" />
+                Generate Strategy
+              </>
+            )}
           </button>
         </div>
       </div>
