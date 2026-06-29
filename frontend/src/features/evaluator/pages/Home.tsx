@@ -4,9 +4,10 @@ import { UploadResume } from '../components/UploadResume';
 import { SelfDescription } from '../components/SelfDescription';
 import { HelperNote } from '../components/HelperNote';
 import { AuthModal } from '../components/AuthModal';
-import { Star, User, Loader2, FileText, CheckCircle2 } from 'lucide-react';
-import { useGenerateReport } from '../hooks/useEvaluator';
+import { Star, User, Loader2, FileText, CheckCircle2, ChevronRight } from 'lucide-react';
+import { useGenerateReport, useGetAllReports } from '../hooks/useEvaluator';
 import { useAuthStore } from '../../../store/useAuth.store';
+import { useNavigate } from 'react-router';
 
 const loadingMessages = [
   "Extracting profile data and experience...",
@@ -32,6 +33,8 @@ const Home = () => {
 
   const user = useAuthStore((state) => state.user);
   const { mutate: generateReport, isPending } = useGenerateReport();
+  const { data: reports, isLoading: isReportsLoading } = useGetAllReports();
+  const navigate = useNavigate();
 
   const isLoading = isPending || showFakeLoader;
 
@@ -87,7 +90,7 @@ const Home = () => {
     <main className="min-h-screen bg-[#09090b] text-zinc-200 p-4 md:p-8 font-sans flex flex-col items-center justify-center relative">
       
       {/* Header */}
-      <div className="text-center mb-10 w-full max-w-5xl">
+      <div className="text-center mb-10 w-full max-w-5xl pt-10">
         <h1 className="text-3xl md:text-[32px] font-semibold mb-3 tracking-tight text-zinc-100">
           Create Your Custom <span className="text-emerald-500">Interview Plan</span>
         </h1>
@@ -186,6 +189,53 @@ const Home = () => {
         )}
 
       </div>
+
+      {/* Recent Reports Section (Only if user is logged in) */}
+      {user && reports && reports.length > 0 && (
+        <div className="w-full max-w-[1000px] mt-8 bg-[#121214] rounded-2xl border border-zinc-800/60 shadow-xl overflow-hidden mb-12">
+          <div className="px-6 py-5 border-b border-zinc-800/60 flex items-center gap-2">
+            <FileText className="w-4 h-4 text-emerald-500" />
+            <h2 className="text-sm font-semibold text-zinc-100 uppercase tracking-widest">My Recent Reports</h2>
+          </div>
+          <div className="flex flex-col">
+            {reports.map((report: any) => (
+              <div 
+                key={report._id}
+                onClick={() => navigate(`/report/${report._id}`)}
+                className="group flex items-center justify-between p-5 border-b border-zinc-800/60 last:border-0 hover:bg-zinc-900/50 cursor-pointer transition-all duration-200"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-full bg-emerald-500/5 flex items-center justify-center border border-emerald-500/10 group-hover:bg-emerald-500/10 group-hover:border-emerald-500/20 transition-all">
+                    <FileText className="w-4 h-4 text-emerald-500/70 group-hover:text-emerald-400 transition-colors" />
+                  </div>
+                  <div>
+                    <h3 className="text-[15px] font-medium text-zinc-200 group-hover:text-emerald-400 transition-colors">
+                      {report.title || "Interview Strategy Report"}
+                    </h3>
+                    <p className="text-xs text-zinc-500 mt-1">
+                      {new Date(report.createdAt).toLocaleDateString(undefined, {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                      })}
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-5">
+                  <div className="flex flex-col items-end">
+                    <span className="text-[10px] uppercase tracking-wider text-zinc-500 font-medium mb-1">Match</span>
+                    <span className={`text-sm font-bold ${report.matchScore >= 85 ? 'text-emerald-400' : report.matchScore >= 70 ? 'text-orange-400' : 'text-red-400'}`}>
+                      {report.matchScore}%
+                    </span>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-zinc-700 group-hover:text-emerald-400 transition-colors" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Auth Modal */}
       {showAuthModal && (

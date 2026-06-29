@@ -23,3 +23,10 @@ export const useGenerateReport = () => {
         }
     });
 };
+
+export const useGetAllReports = () => {
+    return useQuery({
+        queryKey: ["all-interview-reports"],
+        queryFn: getAllInterviewReports,
+    });
+};
