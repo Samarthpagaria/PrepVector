@@ -62,5 +62,6 @@ export const useGetMe = () => {
         queryKey: ["authUser"],
         queryFn: getMeUser,
         retry: false, // Don't retry if it fails (e.g., user is not logged in / 401 error)
+        refetchOnWindowFocus: false, // Prevent app remounts on tab switch
     });
 };

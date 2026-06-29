@@ -24,9 +24,9 @@ const technicalQuestionSchema = new mongoose.Schema(
       type: String,
       required: [true, "Technical question is required."],
     },
-    intension: {
+    intention: {
       type: String,
-      required: [true, "Intension is required"],
+      required: [true, "Intention is required"],
     },
     answer: {
       type: String,
@@ -42,9 +42,9 @@ const behavioralQuestionSchema = new mongoose.Schema(
       type: String,
       required: [true, "Behavioral question is required"],
     },
-    intension: {
+    intention: {
       type: String,
-      required: [true, "Intension is required"],
+      required: [true, "Intention is required"],
     },
     answer: {
       type: String,
@@ -62,7 +62,7 @@ const skillGapSchema = new mongoose.Schema(
     },
     severity: {
       type: String,
-      enum: ["low", "medium", "high"],
+      enum: ["Minor", "Moderate", "Critical"],
       required: [true, "Severity is required"],
     },
   },
@@ -72,16 +72,16 @@ const skillGapSchema = new mongoose.Schema(
 const preparationPlanSchema = new mongoose.Schema(
   {
     day: {
-      type: Number,
+      type: String,
       required: [true, "Day is required"],
     },
     focus: {
       type: String,
       required: [true, "Focus is required"],
     },
-    task: {
+    tasks: {
       type: Array,
-      required: [true, "Task is required"],
+      required: [true, "Tasks are required"],
     },
   },
   { _id: false }
@@ -102,7 +102,7 @@ const inteviewReportSechema = new mongoose.Schema(
       required: true,
     },
     matchScore: {
-      type: String,
+      type: Number,
       min: 0,
       max: 100,
     },

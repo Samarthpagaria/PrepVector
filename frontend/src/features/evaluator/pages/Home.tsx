@@ -9,6 +9,14 @@ import { useGenerateReport, useGetAllReports } from '../hooks/useEvaluator';
 import { useAuthStore } from '../../../store/useAuth.store';
 import { useNavigate } from 'react-router';
 
+const idleMessages = [
+  "AI analyzes your resume against the job description.",
+  "Identifies critical skill gaps in your profile.",
+  "Generates high-probability technical questions.",
+  "Prepares you with role-specific behavioral scenarios.",
+  "Builds a personalized day-by-day preparation roadmap."
+];
+
 const loadingMessages = [
   "Extracting profile data and experience...",
   "Cross-referencing with target job description...",
@@ -30,6 +38,7 @@ const Home = () => {
   
   // Animation State
   const [loadingStep, setLoadingStep] = useState(0);
+  const [idleStep, setIdleStep] = useState(0);
 
   const user = useAuthStore((state) => state.user);
   const { mutate: generateReport, isPending } = useGenerateReport();
@@ -39,17 +48,41 @@ const Home = () => {
   const isLoading = isPending || showFakeLoader;
 
   useEffect(() => {
+    console.log("[Home] Component mounted/updated. User auth state:", user ? "Logged In" : "Not Logged In");
+    if (reports) {
+      console.log("[Home] Recent reports fetched:", reports.length);
+    }
+  }, [user, reports]);
+
+  // Handle Loading Messages Animation
+  useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isLoading) {
       setLoadingStep(0);
       interval = setInterval(() => {
         setLoadingStep((prev) => (prev < loadingMessages.length - 1 ? prev + 1 : prev));
-      }, 3500); // Change message every 3.5 seconds
+      }, 3500);
+    }
+    return () => clearInterval(interval);
+  }, [isLoading]);
+
+  // Handle Idle Messages Animation
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (!isLoading) {
+      interval = setInterval(() => {
+        setIdleStep((prev) => (prev + 1) % idleMessages.length);
+      }, 4000);
     }
     return () => clearInterval(interval);
   }, [isLoading]);
 
   const handleGenerate = () => {
+    console.log("[Home] 'Generate Strategy' clicked. Current state:");
+    console.log("[Home] Resume uploaded?", !!resumeFile);
+    console.log("[Home] Job Description filled?", !!jobDescription);
+    console.log("[Home] User logged in?", !!user);
+
     if (!resumeFile) {
       alert("Please upload your Resume (required by backend).");
       return;
@@ -61,15 +94,24 @@ const Home = () => {
     
     if (user) {
       // If logged in, generate normally
+      console.log("[Home] Triggering generateReport mutation directly...");
       generateReport({
         jobDescription,
         selfDescription,
         resumeFile
+      }, {
+        onSuccess: (data) => {
+          const reportId = data?.interviewReport?._id || data?._id;
+          console.log("[Home] Generation success! Navigating to report:", reportId);
+          if (reportId) navigate(`/report/${reportId}`);
+        }
       });
     } else {
       // If not logged in, show the lead magnet flow
+      console.log("[Home] User not logged in. Starting fake loader lead magnet flow...");
       setShowFakeLoader(true);
       setTimeout(() => {
+        console.log("[Home] Fake loader finished. Showing AuthModal.");
         setShowFakeLoader(false);
         setShowAuthModal(true);
       }, 4500); // 4.5 seconds fake generation
@@ -77,12 +119,19 @@ const Home = () => {
   };
 
   const handleAuthSuccess = () => {
+    console.log("[Home] AuthModal reported success! Hiding modal and triggering actual generation...");
     setShowAuthModal(false);
     // User is now logged in, automatically trigger the real generation
     generateReport({
       jobDescription,
       selfDescription,
       resumeFile: resumeFile as File
+    }, {
+      onSuccess: (data) => {
+        const reportId = data?.interviewReport?._id || data?._id;
+        console.log("[Home] Post-auth generation success! Navigating to report:", reportId);
+        if (reportId) navigate(`/report/${reportId}`);
+      }
     });
   };
 
@@ -137,13 +186,16 @@ const Home = () => {
         <div className="px-7 py-4 md:px-8 border-t border-zinc-800/60 bg-[#09090b] flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="h-6 overflow-hidden relative flex-1 flex items-center">
              {!isLoading ? (
-               <span className="text-[13px] text-zinc-500">
-                 AI-Powered Strategy Generation — Approx 60s
+               <span 
+                 key={`idle-${idleStep}`}
+                 className="text-[13px] text-zinc-500 animate-in fade-in slide-in-from-bottom-2 duration-500"
+               >
+                 {idleMessages[idleStep]}
                </span>
              ) : (
                <span 
-                 key={loadingStep}
-                 className="text-[13px] text-emerald-400 animate-pulse"
+                 key={`loading-${loadingStep}`}
+                 className="text-[13px] text-emerald-400 animate-pulse animate-in fade-in slide-in-from-bottom-2 duration-300"
                >
                  {loadingMessages[loadingStep]}
                </span>

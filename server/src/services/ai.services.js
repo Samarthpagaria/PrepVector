@@ -1,13 +1,18 @@
 import { ChatOpenAI } from "@langchain/openai";
 import { z } from "zod";
 import puppeteer from "puppeteer";
+import { StructuredOutputParser } from "@langchain/core/output_parsers";
 const getModel = () => {
   return new ChatOpenAI({
-    model: "openai/gpt-oss-120b",
-    apiKey: process.env.HUGGINGFACE_API_KEY,
+    model: process.env.AI_MODEL || "google/gemini-2.5-flash",
+    apiKey: process.env.OPENROUTER_API_KEY,
     temperature: 0.2,
     configuration: {
-      baseURL: "https://router.huggingface.co/v1",
+      baseURL: process.env.OPENROUTER_BASE_URL || "https://openrouter.ai/api/v1",
+      defaultHeaders: {
+        "HTTP-Referer": "http://localhost:5173", // Optional, for including your app on openrouter.ai rankings.
+        "X-Title": "PrepVector", // Optional. Shows in rankings on openrouter.ai.
+      }
     },
   });
 };
@@ -91,9 +96,9 @@ const interviewReportSchema = z.object({
     .array(
       z.object({
         day: z
-          .number()
+          .string()
           .describe(
-            "The sequential day number in the preparation plan, starting from Day 1. Each day should build upon previous learning and contribute toward interview readiness."
+            "The sequential day number in the preparation plan, starting from '1'. Each day should build upon previous learning and contribute toward interview readiness."
           ),
         focus: z
           .string()
@@ -172,16 +177,35 @@ Important Strict Constraints:
 - Do not include any extra explanation outside the structured response.
 `;
 
+  const parser = StructuredOutputParser.fromZodSchema(interviewReportSchema);
+  const formatInstructions = parser.getFormatInstructions();
+
   const model = getModel();
+  
+  // We explicitly append the JSON schema instructions to the prompt
+  // and remove withStructuredOutput so it runs as a pure text-to-json task.
+  const result = await model.invoke(interviewReportPrompt + "\n\n" + formatInstructions);
 
-  const structuredModel = model.withStructuredOutput(interviewReportSchema, {
-    name: "interview_report",
-    method: "functionCalling",
-  });
-
-  const result = await structuredModel.invoke(interviewReportPrompt);
-
-  return result;
+  try {
+    let cleanText = result.content;
+    
+    // Attempt to fix common LLM JSON typo: `"day": 3",` -> `"day": 3,`
+    cleanText = cleanText.replace(/"day":\s*(\d+)",/g, '"day": $1,');
+    
+    const parsed = await parser.parse(cleanText);
+    return parsed;
+  } catch (e) {
+    console.error("Failed to parse LLM output:", e);
+    // If it fails to parse, try to manually extract JSON from markdown fences just in case
+    let text = result.content;
+    text = text.replace(/"day":\s*(\d+)",/g, '"day": $1,');
+    
+    const jsonMatch = text.match(/```(?:json)?\n([\s\S]*?)\n```/);
+    if (jsonMatch) {
+      return JSON.parse(jsonMatch[1]);
+    }
+    return JSON.parse(text);
+  }
 }
 export const generatePdfFromHtml = async (htmlContent) => {
   const browser = await puppeteer.launch({
@@ -233,14 +257,27 @@ export const generateResumePdf = async ({
 - Tailor the content to the job description
 - Use clean inline styling suitable for PDF generation
     `;
+  const parser = StructuredOutputParser.fromZodSchema(resumePdfSchema);
+  const formatInstructions = parser.getFormatInstructions();
   const model = getModel();
-  const structuredModel = model.withStructuredOutput(resumePdfSchema, {
-    name: "resume_pdf",
-    method: "functionCalling",
-  });
-  const result = await structuredModel.invoke(prompt);
+  
+  const result = await model.invoke(prompt + "\n\n" + formatInstructions);
 
-  const pdfBuffer = await generatePdfFromHtml(result.html);
+  let parsed;
+  try {
+    parsed = await parser.parse(result.content);
+  } catch (e) {
+    console.error("Failed to parse LLM output for PDF:", e);
+    const text = result.content;
+    const jsonMatch = text.match(/```(?:json)?\n([\s\S]*?)\n```/);
+    if (jsonMatch) {
+      parsed = JSON.parse(jsonMatch[1]);
+    } else {
+      parsed = JSON.parse(text);
+    }
+  }
+
+  const pdfBuffer = await generatePdfFromHtml(parsed.html);
 
   return pdfBuffer;
 };
