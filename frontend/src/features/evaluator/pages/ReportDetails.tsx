@@ -1,73 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import { Target, MessageSquare, Map, AlertTriangle, ChevronRight, BookOpen, CheckCircle, BrainCircuit, Download, Loader2 } from 'lucide-react';
+import { Target, MessageSquare, Map, AlertTriangle, ChevronRight, BookOpen, CheckCircle, BrainCircuit, Download, Loader2, Star, Sparkles } from 'lucide-react';
 import { AuthModal } from '../components/AuthModal';
 import { useParams } from 'react-router';
 import { useGetReportById, useGeneratePdf } from '../hooks/useEvaluator';
 import { useAuthStore } from '../../../store/useAuth.store';
+import ReactMarkdown from 'react-markdown';
 
-const DUMMY_REPORT = {
-  title: "Senior Frontend Engineer",
-  matchScore: 82,
-  skillGaps: [
-    { skill: "AWS Deployment Pipeline", severity: "high" },
-    { skill: "Microservices Architecture", severity: "medium" },
-    { skill: "GraphQL API Integration", severity: "low" },
-    { skill: "System Design for high scale", severity: "high" }
-  ],
-  technicalQuestions: [
-    {
-      question: "Can you explain how you would design a rate limiter for a distributed system?",
-      intension: "To test your knowledge of system design, concurrency handling, and caching strategies.",
-      answer: "Start by discussing Token Bucket or Leaky Bucket algorithms. Explain how you would store tokens in Redis to handle distributed nodes. Mention the importance of sliding window logs for high accuracy if strict rate limiting is required, and discuss the trade-offs in memory versus precision."
-    },
-    {
-      question: "How does React Fiber differ from the previous reconciliation algorithm?",
-      intension: "Assess deep understanding of React's rendering engine and performance optimization.",
-      answer: "Explain that Fiber uses a linked list traversal instead of a recursive stack. This allows the main thread to be yielded and rendering to be paused, aborted, or prioritized. Mention how this enables Concurrent Mode and smoother UI transitions."
-    }
-  ],
-  behavioralQuestions: [
-    {
-      question: "Tell me about a time you strongly disagreed with a senior developer's technical decision.",
-      intension: "Evaluate conflict resolution, communication skills, and ego management.",
-      answer: "Use the STAR method. Focus on communication, bringing objective data/metrics to the discussion rather than opinions. Show that you can commit to the final team decision even if your idea wasn't chosen, prioritizing the project's success over personal preference."
-    },
-    {
-      question: "Describe a project that failed and what you learned from it.",
-      intension: "Check for accountability, resilience, and a growth mindset.",
-      answer: "Be honest about the failure. Focus 20% of the answer on the issue and 80% on the root cause analysis and what processes you implemented to prevent it from happening again."
-    }
-  ],
-  preparationPlan: [
-    {
-      day: 1,
-      focus: "React Advanced Concepts & Fiber Architecture",
-      task: [
-        "Read the official React documentation on Concurrent Mode.",
-        "Build a small prototype using useTransition and useDeferredValue.",
-        "Review common React performance pitfalls."
-      ]
-    },
-    {
-      day: 2,
-      focus: "System Design & Caching",
-      task: [
-        "Study Token Bucket and Leaky Bucket algorithms.",
-        "Implement a basic rate limiter in Node.js/Redis.",
-        "Read articles on distributed caching strategies."
-      ]
-    },
-    {
-      day: 3,
-      focus: "Behavioral Preparation (STAR Method)",
-      task: [
-        "Write down 3 comprehensive STAR stories.",
-        "Practice delivering the stories out loud.",
-        "Refine answers to focus more on 'Action' and 'Result'."
-      ]
-    }
-  ]
-};
+const MarkdownRenderer = ({ content }: { content: string }) => (
+  <ReactMarkdown
+    components={{
+      code({ node, inline, className, children, ...props }: any) {
+        const match = /language-(\w+)/.exec(className || '');
+        return !inline ? (
+          <div className="rounded-md overflow-hidden my-4 border border-zinc-800">
+            <div className="bg-zinc-800/80 px-4 py-1.5 text-xs text-zinc-400 border-b border-zinc-700/50 font-mono flex items-center">
+              {match?.[1] || 'code'}
+            </div>
+            <pre className="bg-[#09090b] p-4 overflow-x-auto text-sm text-zinc-300 font-mono" {...props}>
+              <code>{children}</code>
+            </pre>
+          </div>
+        ) : (
+          <code className="bg-zinc-800/60 text-emerald-400 px-1.5 py-0.5 rounded text-xs font-mono" {...props}>
+            {children}
+          </code>
+        );
+      },
+      p: ({ children }) => <p className="mb-2 last:mb-0 leading-relaxed text-sm text-zinc-300">{children}</p>,
+      ul: ({ children }) => <ul className="list-disc pl-5 mb-2 space-y-1 text-sm text-zinc-300">{children}</ul>,
+      ol: ({ children }) => <ol className="list-decimal pl-5 mb-2 space-y-1 text-sm text-zinc-300">{children}</ol>,
+      li: ({ children }) => <li>{children}</li>,
+    }}
+  >
+    {content}
+  </ReactMarkdown>
+);
 
 const ScoreRing = ({ score }: { score: number }) => {
   const radius = 50;
@@ -172,7 +139,8 @@ export const ReportDetails = () => {
     );
   }
 
-  const displayReport = isUnauthenticated ? DUMMY_REPORT : report;
+  const displayReport = report || (isUnauthenticated ? { title: "Custom Role", matchScore: 0, skillGaps: [], technicalQuestions: [], behavioralQuestions: [], preparationPlan: [] } : null);
+  
   if (!displayReport) {
     console.log("[ReportDetails] Warning: displayReport is null or undefined.");
     return null;
@@ -182,24 +150,24 @@ export const ReportDetails = () => {
   }
 
   const handleGeneratePdf = () => {
-    console.log(`[ReportDetails] 'Generate PDF' clicked. Report ID: ${id}`);
-    if (id && !isUnauthenticated) {
-      generatePdf(id);
+    console.log(`[ReportDetails] 'Generate PDF' clicked. Report ID: ${interviewId}`);
+    if (interviewId && !isUnauthenticated) {
+      generatePdf(interviewId);
     }
   };
 
   return (
     <>
-    <div className={`h-screen bg-[#09090b] text-zinc-200 font-sans selection:bg-emerald-500/30 flex flex-col overflow-hidden transition-all duration-500 ${isUnauthenticated ? 'blur-[6px] pointer-events-none opacity-50' : ''}`}>
+    <div className={`min-h-screen bg-[#09090b] text-zinc-200 font-sans selection:bg-emerald-500/30 flex flex-col overflow-x-hidden transition-all duration-500 ${isUnauthenticated ? 'blur-[6px] pointer-events-none opacity-50' : ''}`}>
       
       {/* Header - Fixed Height */}
-      <div className="shrink-0 max-w-7xl mx-auto w-full pt-8 pb-6 px-4 md:px-8 flex justify-between items-start gap-4">
+      <div className="shrink-0 max-w-[1600px] mx-auto w-full pt-6 pb-4 px-4 md:px-8 flex justify-between items-start gap-4">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-medium border border-emerald-500/20 mb-4">
+          <div className="inline-flex items-center gap-2 px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-[11px] font-medium border border-emerald-500/20 mb-3">
             <BrainCircuit className="w-3.5 h-3.5" />
             AI Analysis Complete
           </div>
-          <h1 className="text-3xl md:text-4xl font-semibold text-zinc-100 tracking-tight">
+          <h1 className="text-2xl md:text-3xl font-semibold text-zinc-100 tracking-tight">
             Interview Strategy: <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-500">{displayReport.title || "Custom Role"}</span>
           </h1>
           <p className="text-sm text-zinc-500 mt-2 max-w-2xl leading-relaxed">
@@ -207,49 +175,57 @@ export const ReportDetails = () => {
           </p>
         </div>
         
-        <button 
-          onClick={handleGeneratePdf}
-          disabled={isPdfPending || isUnauthenticated}
-          className="flex items-center gap-2 px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 disabled:bg-emerald-500/50 disabled:cursor-not-allowed text-white rounded-lg font-semibold transition-all duration-200 text-sm shadow-[0_0_15px_rgba(16,185,129,0.3)] hover:shadow-[0_0_25px_rgba(16,185,129,0.5)] active:scale-95 shrink-0 mt-4 md:mt-0"
-        >
-          {isPdfPending ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          ) : (
-            <Download className="w-4 h-4" />
+        <div className="flex flex-col md:flex-row items-end md:items-center gap-3 shrink-0 mt-2 md:mt-0">
+          {user && (
+            <div className="flex items-center gap-1.5 px-3 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-emerald-400 text-sm font-semibold shadow-[0_0_15px_rgba(16,185,129,0.1)]">
+              <Star className="w-4 h-4 fill-emerald-400" />
+              {20 - (user.reportGenerationCount || 0)} Reports Left
+            </div>
           )}
-          Generate PDF
-        </button>
+          <button 
+            onClick={handleGeneratePdf}
+            disabled={isPdfPending || isUnauthenticated}
+            className="group flex items-center gap-2.5 px-5 py-2.5 bg-emerald-950/40 hover:bg-emerald-900/60 border border-emerald-500/70 hover:border-emerald-400 disabled:opacity-50 disabled:cursor-not-allowed text-emerald-400 hover:text-emerald-300 rounded-lg font-semibold transition-all duration-300 text-sm shadow-[inset_0_1px_0_rgba(16,185,129,0.3),0_0_15px_rgba(16,185,129,0.25)] hover:shadow-[inset_0_1px_0_rgba(16,185,129,0.5),0_0_25px_rgba(16,185,129,0.45)] active:scale-[0.98]"
+          >
+            {isPdfPending ? (
+              <Loader2 className="w-4 h-4 animate-spin text-emerald-400" />
+            ) : (
+              <Download className="w-4 h-4 text-emerald-500 group-hover:text-emerald-400 transition-colors" />
+            )}
+            Download Tailored Resume
+          </button>
+        </div>
       </div>
 
       {/* Main Content Area - Fills remaining height */}
-      <div className="flex-1 min-h-0 max-w-7xl mx-auto w-full px-4 md:px-8 pb-8 flex flex-col lg:flex-row gap-8">
+      <div className="flex-1 min-h-0 max-w-[1600px] mx-auto w-full px-4 md:px-8 pb-6 flex flex-col lg:flex-row gap-6">
         
         {/* LEFT COLUMN: SECTIONS (25%) */}
-        <div className="lg:w-[280px] shrink-0 h-full">
-          <div className="bg-[#121214] border border-zinc-800/60 rounded-2xl p-5 shadow-2xl h-full flex flex-col">
-            <h2 className="text-[11px] font-bold text-zinc-500 uppercase tracking-widest mb-5 px-2 shrink-0">
+        <div className="lg:w-fit shrink-0">
+          <div className="bg-[#121214] border border-zinc-800/60 rounded-xl p-4 shadow-xl flex flex-col">
+            <h2 className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-3 px-2 shrink-0">
               Action Plan
             </h2>
-            <nav className="flex flex-col gap-2 overflow-y-auto pr-2" style={{ scrollbarWidth: 'thin', scrollbarColor: '#27272a transparent' }}>
+            <nav className="flex flex-col gap-1 overflow-y-auto pr-1" style={{ scrollbarWidth: 'thin', scrollbarColor: '#27272a transparent' }}>
               <button 
                 onClick={() => setActiveTab('technical')}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${activeTab === 'technical' ? 'bg-zinc-800/80 text-emerald-400 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] border border-zinc-700/50' : 'text-zinc-400 hover:bg-zinc-800/40 hover:text-zinc-200 border border-transparent'}`}
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 ${activeTab === 'technical' ? 'bg-zinc-800/80 text-emerald-400 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] border border-zinc-700/50' : 'text-zinc-400 hover:bg-zinc-800/40 hover:text-zinc-200 border border-transparent'}`}
               >
-                <Target className={`w-4 h-4 shrink-0 ${activeTab === 'technical' ? 'text-emerald-400' : ''}`} />
+                <Target className={`w-3.5 h-3.5 shrink-0 ${activeTab === 'technical' ? 'text-emerald-400' : ''}`} />
                 Technical Questions
               </button>
               <button 
                 onClick={() => setActiveTab('behavioral')}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${activeTab === 'behavioral' ? 'bg-zinc-800/80 text-emerald-400 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] border border-zinc-700/50' : 'text-zinc-400 hover:bg-zinc-800/40 hover:text-zinc-200 border border-transparent'}`}
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 ${activeTab === 'behavioral' ? 'bg-zinc-800/80 text-emerald-400 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] border border-zinc-700/50' : 'text-zinc-400 hover:bg-zinc-800/40 hover:text-zinc-200 border border-transparent'}`}
               >
-                <MessageSquare className={`w-4 h-4 shrink-0 ${activeTab === 'behavioral' ? 'text-emerald-400' : ''}`} />
+                <MessageSquare className={`w-3.5 h-3.5 shrink-0 ${activeTab === 'behavioral' ? 'text-emerald-400' : ''}`} />
                 Behavioral Questions
               </button>
               <button 
                 onClick={() => setActiveTab('roadmap')}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${activeTab === 'roadmap' ? 'bg-zinc-800/80 text-emerald-400 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] border border-zinc-700/50' : 'text-zinc-400 hover:bg-zinc-800/40 hover:text-zinc-200 border border-transparent'}`}
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 ${activeTab === 'roadmap' ? 'bg-zinc-800/80 text-emerald-400 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] border border-zinc-700/50' : 'text-zinc-400 hover:bg-zinc-800/40 hover:text-zinc-200 border border-transparent'}`}
               >
-                <Map className={`w-4 h-4 shrink-0 ${activeTab === 'roadmap' ? 'text-emerald-400' : ''}`} />
+                <Map className={`w-3.5 h-3.5 shrink-0 ${activeTab === 'roadmap' ? 'text-emerald-400' : ''}`} />
                 Preparation Roadmap
               </button>
             </nav>
@@ -257,8 +233,8 @@ export const ReportDetails = () => {
         </div>
 
         {/* MIDDLE COLUMN: CONTENT (50%) - Scrollable */}
-        <div className="flex-1 min-w-0 h-full">
-          <div className="bg-[#121214] border border-zinc-800/60 rounded-2xl p-6 md:p-8 shadow-2xl h-full overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: '#3f3f46 transparent' }}>
+        <div className="flex-1 min-w-0">
+          <div className="bg-[#121214] border border-zinc-800/60 rounded-xl p-5 md:p-6 shadow-xl h-full overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: '#3f3f46 transparent' }}>
             
             <div className={`animate-in fade-in duration-500 ${activeTab === 'technical' ? 'block' : 'hidden'}`}>
               <div className="flex items-center gap-3 mb-8 pb-6 border-b border-zinc-800/60">
@@ -271,14 +247,14 @@ export const ReportDetails = () => {
                 </div>
               </div>
               
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-4">
                 {displayReport.technicalQuestions?.map((q: any, idx: number) => (
-                  <div key={idx} className="group bg-zinc-900/30 hover:bg-zinc-900/60 border border-zinc-800/80 hover:border-zinc-700/80 rounded-xl p-6 transition-all duration-300">
-                    <div className="flex items-start gap-4 mb-4">
-                      <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-xs font-bold text-zinc-400 shrink-0 border border-zinc-700/50">
+                  <div key={idx} className="group bg-zinc-900/30 hover:bg-zinc-900/60 border border-zinc-800/80 hover:border-zinc-700/80 rounded-xl p-5 transition-all duration-300">
+                    <div className="flex items-start gap-3 mb-3">
+                      <div className="w-6 h-6 rounded-full bg-zinc-800 flex items-center justify-center text-[11px] font-bold text-zinc-400 shrink-0 border border-zinc-700/50">
                         {idx + 1}
                       </div>
-                      <h4 className="text-[15px] font-medium text-zinc-100 leading-relaxed pt-1">
+                      <h4 className="text-sm font-medium text-zinc-100 leading-relaxed pt-0.5">
                         {q.question}
                       </h4>
                     </div>
@@ -294,7 +270,7 @@ export const ReportDetails = () => {
                       
                       <div className="bg-[#09090b] rounded-lg p-4 border border-zinc-800/60 shadow-inner">
                         <span className="text-xs font-semibold text-emerald-400 uppercase tracking-wider block mb-2">Ideal Answer Framework</span>
-                        <p className="text-sm text-zinc-300 leading-relaxed">{q.answer}</p>
+                        <MarkdownRenderer content={q.answer} />
                       </div>
                     </div>
                   </div>
@@ -313,14 +289,14 @@ export const ReportDetails = () => {
                 </div>
               </div>
               
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-4">
                 {displayReport.behavioralQuestions?.map((q: any, idx: number) => (
-                  <div key={idx} className="group bg-zinc-900/30 hover:bg-zinc-900/60 border border-zinc-800/80 hover:border-zinc-700/80 rounded-xl p-6 transition-all duration-300">
-                    <div className="flex items-start gap-4 mb-4">
-                      <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-xs font-bold text-zinc-400 shrink-0 border border-zinc-700/50">
+                  <div key={idx} className="group bg-zinc-900/30 hover:bg-zinc-900/60 border border-zinc-800/80 hover:border-zinc-700/80 rounded-xl p-5 transition-all duration-300">
+                    <div className="flex items-start gap-3 mb-3">
+                      <div className="w-6 h-6 rounded-full bg-zinc-800 flex items-center justify-center text-[11px] font-bold text-zinc-400 shrink-0 border border-zinc-700/50">
                         {idx + 1}
                       </div>
-                      <h4 className="text-[15px] font-medium text-zinc-100 leading-relaxed pt-1">
+                      <h4 className="text-sm font-medium text-zinc-100 leading-relaxed pt-0.5">
                         {q.question}
                       </h4>
                     </div>
@@ -336,7 +312,7 @@ export const ReportDetails = () => {
                       
                       <div className="bg-[#09090b] rounded-lg p-4 border border-zinc-800/60 shadow-inner">
                         <span className="text-xs font-semibold text-blue-400 uppercase tracking-wider block mb-2">How to Answer (STAR)</span>
-                        <p className="text-sm text-zinc-300 leading-relaxed">{q.answer}</p>
+                        <MarkdownRenderer content={q.answer} />
                       </div>
                     </div>
                   </div>
@@ -393,10 +369,10 @@ export const ReportDetails = () => {
         </div>
 
         {/* RIGHT COLUMN: SCORE & GAPS (25%) */}
-        <div className="lg:w-[320px] shrink-0 h-full overflow-y-auto pr-2 flex flex-col gap-6" style={{ scrollbarWidth: 'none' }}>
+        <div className="lg:w-[320px] shrink-0 overflow-y-auto pr-1 flex flex-col gap-4" style={{ scrollbarWidth: 'none' }}>
           
           {/* Match Score */}
-          <div className="bg-[#121214] border border-zinc-800/60 rounded-2xl p-8 shadow-2xl text-center flex flex-col items-center relative overflow-hidden shrink-0">
+          <div className="bg-[#121214] border border-zinc-800/60 rounded-xl p-6 shadow-xl text-center flex flex-col items-center relative overflow-hidden shrink-0">
             {/* Background Glow */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-emerald-500/10 blur-[50px] rounded-full" />
             
@@ -410,12 +386,12 @@ export const ReportDetails = () => {
           </div>
 
           {/* Skill Gaps */}
-          <div className="bg-[#121214] border border-zinc-800/60 rounded-2xl p-6 shadow-2xl shrink-0">
-            <h3 className="text-sm font-bold text-zinc-300 uppercase tracking-widest mb-5 flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-orange-500" />
+          <div className="bg-[#121214] border border-zinc-800/60 rounded-xl p-5 shadow-xl shrink-0">
+            <h3 className="text-xs font-bold text-zinc-300 uppercase tracking-widest mb-4 flex items-center gap-2">
+              <AlertTriangle className="w-3.5 h-3.5 text-orange-500" />
               Critical Gaps
             </h3>
-            <ul className="flex flex-col gap-4">
+            <ul className="flex flex-col gap-3">
               {displayReport.skillGaps?.map((gap: any, idx: number) => {
                 let badgeColor = "";
                 let severityStr = "Minor";

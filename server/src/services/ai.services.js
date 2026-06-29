@@ -7,6 +7,7 @@ const getModel = () => {
     model: process.env.AI_MODEL || "google/gemini-2.5-flash",
     apiKey: process.env.OPENROUTER_API_KEY,
     temperature: 0.2,
+    maxTokens: 8000,
     configuration: {
       baseURL: process.env.OPENROUTER_BASE_URL || "https://openrouter.ai/api/v1",
       defaultHeaders: {
@@ -269,11 +270,28 @@ export const generateResumePdf = async ({
   } catch (e) {
     console.error("Failed to parse LLM output for PDF:", e);
     const text = result.content;
-    const jsonMatch = text.match(/```(?:json)?\n([\s\S]*?)\n```/);
-    if (jsonMatch) {
-      parsed = JSON.parse(jsonMatch[1]);
-    } else {
-      parsed = JSON.parse(text);
+    try {
+      const jsonMatch = text.match(/```(?:json)?\n([\s\S]*?)\n```/);
+      if (jsonMatch) {
+        parsed = JSON.parse(jsonMatch[1]);
+      } else {
+        parsed = JSON.parse(text);
+      }
+    } catch (parseError) {
+      console.error("JSON extraction failed, falling back to raw HTML extraction...");
+      const htmlMatch = text.match(/```(?:html)?\n([\s\S]*?)\n```/);
+      if (htmlMatch) {
+        parsed = { html: htmlMatch[1] };
+      } else if (text.trim().startsWith("<")) {
+        parsed = { html: text.trim() };
+      } else {
+        const htmlTagMatch = text.match(/<html[\s\S]*?<\/html>/i);
+        if (htmlTagMatch) {
+          parsed = { html: htmlTagMatch[0] };
+        } else {
+          parsed = { html: text };
+        }
+      }
     }
   }
 

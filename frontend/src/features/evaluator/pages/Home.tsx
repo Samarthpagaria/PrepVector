@@ -139,7 +139,13 @@ const Home = () => {
     <main className="min-h-screen bg-[#09090b] text-zinc-200 p-4 md:p-8 font-sans flex flex-col items-center justify-center relative">
       
       {/* Header */}
-      <div className="text-center mb-10 w-full max-w-5xl pt-10">
+      <div className="text-center mb-10 w-full max-w-5xl pt-10 relative">
+        {user && (
+          <div className="absolute top-0 right-0 flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-emerald-400 text-xs font-semibold shadow-[0_0_15px_rgba(16,185,129,0.1)]">
+            <Star className="w-3.5 h-3.5 fill-emerald-400" />
+            {20 - (user.reportGenerationCount || 0)} Reports Left
+          </div>
+        )}
         <h1 className="text-3xl md:text-[32px] font-semibold mb-3 tracking-tight text-zinc-100">
           Create Your Custom <span className="text-emerald-500">Interview Plan</span>
         </h1>
