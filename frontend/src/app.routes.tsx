@@ -6,7 +6,7 @@ import ReportDetails from "./features/evaluator/pages/ReportDetails";
 
 import Layout from "./layouts/Layout";
 import Dashboard from "./features/dashboard/pages/Dashboard";
-import ResumeBuilder from "./features/resume/pages/ResumeBuilder";
+import ResumeBuilder from "./features/ResumeBuilder/pages/Resumebuilder";
 import Preview from "./features/resume/pages/Preview";
 
 export const router = createBrowserRouter([ 
