@@ -5,6 +5,8 @@ import PersonalInfoForm from '../components/PersonalInfoForm'
 import ResumePreview from '../components/ResumePreview'
 import TemplateSelector from '../components/TemplateSelector'
 import BasicColorPicker from '../components/BasicColorPicker'
+import ProfessionalSummaryForm from '../components/ProfessionalSummaryForm'
+import ExperienceForm from '../components/ExperienceForm'
 
 const dummyResumeData: any[] = [
     { _id: '1', id: '1', title: 'Software Engineer Resume', personal_info: {} },
@@ -18,8 +20,8 @@ const Resumebuilder = () => {
         title: '',
         personal_info: {},
         skills: [],
-        experiences: [],
-        educations: [],
+        experience: [],
+        education: [],
         professional_summary:'',
         projects: [],
         template: 'classic',
@@ -129,7 +131,21 @@ const Resumebuilder = () => {
                                   />
                               )}
                               
-                              {activeSection.id !== 'personal' && (
+                              {activeSection.id === 'summary' && (
+                                  <ProfessionalSummaryForm 
+                                      summary={resumeData.professional_summary || ''} 
+                                      onChange={(value) => setResumeData((prev: any) => ({ ...prev, professional_summary: value }))} 
+                                  />
+                              )}
+
+                              {activeSection.id === 'experiences' && (
+                                  <ExperienceForm 
+                                      experiences={resumeData.experience || []} 
+                                      onChange={(exp) => setResumeData((prev: any) => ({ ...prev, experience: exp }))} 
+                                  />
+                              )}
+                              
+                              {activeSection.id !== 'personal' && activeSection.id !== 'summary' && activeSection.id !== 'experiences' && (
                                   <div className="flex flex-col items-center justify-center h-full text-zinc-500">
                                       <activeSection.icon className="w-12 h-12 mb-3 opacity-20" />
                                       <p>This section is under construction.</p>
