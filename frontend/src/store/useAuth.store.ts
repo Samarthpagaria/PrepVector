@@ -5,7 +5,8 @@ export interface User {
   _id: string;
   username: string;
   email: string;
-  // Add any other fields your backend user model has
+  credits: number;
+  reportGenerationCount: number;
 }
 
 interface AuthState {

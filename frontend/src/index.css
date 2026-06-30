@@ -125,11 +125,22 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    }
+  }
   body {
     @apply bg-background text-foreground;
-    }
+  }
   html {
     @apply font-sans;
-    }
+  }
+
+  /* Universal component styles */
+  button {
+    @apply cursor-pointer;
+  }
+  input:not([type="checkbox"]) {
+    @apply outline-none focus:ring-1 border border-zinc-700 bg-zinc-900 text-zinc-100 placeholder:text-zinc-500 focus:ring-emerald-500/50 focus:border-emerald-500  rounded-lg transition-all duration-300;
+  }
+  textarea {
+    @apply outline-none focus:ring-2 border border-zinc-700 bg-zinc-900 text-zinc-100 placeholder:text-zinc-500 focus:ring-emerald-500/50 focus:border-emerald-500 rounded-lg resize-none transition-all duration-300;
+  }
 }
