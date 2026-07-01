@@ -31,7 +31,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ data, template, accentCol
   };
 
   return (
-    <div className='w-full bg-gray-100 flex justify-center overflow-hidden rounded-xl h-full'>
+    <div className='w-full bg-gray-100 flex justify-center overflow-y-auto rounded-xl h-full' style={{ scrollbarWidth: 'thin', scrollbarColor: '#a1a1aa transparent' }}>
       {/* 
         This wrapper holds the actual resume content. 
         It has standard borders/shadows for the web view, but they are removed during printing.

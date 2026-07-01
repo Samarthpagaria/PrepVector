@@ -10,6 +10,10 @@ import ExperienceForm from '../components/ExperienceForm'
 import EducationForm from '../components/EducationForm'
 import ProjectForm from '../components/ProjectForm'
 import SkillsForm from '../components/SkillsForm'
+import { useGetResumeById } from '../../dashboard/hooks/useDashbaord'
+import { useResumeStore } from '../store/resumeStore'
+import { useSaveResume } from '../hooks/useResumeBuilder';
+import { useToastStore } from '../../../store/toastStore';
 
 export const dummyResumeData: any[] = [
     { _id: '1', id: '1', title: 'Software Engineer Resume', personal_info: {} },
@@ -18,19 +22,9 @@ export const dummyResumeData: any[] = [
 
 const Resumebuilder = () => {
     const {resumeId}= useParams()
-    const [resumeData,setResumeData] = useState<any>({
-        _id: '',
-        title: '',
-        personal_info: {},
-        skills: [],
-        experience: [],
-        education: [],
-        professional_summary:'',
-        project: [],
-        template: 'classic',
-        accent_color: '#10b981', // emerald-500
-        public:false
-    })
+    const { resumeData, setResumeData, updateResumeData, updatePersonalInfo } = useResumeStore();
+    const { mutate: saveResume } = useSaveResume();
+    const { openToast } = useToastStore();
 
     const sections = [
         { id:"personal",name:"Personal Info",icon:User }, 
@@ -44,30 +38,42 @@ const Resumebuilder = () => {
     const [activeSectionIndex, setActiveSectionIndex] = useState(0)
     const activeSection = sections[activeSectionIndex]
 
-    const loadExistingResume = async () => {
-        const resume = dummyResumeData.find(resume=>resume._id  === resumeId || resume.id === resumeId)
-        if (resume) {
-            setResumeData(resume)
-            document.title = resume.title
-        }
-    }
+    const { data: resumeResponse, isLoading } = useGetResumeById(resumeId || "");
 
     useEffect(() => {
-        loadExistingResume()
-    }, [resumeId])
+        if (resumeResponse?.resume) {
+            const fetchedData = { ...resumeResponse.resume };
+            
+            // Map professional_info (from backend AI schema) to personal_info (frontend form state)
+            if (fetchedData.professional_info && !fetchedData.personal_info) {
+                fetchedData.personal_info = fetchedData.professional_info;
+            }
+            
+            setResumeData(fetchedData);
+            document.title = fetchedData.title || "Resume Builder";
+        }
+    }, [resumeResponse]);
 
     const handlePersonalInfoChange = (field: string, value: any) => {
-        setResumeData((prev: any) => ({
-            ...prev,
-            personal_info: {
-                ...prev.personal_info,
-                [field]: value
-            }
-        }))
+        updatePersonalInfo(field, value);
     }
     
     const changeResumeVisibility = () => {
-        setResumeData((prev: any) => ({ ...prev, public: !prev.public }));
+        const newVisibility = !resumeData.isPublic;
+        updateResumeData('isPublic', newVisibility);
+        
+        saveResume({ 
+            resumeId: resumeData._id, 
+            resumeData: { ...resumeData, isPublic: newVisibility } 
+        }, {
+            onSuccess: () => {
+                openToast(`Resume is now ${newVisibility ? 'Public' : 'Private'}!`, 'success');
+            },
+            onError: () => {
+                openToast('Failed to update visibility', 'error');
+                updateResumeData('isPublic', !newVisibility); // Revert on error
+            }
+        });
     };
 
     const handleShare = async () => {
@@ -80,7 +86,7 @@ const Resumebuilder = () => {
             }
         } else {
             navigator.clipboard.writeText(resumeUrl);
-            alert('Link copied to clipboard!');
+            openToast('Link copied to clipboard!', 'success');
         }
     };
 
@@ -113,8 +119,8 @@ const Resumebuilder = () => {
                       <span className="max-sm:hidden">Share</span>
                   </button>
                   <button onClick={changeResumeVisibility} className='flex items-center p-2 px-3 gap-2 text-sm font-medium bg-zinc-800/50 text-zinc-300 rounded-lg border border-zinc-700/50 hover:bg-zinc-800 transition-all cursor-pointer'>
-                      {resumeData.public ? <EyeIcon className='w-4 h-4' /> : <EyeOffIcon className='w-4 h-4' />}
-                      <span className="max-sm:hidden">{resumeData.public ? 'Public' : 'Private'}</span>
+                      {resumeData.isPublic ? <EyeIcon className='w-4 h-4' /> : <EyeOffIcon className='w-4 h-4' />}
+                      <span className="max-sm:hidden">{resumeData.isPublic ? 'Public' : 'Private'}</span>
                   </button>
                   <button onClick={downloadResume} className='flex items-center p-2 px-4 gap-2 text-sm font-medium bg-emerald-500 hover:bg-emerald-600 text-zinc-950 rounded-lg shadow-lg shadow-emerald-500/20 transition-all cursor-pointer'>
                       <DownloadIcon className='w-4 h-4'/>
@@ -145,12 +151,12 @@ const Resumebuilder = () => {
                                   <div className="hidden sm:block">
                                       <BasicColorPicker 
                                           color={resumeData.accent_color || "#10b981"} 
-                                          onChange={(color) => setResumeData((prev: any) => ({ ...prev, accent_color: color }))} 
+                                          onChange={(color) => updateResumeData('accent_color', color)} 
                                       />
                                   </div>
                                   <TemplateSelector 
                                       selectedTemplate={resumeData.template || "classic"} 
-                                      onChange={(id) => setResumeData((prev: any) => ({ ...prev, template: id }))} 
+                                      onChange={(id) => updateResumeData('template', id)} 
                                   />
                                   <div className='flex items-center gap-2'>
                                       <button 
@@ -183,35 +189,35 @@ const Resumebuilder = () => {
                               {activeSection.id === 'summary' && (
                                   <ProfessionalSummaryForm 
                                       summary={resumeData.professional_summary || ''} 
-                                      onChange={(value) => setResumeData((prev: any) => ({ ...prev, professional_summary: value }))} 
+                                      onChange={(value) => updateResumeData('professional_summary', value)} 
                                   />
                               )}
 
                               {activeSection.id === 'experiences' && (
                                   <ExperienceForm 
                                       experiences={resumeData.experience || []} 
-                                      onChange={(exp) => setResumeData((prev: any) => ({ ...prev, experience: exp }))} 
+                                      onChange={(exp) => updateResumeData('experience', exp)} 
                                   />
                               )}
 
                               {activeSection.id === 'educations' && (
                                   <EducationForm 
                                       education={resumeData.education || []} 
-                                      onChange={(edu) => setResumeData((prev: any) => ({ ...prev, education: edu }))} 
+                                      onChange={(edu) => updateResumeData('education', edu)} 
                                   />
                               )}
 
                               {activeSection.id === 'skills' && (
                                   <SkillsForm 
                                       skills={resumeData.skills || []} 
-                                      onChange={(skills) => setResumeData((prev: any) => ({ ...prev, skills }))} 
+                                      onChange={(skills) => updateResumeData('skills', skills)} 
                                   />
                               )}
 
                               {activeSection.id === 'projects' && (
                                   <ProjectForm 
                                       projects={resumeData.project || []} 
-                                      onChange={(proj) => setResumeData((prev: any) => ({ ...prev, project: proj }))} 
+                                      onChange={(proj) => updateResumeData('project', proj)} 
                                   />
                               )}
                               

@@ -128,7 +128,12 @@ const updateResume = asyncHandler(async (req, res) => {
       message: "Please provide resume id , data and title.",
     });
   }
-  let resumeDataCopy = JSON.parse(resumeData);
+  let resumeDataCopy;
+  if (typeof resumeData === 'string') {
+    resumeDataCopy = await JSON.parse(resumeData);
+  } else {
+    resumeDataCopy = structuredClone(resumeData);
+  }
   if (image) {
     const response = await imagekit.files.upload({
       file: image.buffer,
@@ -159,4 +164,58 @@ const updateResume = asyncHandler(async (req, res) => {
     resume,
   });
 });
-export { createResume, deleteResume, getResumeById, getPublicResumeById, updateResume };
+/**
+ * @name getAllResumes
+ * @description controller to get all resumes for a specific user
+ * @access Private
+ * @path /api/v1/resumes/get-all
+ * @method GET
+ */
+const getAllResumes = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  if (!userId) {
+    return res.status(401).json({
+      message: "Unauthorized",
+    });
+  }
+
+  const resumes = await Resume.find({ userId })
+    .select("-__v")
+    .sort({ createdAt: -1 }); // sort by newest first
+
+  return res.status(200).json({
+    message: "Resumes fetched successfully",
+    resumes,
+  });
+});
+
+/**
+ * @name updateResumeTitle
+ * @description controller to update only the title of a resume
+ * @access Private
+ * @path /api/v1/resumes/update-title/:resumeId
+ * @method PATCH
+ */
+const updateResumeTitle = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  const resumeId = req.params.resumeId;
+  const { title } = req.body;
+
+  if (!userId) return res.status(401).json({ message: "Unauthorized" });
+  if (!resumeId || !title) return res.status(400).json({ message: "Resume ID and title are required" });
+
+  const resume = await Resume.findOneAndUpdate(
+    { userId, _id: resumeId },
+    { title },
+    { new: true }
+  );
+
+  if (!resume) return res.status(404).json({ message: "Resume not found" });
+
+  return res.status(200).json({
+    message: "Resume title updated successfully",
+    resume,
+  });
+});
+
+export { createResume, deleteResume, getResumeById, getPublicResumeById, updateResume, getAllResumes, updateResumeTitle };

@@ -100,6 +100,9 @@ const enhanceJobDescription = asyncHandler(async (req, res) => {
 const uploadResume = asyncHandler(async (req, res) => {
   const { resumeText, title } = req.body;
   const userId = req.user?._id;
+  
+  console.log(`[Backend - uploadResume] Received request from userId: ${userId}`);
+  console.log(`[Backend - uploadResume] Title: "${title}", Text Length: ${resumeText?.length}`);
 
   if (!userId) {
     return res.status(401).json({
@@ -260,25 +263,22 @@ Rules:
 - Use empty array for missing list sections.
 - Use true or false for boolean fields.
 - Do not invent an image URL.
+- CRITICAL: All dates (start_date, end_date, graduation_date) MUST be formatted strictly as "YYYY-MM" (e.g., "2023-08", "2024-01"). Do not use "Jan 2023" or any other format.
 `;
 
-  const response = await ai_model.invoke(
-    [
-      {
-        role: "system",
-        content: systemPrompt,
-      },
-      {
-        role: "user",
-        content: userPrompt,
-      },
-    ],
+  const response = await ai_model.invoke([
     {
-      response_format: {
-        type: "json_object",
-      },
-    }
-  );
+      role: "system",
+      content: systemPrompt,
+    },
+    {
+      role: "user",
+      content: userPrompt,
+    },
+  ]);
+
+  console.log("[Backend - uploadResume] AI Model successfully responded.");
+  console.log("[Backend - uploadResume] Raw AI Response Content:", response?.content);
 
   if (!response || !response.content) {
     return res.status(500).json({
@@ -295,17 +295,22 @@ Rules:
         ? JSON.parse(response.content)
         : response.content;
   } catch (error) {
+    console.error("[Backend - uploadResume] Failed to parse JSON from AI response:", error);
     return res.status(500).json({
       success: false,
       message: "Model returned invalid JSON",
     });
   }
 
+  console.log("[Backend - uploadResume] Successfully parsed JSON data:", JSON.stringify(parsedData, null, 2));
+
   const newResume = await Resume.create({
     userId,
     title,
     ...parsedData,
   });
+  
+  console.log(`[Backend - uploadResume] New Resume created in DB with ID: ${newResume._id}`);
 
   return res.status(201).json({
     success: true,

@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
-import { Sparkles, Save } from 'lucide-react';
+import { Sparkles, Save, Loader2 } from 'lucide-react';
+import { useResumeStore } from '../store/resumeStore';
+import { useSaveResume } from '../hooks/useResumeBuilder';
+import { enhanceProfessionalSummary } from '../services/resumeBuilder.api';
+import { useToastStore } from '../../../store/toastStore';
 
 interface ProfessionalSummaryFormProps {
   summary: string;
@@ -7,19 +11,34 @@ interface ProfessionalSummaryFormProps {
 }
 
 const ProfessionalSummaryForm: React.FC<ProfessionalSummaryFormProps> = ({ summary, onChange }) => {
-  const [isEnhancing, setIsEnhancing] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const { resumeData } = useResumeStore();
+  const { mutate: saveResume, isPending } = useSaveResume();
+  const { openToast } = useToastStore();
 
-  const handleEnhance = async () => {
+  const handleSave = () => {
+    saveResume({ resumeId: resumeData._id, resumeData });
+  };
+
+  const generateSummary = async () => {
     if (!summary.trim()) return;
     
-    setIsEnhancing(true);
+    setIsGenerating(true);
     
-    // Simulate AI enhancement API call
-    setTimeout(() => {
-      // In a real implementation, this would be an API call to your backend
-      onChange(summary + " [AI Enhanced: added more impactful action verbs and optimized for ATS systems.]");
-      setIsEnhancing(false);
-    }, 1500);
+    try {
+      const prompt = `enhance my professional summary "${summary}"`;
+      const response = await enhanceProfessionalSummary(prompt);
+      if (response.success) {
+        onChange(response.data);
+        openToast("Summary enhanced successfully!", "success");
+      } else {
+        openToast(response.message || "Failed to enhance summary", "error");
+      }
+    } catch (error: any) {
+      openToast(error.response?.data?.message || "Failed to communicate with AI", "error");
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   return (
@@ -33,12 +52,12 @@ const ProfessionalSummaryForm: React.FC<ProfessionalSummaryFormProps> = ({ summa
         </div>
         
         <button
-          onClick={handleEnhance}
-          disabled={isEnhancing || !summary.trim()}
+          onClick={generateSummary}
+          disabled={isGenerating || !summary.trim()}
           className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg text-fuchsia-400 bg-fuchsia-500/10 hover:bg-fuchsia-500/20 border border-fuchsia-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <Sparkles className={`w-4 h-4 ${isEnhancing ? 'animate-pulse' : ''}`} />
-          {isEnhancing ? 'Enhancing...' : 'AI Enhance'}
+          {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+          {isGenerating ? 'Generating...' : 'AI Enhance'}
         </button>
       </div>
 
@@ -57,10 +76,12 @@ const ProfessionalSummaryForm: React.FC<ProfessionalSummaryFormProps> = ({ summa
       <div className="pt-4 mt-2 border-t border-zinc-800/60 flex justify-end">
         <button
           type="button"
-          className="flex items-center gap-2 px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-zinc-950 font-semibold rounded-lg transition-all shadow-lg shadow-emerald-500/20 active:scale-[0.98]"
+          onClick={handleSave}
+          disabled={isPending}
+          className="flex items-center gap-2 px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed text-zinc-950 font-semibold rounded-lg transition-all shadow-lg shadow-emerald-500/20 active:scale-[0.98]"
         >
-          <Save className="w-4 h-4" />
-          Save Changes
+          {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+          {isPending ? 'Saving...' : 'Save Changes'}
         </button>
       </div>
     </div>

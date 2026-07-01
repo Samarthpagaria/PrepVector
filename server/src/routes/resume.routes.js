@@ -6,6 +6,8 @@ import {
   getResumeById,
   getPublicResumeById,
   updateResume,
+  getAllResumes,
+  updateResumeTitle,
 } from "../controllers/resume.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import {uploadImage } from "../middlewares/multer.middleware.js";
@@ -17,6 +19,15 @@ import {uploadImage } from "../middlewares/multer.middleware.js";
  * @method POST
  */
 router.route("/create").post(verifyJWT, createResume);
+
+/**
+ * @name getAllResumes
+ * @description controller to get all resumes
+ * @access Private
+ * @path /api/v1/resumes/get-all
+ * @method GET
+ */
+router.route("/get-all").get(verifyJWT, getAllResumes);
 
 /**
  * @name deleteResume
@@ -55,4 +66,14 @@ router.route("/public/:resumeId").get(getPublicResumeById);
 router
   .route("/update")
   .put(verifyJWT, uploadImage.single("image"), updateResume);
+
+/**
+ * @name updateResumeTitle
+ * @description controller for updating a resume title inline.
+ * @access Private
+ * @path /api/v1/resumes/update-title/:resumeId
+ * @method PATCH
+ */
+router.route("/update-title/:resumeId").patch(verifyJWT, updateResumeTitle);
+
 export default router;
