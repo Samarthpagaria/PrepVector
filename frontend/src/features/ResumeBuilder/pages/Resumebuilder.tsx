@@ -1,4 +1,4 @@
-import { ArrowLeft, Briefcase, ChevronLeft, ChevronRight, FileText, FolderIcon, GraduationCap, Sparkles, User } from 'lucide-react'
+import { ArrowLeft, Briefcase, ChevronLeft, ChevronRight, DownloadIcon, EyeIcon, EyeOffIcon, FileText, FolderIcon, GraduationCap, Share2Icon, Sparkles, User } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router'
 import PersonalInfoForm from '../components/PersonalInfoForm'
@@ -68,13 +68,30 @@ const Resumebuilder = () => {
     
   return (
       <div className="min-h-screen bg-[#09090b] text-zinc-200 font-sans">
-          <div className='w-full max-w-[1800px] mx-auto px-4 lg:px-8 py-6'>
+          <div className='w-full max-w-[1800px] mx-auto px-4 lg:px-8 py-6 flex justify-between items-center'>
               <Link to={'/app'} className='inline-flex items-center gap-2 text-zinc-400 hover:text-zinc-100 transition-colors'>
                 <ArrowLeft className="w-5 h-5" />
-                <span className='font-medium'>
+                <span className='font-medium max-sm:hidden'>
                     Back to Dashboard
                 </span>
               </Link>
+
+              <div className="flex items-center gap-3">
+                  {resumeData.public && (
+                      <button className='flex items-center p-2 px-3 gap-2 text-sm font-medium bg-blue-500/10 text-blue-500 rounded-lg border border-blue-500/20 hover:bg-blue-500/20 transition-all'>
+                          <Share2Icon className='w-4 h-4'/>
+                          <span className="max-sm:hidden">Share</span>
+                      </button>
+                  )}
+                  <button className='flex items-center p-2 px-3 gap-2 text-sm font-medium bg-zinc-800/50 text-zinc-300 rounded-lg border border-zinc-700/50 hover:bg-zinc-800 transition-all'>
+                      {resumeData.public ? <EyeIcon className='w-4 h-4' /> : <EyeOffIcon className='w-4 h-4' />}
+                      <span className="max-sm:hidden">{resumeData.public ? 'Public' : 'Private'}</span>
+                  </button>
+                  <button className='flex items-center p-2 px-4 gap-2 text-sm font-medium bg-emerald-500 hover:bg-emerald-600 text-zinc-950 rounded-lg shadow-lg shadow-emerald-500/20 transition-all'>
+                      <DownloadIcon className='w-4 h-4'/>
+                      <span className="max-sm:hidden">Download</span>
+                  </button>
+              </div>
           </div>
           <div className='w-full max-w-[1800px] mx-auto px-4 lg:px-8 pb-8'>
               <div className='grid lg:grid-cols-12 gap-8 lg:gap-12'>
@@ -180,10 +197,7 @@ const Resumebuilder = () => {
                     </div>
                     {/* Right panel- Preview */}
                     <div className='lg:col-span-7 max-lg:mt-6'>
-                      <div className="mb-2">
-                          {/* buttons (e.g. Download PDF, Change Template) will go here */}
-                      </div>
-                      <div 
+                             <div 
                         className="bg-[#121214] border border-zinc-800/60 rounded-4xl overflow-hidden shadow-xl p-1 sm:p-3 flex justify-center h-[calc(100vh-140px)] sticky top-6"
                         style={{
                           backgroundImage: 'repeating-linear-gradient(-45deg, rgba(255,255,255,0.08), rgba(255,255,255,0.08) 1px, transparent 1px, transparent 12px), repeating-linear-gradient(45deg, rgba(255,255,255,0.08), rgba(255,255,255,0.08) 1px, transparent 1px, transparent 12px)'

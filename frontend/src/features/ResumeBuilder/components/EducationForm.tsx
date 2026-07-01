@@ -1,5 +1,5 @@
 import React from 'react';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, Save } from 'lucide-react';
 
 interface Education {
   institution: string;
@@ -134,6 +134,16 @@ const EducationForm: React.FC<EducationFormProps> = ({ education = [], onChange 
             </button>
           </div>
         )}
+      </div>
+
+      <div className="pt-4 mt-2 border-t border-zinc-800/60 flex justify-end">
+        <button
+          type="button"
+          className="flex items-center gap-2 px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-zinc-950 font-semibold rounded-lg transition-all shadow-lg shadow-emerald-500/20 active:scale-[0.98]"
+        >
+          <Save className="w-4 h-4" />
+          Save Changes
+        </button>
       </div>
     </div>
   );

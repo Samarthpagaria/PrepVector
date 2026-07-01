@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Save } from 'lucide-react';
 
 interface ProfessionalSummaryFormProps {
   summary: string;
@@ -52,6 +52,16 @@ const ProfessionalSummaryForm: React.FC<ProfessionalSummaryFormProps> = ({ summa
         <p className="text-xs text-zinc-500 text-center mt-2">
           Tip: Keep it concise (3-4 sentences) and focus on your most relevant achievements and skills.
         </p>
+      </div>
+
+      <div className="pt-4 mt-2 border-t border-zinc-800/60 flex justify-end">
+        <button
+          type="button"
+          className="flex items-center gap-2 px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-zinc-950 font-semibold rounded-lg transition-all shadow-lg shadow-emerald-500/20 active:scale-[0.98]"
+        >
+          <Save className="w-4 h-4" />
+          Save Changes
+        </button>
       </div>
     </div>
   );
