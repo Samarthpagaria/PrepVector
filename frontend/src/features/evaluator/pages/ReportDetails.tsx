@@ -5,6 +5,7 @@ import { useParams } from 'react-router';
 import { useGetReportById, useGeneratePdf } from '../hooks/useEvaluator';
 import { useAuthStore } from '../../../store/useAuth.store';
 import ReactMarkdown from 'react-markdown';
+import Loader from '../../../components/shared/Loader';
 
 const MarkdownRenderer = ({ content }: { content: string }) => (
   <ReactMarkdown
@@ -118,10 +119,7 @@ export const ReportDetails = () => {
     console.log("[ReportDetails] Loading real report data from backend...");
     return (
        <div className="h-screen bg-[#09090b] flex items-center justify-center font-sans">
-         <div className="flex flex-col items-center gap-4">
-           <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
-           <p className="text-zinc-400 text-sm">Loading your strategy report...</p>
-         </div>
+         <Loader text="Loading your strategy report..." />
        </div>
     );
   }

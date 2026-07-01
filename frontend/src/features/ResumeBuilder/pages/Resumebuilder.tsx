@@ -11,7 +11,7 @@ import EducationForm from '../components/EducationForm'
 import ProjectForm from '../components/ProjectForm'
 import SkillsForm from '../components/SkillsForm'
 
-const dummyResumeData: any[] = [
+export const dummyResumeData: any[] = [
     { _id: '1', id: '1', title: 'Software Engineer Resume', personal_info: {} },
     { _id: '2', id: '2', title: 'Product Manager Resume', personal_info: {} }
 ]
@@ -66,9 +66,40 @@ const Resumebuilder = () => {
         }))
     }
     
+    const changeResumeVisibility = () => {
+        setResumeData((prev: any) => ({ ...prev, public: !prev.public }));
+    };
+
+    const handleShare = async () => {
+        const resumeUrl = `${window.location.origin}/view/${resumeId}`;
+        if (navigator.share) {
+            try {
+                await navigator.share({ url: resumeUrl, title: "My Resume" });
+            } catch (err) {
+                console.error("Error sharing:", err);
+            }
+        } else {
+            navigator.clipboard.writeText(resumeUrl);
+            alert('Link copied to clipboard!');
+        }
+    };
+
+    const downloadResume = () => {
+        window.print();
+    };
   return (
-      <div className="min-h-screen bg-[#09090b] text-zinc-200 font-sans">
-          <div className='w-full max-w-[1800px] mx-auto px-4 lg:px-8 py-6 flex justify-between items-center'>
+      <div className="min-h-screen bg-[#09090b] text-zinc-200 font-sans print:bg-white">
+          <style type="text/css" media="print">
+            {`
+              @page { size: auto; margin: 0mm; }
+              body {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                background-color: white !important;
+              }
+            `}
+          </style>
+          <div className='w-full max-w-[1800px] mx-auto px-4 lg:px-8 py-6 flex justify-between items-center print:hidden'>
               <Link to={'/app'} className='inline-flex items-center gap-2 text-zinc-400 hover:text-zinc-100 transition-colors'>
                 <ArrowLeft className="w-5 h-5" />
                 <span className='font-medium max-sm:hidden'>
@@ -77,17 +108,15 @@ const Resumebuilder = () => {
               </Link>
 
               <div className="flex items-center gap-3">
-                  {resumeData.public && (
-                      <button className='flex items-center p-2 px-3 gap-2 text-sm font-medium bg-blue-500/10 text-blue-500 rounded-lg border border-blue-500/20 hover:bg-blue-500/20 transition-all'>
-                          <Share2Icon className='w-4 h-4'/>
-                          <span className="max-sm:hidden">Share</span>
-                      </button>
-                  )}
-                  <button className='flex items-center p-2 px-3 gap-2 text-sm font-medium bg-zinc-800/50 text-zinc-300 rounded-lg border border-zinc-700/50 hover:bg-zinc-800 transition-all'>
+                  <button onClick={handleShare} className='flex items-center p-2 px-3 gap-2 text-sm font-medium bg-blue-500/10 text-blue-500 rounded-lg border border-blue-500/20 hover:bg-blue-500/20 transition-all cursor-pointer'>
+                      <Share2Icon className='w-4 h-4'/>
+                      <span className="max-sm:hidden">Share</span>
+                  </button>
+                  <button onClick={changeResumeVisibility} className='flex items-center p-2 px-3 gap-2 text-sm font-medium bg-zinc-800/50 text-zinc-300 rounded-lg border border-zinc-700/50 hover:bg-zinc-800 transition-all cursor-pointer'>
                       {resumeData.public ? <EyeIcon className='w-4 h-4' /> : <EyeOffIcon className='w-4 h-4' />}
                       <span className="max-sm:hidden">{resumeData.public ? 'Public' : 'Private'}</span>
                   </button>
-                  <button className='flex items-center p-2 px-4 gap-2 text-sm font-medium bg-emerald-500 hover:bg-emerald-600 text-zinc-950 rounded-lg shadow-lg shadow-emerald-500/20 transition-all'>
+                  <button onClick={downloadResume} className='flex items-center p-2 px-4 gap-2 text-sm font-medium bg-emerald-500 hover:bg-emerald-600 text-zinc-950 rounded-lg shadow-lg shadow-emerald-500/20 transition-all cursor-pointer'>
                       <DownloadIcon className='w-4 h-4'/>
                       <span className="max-sm:hidden">Download</span>
                   </button>
@@ -96,7 +125,7 @@ const Resumebuilder = () => {
           <div className='w-full max-w-[1800px] mx-auto px-4 lg:px-8 pb-8'>
               <div className='grid lg:grid-cols-12 gap-8 lg:gap-12'>
                   {/* Left panel- Form */}
-                  <div className='relative lg:col-span-5 rounded-xl overflow-hidden'>
+                  <div className='relative lg:col-span-5 rounded-xl overflow-hidden print:hidden'>
                       <div className='bg-[#121214] rounded-xl shadow-xl border border-zinc-800/60 p-4 pt-0 flex flex-col min-h-[600px]'>
                           {/* Progress bar */}
                           <div className="pt-1 -mx-6 mb-6">
@@ -196,9 +225,9 @@ const Resumebuilder = () => {
                       </div>
                     </div>
                     {/* Right panel- Preview */}
-                    <div className='lg:col-span-7 max-lg:mt-6'>
+                    <div className='lg:col-span-7 max-lg:mt-6 print:col-span-12 print:m-0 print:w-full'>
                              <div 
-                        className="bg-[#121214] border border-zinc-800/60 rounded-4xl overflow-hidden shadow-xl p-1 sm:p-3 flex justify-center h-[calc(100vh-140px)] sticky top-6"
+                        className="bg-[#121214] border border-zinc-800/60 rounded-4xl overflow-hidden shadow-xl p-1 sm:p-3 flex justify-center h-[calc(100vh-140px)] sticky top-6 print:bg-transparent print:border-none print:shadow-none print:h-auto print:static print:overflow-visible print:!bg-none print:p-0"
                         style={{
                           backgroundImage: 'repeating-linear-gradient(-45deg, rgba(255,255,255,0.08), rgba(255,255,255,0.08) 1px, transparent 1px, transparent 12px), repeating-linear-gradient(45deg, rgba(255,255,255,0.08), rgba(255,255,255,0.08) 1px, transparent 1px, transparent 12px)'
                         }}

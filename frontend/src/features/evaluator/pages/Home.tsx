@@ -8,6 +8,7 @@ import { Star, User, Loader2, FileText, CheckCircle2, ChevronRight } from 'lucid
 import { useGenerateReport, useGetAllReports } from '../hooks/useEvaluator';
 import { useAuthStore } from '../../../store/useAuth.store';
 import { useNavigate } from 'react-router';
+import Loader from '../../../components/shared/Loader';
 
 const idleMessages = [
   "AI analyzes your resume against the job description.",
@@ -301,6 +302,11 @@ const Home = () => {
           onClose={() => setShowAuthModal(false)} 
           onSuccess={handleAuthSuccess} 
         />
+      )}
+
+      {/* Full Screen Loading Overlay */}
+      {isLoading && (
+        <Loader fullScreen text={loadingMessages[loadingStep]} />
       )}
 
     </main>

@@ -4,6 +4,7 @@ import { router } from './app.routes.tsx';
 import { useAuthStore } from './store/useAuth.store.ts';
 import { useGetMe } from './features/auth/hooks/useAuth.ts';
 import { useEffect } from 'react';
+import Loader from './components/shared/Loader';
 function App() {
   const  setUser  = useAuthStore(state => state.setUser);
   const { data, isLoading } = useGetMe();
@@ -13,7 +14,7 @@ function App() {
       setUser(data.user);
     }
   }, [data, isLoading,setUser]);
- if (isLoading) return <div>Loading app...</div>;
+ if (isLoading) return <Loader fullScreen text="Loading app..." />;
   return (
    <RouterProvider router={router} />
   )

@@ -1,7 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router'; 
 import { Zap, Activity } from 'lucide-react';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { useAuthStore } from '../../store/useAuth.store';
+import lottieLogoUrl from '../../assets/prepVectorLogo.lottie?url';
 
 const Navbar = () => {
   const user = useAuthStore((state) => state.user);
@@ -10,7 +12,15 @@ const Navbar = () => {
     <nav className="sticky top-0 z-50 w-full border-b border-zinc-800 bg-zinc-950/10 backdrop-blur-sm px-4 py-3.5 shadow-sm">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <Link to="/app" className="flex items-center gap-2 transition-opacity hover:opacity-80">
-          <span className="text-lg font-bold tracking-tight text-zinc-100">
+          <div className="w-8 h-8 flex items-center justify-center">
+            <DotLottieReact
+              src={lottieLogoUrl}
+              loop
+              autoplay
+              style={{ width: '100%', height: '100%' }}
+            />
+          </div>
+          <span className="text-xl font-bold tracking-tight text-zinc-100">
             PrepVector
           </span>
         </Link>
