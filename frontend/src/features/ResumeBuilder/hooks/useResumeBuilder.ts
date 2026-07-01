@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateResume } from "../services/resumeBuilder.api";
-import { useToastStore } from "../../../../store/toastStore";
+import { useToastStore } from "../../../store/toastStore";
 
 export const useSaveResume = () => {
     const openToast = useToastStore(state => state.openToast);
