@@ -1,6 +1,7 @@
-// Understand this page code .
 import React, { useState } from 'react';
-import { User, Mail, Phone, MapPin, BriefcaseBusiness, Link, Plus, Trash2, Save } from 'lucide-react';
+import { User, Mail, Phone, MapPin, BriefcaseBusiness, Link, Plus, Trash2, Save, Loader2 } from 'lucide-react';
+import { useResumeStore } from '../store/resumeStore';
+import { useSaveResume } from '../hooks/useResumeBuilder';
 
 interface PersonalInfoData {
   image?: string | File;
@@ -28,6 +29,12 @@ const fields = [
 
 const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) => {
   const [removeBg, setRemoveBg] = useState(data.removeBg || false);
+  const { resumeData } = useResumeStore();
+  const { mutate: saveResume, isPending } = useSaveResume();
+
+  const handleSave = () => {
+    saveResume({ resumeId: resumeData._id, resumeData, removeBackground: removeBg });
+  };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -171,10 +178,12 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
       <div className="pt-4 mt-2 border-t border-zinc-800/60 flex justify-end">
         <button
           type="button"
-          className="flex items-center gap-2 px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-zinc-950 font-semibold rounded-lg transition-all shadow-lg shadow-emerald-500/20 active:scale-[0.98]"
+          onClick={handleSave}
+          disabled={isPending}
+          className="flex items-center gap-2 px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed text-zinc-950 font-semibold rounded-lg transition-all shadow-lg shadow-emerald-500/20 active:scale-[0.98]"
         >
-          <Save className="w-4 h-4" />
-          Save Changes
+          {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+          {isPending ? 'Saving...' : 'Save Changes'}
         </button>
       </div>
     </div>

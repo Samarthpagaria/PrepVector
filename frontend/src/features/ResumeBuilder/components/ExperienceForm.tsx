@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
-import { Plus, Trash2, Sparkles, Save } from 'lucide-react';
+import { Plus, Trash2, Sparkles, Save, Loader2 } from 'lucide-react';
+import { useResumeStore } from '../store/resumeStore';
+import { useSaveResume } from '../hooks/useResumeBuilder';
+import { enhanceJobDescription } from '../services/resumeBuilder.api';
+import { useToastStore } from '../../../store/toastStore';
 
 interface Experience {
   company: string;
@@ -17,6 +21,13 @@ interface ExperienceFormProps {
 
 const ExperienceForm: React.FC<ExperienceFormProps> = ({ experiences = [], onChange }) => {
   const [enhancingIndex, setEnhancingIndex] = useState<number | null>(null);
+  const { resumeData } = useResumeStore();
+  const { mutate: saveResume, isPending } = useSaveResume();
+  const { openToast } = useToastStore();
+
+  const handleSave = () => {
+    saveResume({ resumeId: resumeData._id, resumeData });
+  };
 
   const addExperience = () => {
     const newExperience: Experience = {
@@ -46,16 +57,26 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ experiences = [], onCha
     onChange(updated);
   };
 
-  const handleEnhance = async (index: number, description: string) => {
-    if (!description.trim()) return;
+  const generateDescription = async (index: number, experience: Experience) => {
+    if (!experience.description.trim()) return;
     
     setEnhancingIndex(index);
     
-    // Simulate AI enhancement API call
-    setTimeout(() => {
-      updateExperience(index, "description", description + "\n\n[AI Enhanced: Added measurable metrics and optimized action verbs for ATS parsing.]");
+    try {
+      const prompt = `enhance this job description ${experience.description} for the position of ${experience.position} at ${experience.company}.`;
+      const response = await enhanceJobDescription(prompt);
+      
+      if (response.success) {
+        updateExperience(index, "description", response.data);
+        openToast("Job description enhanced successfully!", "success");
+      } else {
+        openToast(response.message || "Failed to enhance description", "error");
+      }
+    } catch (error: any) {
+      openToast(error.response?.data?.message || "Failed to communicate with AI", "error");
+    } finally {
       setEnhancingIndex(null);
-    }, 1500);
+    }
   };
 
   return (
@@ -150,12 +171,12 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ experiences = [], onCha
               <div className="flex justify-between items-end">
                 <label className="text-xs font-medium text-zinc-400">Job Description</label>
                 <button
-                  onClick={() => handleEnhance(index, exp.description)}
+                  onClick={() => generateDescription(index, exp)}
                   disabled={enhancingIndex === index || !exp.description.trim()}
                   className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-md text-fuchsia-400 bg-fuchsia-500/10 hover:bg-fuchsia-500/20 border border-fuchsia-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <Sparkles className={`w-3.5 h-3.5 ${enhancingIndex === index ? 'animate-pulse' : ''}`} />
-                  {enhancingIndex === index ? 'Enhancing...' : 'Enhance with AI'}
+                  {enhancingIndex === index ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                  {enhancingIndex === index ? 'Generating...' : 'Enhance with AI'}
                 </button>
               </div>
               <textarea
@@ -184,10 +205,12 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ experiences = [], onCha
       <div className="pt-4 mt-2 border-t border-zinc-800/60 flex justify-end">
         <button
           type="button"
-          className="flex items-center gap-2 px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-zinc-950 font-semibold rounded-lg transition-all shadow-lg shadow-emerald-500/20 active:scale-[0.98]"
+          onClick={handleSave}
+          disabled={isPending}
+          className="flex items-center gap-2 px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed text-zinc-950 font-semibold rounded-lg transition-all shadow-lg shadow-emerald-500/20 active:scale-[0.98]"
         >
-          <Save className="w-4 h-4" />
-          Save Changes
+          {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+          {isPending ? 'Saving...' : 'Save Changes'}
         </button>
       </div>
     </div>

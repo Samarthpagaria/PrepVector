@@ -1,20 +1,20 @@
 import { XIcon } from 'lucide-react';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { useGenerateResume } from '../hooks/useDashbaord'
+import { useGenerateResume } from '../hooks/useDashbaord';
+import { useToastStore } from '../../../store/toastStore';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface CreateResumeModalProps {
   isOpen: boolean;
   onClose: () => void;
-  allResumes: any[];
-  setAllResumes: React.Dispatch<React.SetStateAction<any[]>>;
 }
-const CreateResumeModal: React.FC<CreateResumeModalProps> = ({ isOpen, onClose ,allResumes,setAllResumes}) => {
+const CreateResumeModal: React.FC<CreateResumeModalProps> = ({ isOpen, onClose }) => {
   const [title, setTitle] = useState('');
-  const [showToast, setShowToast] = useState(false);
+  const openToast = useToastStore(state => state.openToast);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const {mutate:generateResume,isPending,isError} = useGenerateResume()
-
   if (!isOpen) return null;
 
   const handleCreate = (e: React.FormEvent) => {
@@ -32,22 +32,20 @@ const CreateResumeModal: React.FC<CreateResumeModalProps> = ({ isOpen, onClose ,
             return;
           }
 
-          // Show Toast
-          setShowToast(true);
+          openToast('Resume created successfully! Redirecting...');
           
-          // Update local state
-          setAllResumes(prev => [...prev, data.resume]);
+          // Invalidate the cache to automatically refetch all resumes in the background
+          queryClient.invalidateQueries({ queryKey: ["allResumes"] });
           
-          // Delay navigation so the user sees the awesome toast!
           setTimeout(() => {
-            setShowToast(false);
             setTitle('');
             onClose();
             navigate(`/app/builder/${data.resume._id || data.resume.id}`);
           }, 1500);
         },
-        onError: (error) => {
+        onError: (error: any) => {
           console.log("[CreateResumeModal] Error generating resume:", error);
+          openToast(error?.response?.data?.message || error.message || 'Failed to create resume', 'error');
         }
       }
     );
@@ -55,30 +53,6 @@ const CreateResumeModal: React.FC<CreateResumeModalProps> = ({ isOpen, onClose ,
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center  bg-black/40 backdrop-blur-xs p-4 animate-in fade-in duration-200">
-      
-      {/* 🌟 Premium Grainy Gradient Toast */}
-      {showToast && (
-        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[60] animate-in slide-in-from-bottom-5 fade-in duration-300">
-          <div className="relative overflow-hidden px-6 py-3 rounded-full border border-emerald-500/30 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
-            {/* Grainy Noise Overlay */}
-            <div 
-              className="absolute inset-0 opacity-20 pointer-events-none mix-blend-overlay"
-              style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}
-            ></div>
-            {/* Beautiful Gradient Background */}
-            <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-green-400 opacity-90 -z-10"></div>
-            
-            <div className="flex items-center gap-3 relative z-10">
-              <div className="bg-white/20 rounded-full p-1">
-                <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <span className="text-white font-medium text-sm tracking-wide">Resume created successfully! Redirecting...</span>
-            </div>
-          </div>
-        </div>
-      )}
 
       <div className="bg-zinc-950 border border-zinc-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
         <div className="flex items-center justify-between p-5 border-b border-zinc-800/50 bg-zinc-900/50">

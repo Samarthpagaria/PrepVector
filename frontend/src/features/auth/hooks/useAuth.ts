@@ -1,58 +1,58 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { registerUser, loginUser, logoutUser, getMeUser } from "../services/auth.api";
 import { useAuthStore } from "../../../store/useAuth.store";
+import { useToastStore } from "../../../store/toastStore";
 
 export const useRegister = () => {
-    // Bring in our Zustand setter
     const setUser = useAuthStore((state) => state.setUser);
+    const openToast = useToastStore((state) => state.openToast);
 
     return useMutation({
         mutationFn: registerUser,
         onSuccess: (data) => {
-            console.log("Registration successful!", data);
+            openToast("Registration successful! Welcome aboard.");
             
-            // The backend responds with { message: "User registered successfully", user: { ... } }
-            // So we grab data.user and set it in our global Zustand store!
             if (data && data.user) {
                 setUser(data.user);
             }
         },
-        onError: (error) => {
-            console.error("Registration failed:", error);
+        onError: (error: any) => {
+            openToast(error?.response?.data?.message || error.message || "Registration failed", "error");
         }
     });
 };
 
 export const useLogin = () => {
     const setUser = useAuthStore((state) => state.setUser);
+    const openToast = useToastStore((state) => state.openToast);
 
     return useMutation({
         mutationFn: loginUser,
         onSuccess: (data) => {
-            console.log("Login successful!", data);
+            openToast("Logged in successfully!");
             
             if (data && data.user) {
                 setUser(data.user);
             }
         },
-        onError: (error) => {
-            console.error("Login failed:", error);
+        onError: (error: any) => {
+            openToast(error?.response?.data?.message || error.message || "Login failed", "error");
         }
     });
 };
 
 export const useLogout = () => {
     const logout = useAuthStore((state) => state.logout);
+    const openToast = useToastStore((state) => state.openToast);
 
     return useMutation({
         mutationFn: logoutUser,
         onSuccess: () => {
-            console.log("Logout successful!");
-            // Clear the user from Zustand global state
+            openToast("Logged out successfully");
             logout();
         },
-        onError: (error) => {
-            console.error("Logout failed:", error);
+        onError: (error: any) => {
+            openToast(error?.response?.data?.message || error.message || "Logout failed", "error");
         }
     });
 };
