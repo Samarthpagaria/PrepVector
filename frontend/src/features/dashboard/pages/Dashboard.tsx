@@ -3,15 +3,12 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router'
 import CreateResumeModal from '../components/CreateResumeModal' 
 import UploadResumeModal from '../components/UploadResumeModal'
+import { useGenerateResume } from '../hooks/useDashbaord'
 
-const DUMMY_RESUMES = [
-  { id: '1', title: 'Software Engineer Resume', updatedAt: '2026-06-25T10:30:00Z' },
-  { id: '2', title: 'Product Manager Resume', updatedAt: '2026-06-20T14:15:00Z' },
-  { id: '3', title: 'Frontend Developer ATS', updatedAt: '2026-06-28T09:00:00Z' },
-]
 
 const Dashboard = () => {
-  const [allResumes, setAllResumes] = useState(DUMMY_RESUMES);
+    const {mutate:generateResume,isPending,isError} = useGenerateResume()
+  const [allResumes, setAllResumes] = useState([]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [showUploadResume,setShowUploadResume] = useState(false);
   const [editingResumeId, setEditingResumeId] = useState<string | null>(null);
@@ -137,7 +134,9 @@ const Dashboard = () => {
 
         <CreateResumeModal 
             isOpen={isCreateModalOpen} 
-            onClose={() => setIsCreateModalOpen(false)} 
+              onClose={() => setIsCreateModalOpen(false)} 
+              allResumes={allResumes}
+              setAllResumes={setAllResumes}
         />
         <UploadResumeModal
             isOpen={showUploadResume}
