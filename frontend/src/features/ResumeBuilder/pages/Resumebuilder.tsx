@@ -7,6 +7,9 @@ import TemplateSelector from '../components/TemplateSelector'
 import BasicColorPicker from '../components/BasicColorPicker'
 import ProfessionalSummaryForm from '../components/ProfessionalSummaryForm'
 import ExperienceForm from '../components/ExperienceForm'
+import EducationForm from '../components/EducationForm'
+import ProjectForm from '../components/ProjectForm'
+import SkillsForm from '../components/SkillsForm'
 
 const dummyResumeData: any[] = [
     { _id: '1', id: '1', title: 'Software Engineer Resume', personal_info: {} },
@@ -23,7 +26,7 @@ const Resumebuilder = () => {
         experience: [],
         education: [],
         professional_summary:'',
-        projects: [],
+        project: [],
         template: 'classic',
         accent_color: '#10b981', // emerald-500
         public:false
@@ -144,8 +147,29 @@ const Resumebuilder = () => {
                                       onChange={(exp) => setResumeData((prev: any) => ({ ...prev, experience: exp }))} 
                                   />
                               )}
+
+                              {activeSection.id === 'educations' && (
+                                  <EducationForm 
+                                      education={resumeData.education || []} 
+                                      onChange={(edu) => setResumeData((prev: any) => ({ ...prev, education: edu }))} 
+                                  />
+                              )}
+
+                              {activeSection.id === 'skills' && (
+                                  <SkillsForm 
+                                      skills={resumeData.skills || []} 
+                                      onChange={(skills) => setResumeData((prev: any) => ({ ...prev, skills }))} 
+                                  />
+                              )}
+
+                              {activeSection.id === 'projects' && (
+                                  <ProjectForm 
+                                      projects={resumeData.project || []} 
+                                      onChange={(proj) => setResumeData((prev: any) => ({ ...prev, project: proj }))} 
+                                  />
+                              )}
                               
-                              {activeSection.id !== 'personal' && activeSection.id !== 'summary' && activeSection.id !== 'experiences' && (
+                              {activeSection.id !== 'personal' && activeSection.id !== 'summary' && activeSection.id !== 'experiences' && activeSection.id !== 'educations' && activeSection.id !== 'skills' && activeSection.id !== 'projects' && (
                                   <div className="flex flex-col items-center justify-center h-full text-zinc-500">
                                       <activeSection.icon className="w-12 h-12 mb-3 opacity-20" />
                                       <p>This section is under construction.</p>

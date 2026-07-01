@@ -97,9 +97,16 @@ const ClassicTemplate = ({ data, accentColor }) => {
                         {data.project.map((proj, index) => (
                             <div key={index} className="flex justify-between items-start border-l-3 border-gray-300 pl-6">
                                 <div>
-                                    <li className="font-semibold text-gray-800 ">{proj.name}</li>
-                                    <p className="text-gray-600">{proj.description}</p>
+                                    <h3 className="font-semibold text-gray-800 ">
+                                        {proj.name} {proj.type && <span className="font-normal text-gray-500 text-sm ml-1"> - {proj.type}</span>}
+                                    </h3>
+                                    <p className="text-gray-600 mt-1 whitespace-pre-line">{proj.description}</p>
                                 </div>
+                                {proj.url && (
+                                    <a href={proj.url} target="_blank" rel="noopener noreferrer" className="text-sm text-gray-500 hover:underline shrink-0 ml-4">
+                                        View Project
+                                    </a>
+                                )}
                             </div>
                         ))}
                     </ul>

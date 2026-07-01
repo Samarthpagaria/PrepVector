@@ -104,8 +104,15 @@ const ModernTemplate = ({ data, accentColor }) => {
 
 									<div className="flex justify-between items-start">
 										<div>
-											<h3 className="text-lg font-medium text-gray-900">{p.name}</h3>
+											<h3 className="text-lg font-medium text-gray-900">
+												{p.name} {p.type && <span className="text-sm font-normal text-gray-500 ml-2">| {p.type}</span>}
+											</h3>
 										</div>
+										{p.url && (
+											<a href={p.url} target="_blank" rel="noopener noreferrer" className="text-sm font-medium hover:underline flex items-center gap-1 shrink-0 ml-4" style={{color: accentColor}}>
+												Link
+											</a>
+										)}
 									</div>
 									{p.description && (
 										<div className="text-gray-700 leading-relaxed text-sm mt-3">
