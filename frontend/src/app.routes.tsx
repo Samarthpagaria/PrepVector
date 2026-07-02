@@ -12,6 +12,8 @@ import Preview from "./features/resume/pages/Preview";
 import InterviewHistory from "./features/interview/pages/InterviewHistory";
 import InterviewReport from "./features/interview/pages/InterviewReport";
 
+import InterviewPage from "./features/interview/pages/InterviewPage";
+
 export const router = createBrowserRouter([ 
     {
         path: "/",
@@ -30,14 +32,6 @@ export const router = createBrowserRouter([
         element: <ReportDetails />,
     },
     {
-        path: "/history",
-        element: <InterviewHistory />,
-    },
-    {
-        path: "/interview-report/:interviewId",
-        element: <InterviewReport />,
-    },
-    {
         path: "app",
         element: <Layout />,
         children: [
@@ -48,6 +42,18 @@ export const router = createBrowserRouter([
             {
                 path: "builder/:resumeId",
                 element: <ResumeBuilder />,
+            },
+            {
+                path: "history",
+                element: <InterviewHistory />,
+            },
+            {
+                path: "interview-report/:interviewId",
+                element: <InterviewReport />,
+            },
+            {
+                path: "interview",
+                element: <InterviewPage />,
             }
         ]
     },

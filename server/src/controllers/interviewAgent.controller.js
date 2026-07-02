@@ -39,7 +39,20 @@ export const analyzeResume = asyncHandler(async (req, res) => {
     },
   ];
   const airesponse = await askAI(messages);
-  const parsed = JSON.parse(airesponse);
+  
+  let parsed;
+  try {
+    const cleanResponse = airesponse.replace(/```json/gi, "").replace(/```/g, "").trim();
+    parsed = JSON.parse(cleanResponse);
+  } catch (error) {
+    console.error("Failed to parse AI response:", airesponse);
+    return res.status(500).json({ 
+      success: false, 
+      message: "AI failed to analyze the resume properly. Please ensure the PDF is valid." 
+    });
+  }
+
+  console.log("================= [BACKEND API] analyzeResume DONE ==================");
   return res.status(200).json({
     success: true,
     data: parsed
@@ -53,6 +66,7 @@ export const analyzeResume = asyncHandler(async (req, res) => {
  * @path : /api/v1/interview/generate-questions
  */
 export const generateQuestion = asyncHandler(async (req, res) => {
+  console.log("================= [BACKEND API] generateQuestion ==================");
   let{ role, experience, mode, resumeText, projects, skills } = req.body;
   role = role?.trim();
   experience = experience?.trim();
@@ -63,11 +77,11 @@ export const generateQuestion = asyncHandler(async (req, res) => {
       message: "Role, experience and mode are required",
     });
   }
-  const user = await User.findById(req.user?.userId);
+  const user = req.user;
   if (!user) {
-    return res.status(404).json({
+    return res.status(401).json({
       success: false,
-      message: "User not found",
+      message: "Unauthorized",
     });
   }
   if (user.credits < 50) {
@@ -191,6 +205,7 @@ export const generateQuestion = asyncHandler(async (req, res) => {
     finalScore: 0,
     status: "Incomplete",
   });
+  console.log("================= [BACKEND API] generateQuestion DONE ==================");
   return res.status(200).json({
     success: true,
     message: "Questions generated successfully",
@@ -210,12 +225,17 @@ export const generateQuestion = asyncHandler(async (req, res) => {
  * @path : /api/v1/interview/submit-answer
  */
 export const submitAnswer = asyncHandler(async (req, res) => {
-  const { interviewId, questionIndex, answer, timeTaken } = req.body;
-  const user = req.user.userId;
-  if (!interviewId || !questionIndex || !answer || !timeTaken) {
+  console.log("================= [BACKEND API] submitAnswer ==================");
+  console.log("Req Body:", req.body);
+  const { interviewId, questionIndex, answer, timeTaken } = req.body || {};
+  const user = req.user._id;
+  
+  if (!interviewId || questionIndex === undefined || timeTaken === undefined) {
+    console.error("Missing fields in submitAnswer:", { interviewId, questionIndex, answer, timeTaken, body: req.body });
     return res.status(400).json({
       success: false,
-      message: "Interview ID and questions are required",
+      message: "Interview ID, questionIndex, and timeTaken are required",
+      received: { interviewId, questionIndex, answer, timeTaken }
     });
   }
   const interview = await InterviewAgent.findById(interviewId);
@@ -293,7 +313,18 @@ Return ONLY valid JSON in this format:
     },
   ];
   const evaluation = await askAI(messages);
-  const parsed = JSON.parse(evaluation);
+  
+  let parsed;
+  try {
+    const cleanResponse = evaluation.replace(/```json/gi, "").replace(/```/g, "").trim();
+    parsed = JSON.parse(cleanResponse);
+  } catch (error) {
+    console.error("Failed to parse evaluation JSON:", evaluation);
+    return res.status(500).json({ 
+      success: false, 
+      message: "AI evaluation parsing failed" 
+    });
+  }
   question.answer = answer;
   question.feedback = parsed.feedback;
   question.score = parsed.finalScore;
@@ -301,6 +332,7 @@ Return ONLY valid JSON in this format:
   question.communication = parsed.communication;
   question.correctness = parsed.correctness;
   await interview.save();
+  console.log("================= [BACKEND API] submitAnswer DONE ==================");
   return res.json({
     feedback: question.feedback,
     score: question.score,
@@ -314,6 +346,7 @@ Return ONLY valid JSON in this format:
  * @path : /api/v1/interview/finish-interview
  */
 export const finishInterview = asyncHandler(async (req, res) => {
+  console.log("================= [BACKEND API] finishInterview ==================");
   const { interviewId } = req.body;
   if (!interviewId) {
     return res.status(400).json({
@@ -351,7 +384,7 @@ export const finishInterview = asyncHandler(async (req, res) => {
   interview.correctness = avgCorrectness;
   interview.communication = avgCommunication;
 
-  interview.status = "completed";
+  interview.status = "Completed";
   await interview.save({ validateBeforeSave: true });
   return res.status(200).json({
     finalScore: Number(finalScore.toFixed(1)),
@@ -376,7 +409,7 @@ export const finishInterview = asyncHandler(async (req, res) => {
  * @path : /api/v1/interview/get-interview
  */
 export const getMyInterviews = asyncHandler(async (req, res) => {
-  const userId = req.user.userId;
+  const userId = req.user._id;
   const interviews = await InterviewAgent.find({ userId }).sort({createdAt:-1})
   return res.status(200).json({
     success: true,

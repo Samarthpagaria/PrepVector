@@ -158,6 +158,7 @@ const Interview: React.FC<InterviewProps> = ({ interviewData, onFinish }) => {
         .replace(/\./g, ". ... ");
 
       const utterance = new SpeechSynthesisUtterance(humanText);
+      (window as any)._speechSynthesisUtterance = utterance; // Prevent Chrome GC bug
       utterance.voice = selectedVoice;
 
       // Human-like pacing
@@ -239,10 +240,12 @@ const Interview: React.FC<InterviewProps> = ({ interviewData, onFinish }) => {
       const result = await finishInterviewMutation.mutateAsync({
         interviewId
       });
-      console.log(result);
+      console.log("[DEBUG] Finish Interview Result:", result);
       onFinish(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
+      alert("Failed to finish interview: " + (error?.response?.data?.message || error.message));
+      setIsSubmitting(false); // Make sure to unblock the UI
     }
   };
 
@@ -283,6 +286,13 @@ const Interview: React.FC<InterviewProps> = ({ interviewData, onFinish }) => {
     const timeTaken = timeLimit - timeLeft;
     
     try {
+      console.log("[DEBUG] Submitting Answer:", {
+        interviewId,
+        questionIndex: currentIndex,
+        answer: answer.trim() || "No answer provided",
+        timeTaken,
+        interviewData
+      });
       const response = await submitAnswerMutation.mutateAsync({
         interviewId,
         questionIndex: currentIndex,

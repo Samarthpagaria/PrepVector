@@ -44,7 +44,7 @@ const InterviewHistory = () => {
             You haven't completed any interviews. Start an interview to see your history here.
           </p>
           <button
-            onClick={() => navigate('/interview')}
+            onClick={() => navigate('/app/interview')}
             className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors duration-200"
           >
             Start New Interview
@@ -69,7 +69,7 @@ const InterviewHistory = () => {
             return (
               <div
                 key={interview._id}
-                onClick={() => isCompleted && navigate(`/interview-report/${interview._id}`)}
+                onClick={() => isCompleted && navigate(`/app/interview-report/${interview._id}`)}
                 className={`bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between transition-all duration-200 ${
                   isCompleted 
                     ? 'hover:shadow-md hover:border-indigo-200 dark:hover:border-indigo-800 cursor-pointer group'

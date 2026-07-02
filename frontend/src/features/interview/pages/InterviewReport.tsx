@@ -24,7 +24,7 @@ const InterviewReport = () => {
     return (
       <div className="flex flex-col items-center justify-center h-[calc(100vh-80px)]">
         <p className="text-red-500 mb-4">Failed to load interview report.</p>
-        <button onClick={() => navigate('/history')} className="text-indigo-600 hover:underline flex items-center gap-2">
+        <button onClick={() => navigate('/app/history')} className="text-indigo-600 hover:underline flex items-center gap-2">
           <ChevronLeft className="w-4 h-4" /> Back to History
         </button>
       </div>
@@ -145,7 +145,7 @@ const InterviewReport = () => {
       <div className="mb-8">
         <div className="flex justify-between items-center mb-4">
           <button 
-            onClick={() => navigate('/history')}
+            onClick={() => navigate('/app/history')}
             className="flex items-center gap-2 text-gray-500 hover:text-indigo-600 transition-colors text-sm font-medium"
           >
             <ChevronLeft className="w-4 h-4" /> Back to History

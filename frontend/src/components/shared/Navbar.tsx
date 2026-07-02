@@ -59,6 +59,16 @@ const Navbar = () => {
               PrepVector
             </span>
           </Link>
+          {user && (
+            <div className="hidden md:flex items-center gap-6">
+              <Link to="/app/interview" className="text-sm font-medium text-zinc-300 hover:text-emerald-400 transition-colors">
+                Mock Interview
+              </Link>
+              <Link to="/app/history" className="text-sm font-medium text-zinc-300 hover:text-emerald-400 transition-colors">
+                History
+              </Link>
+            </div>
+          )}
         </div>
         <div className="flex items-center gap-4">
           
@@ -118,7 +128,13 @@ const Navbar = () => {
                     </span>
                   </div>
                   
-                  <button className="flex items-center gap-2.5 px-3 py-2.5 text-sm text-zinc-300 hover:bg-zinc-800/50 hover:text-zinc-100 rounded-lg transition-colors text-left font-medium">
+                  <button 
+                    onClick={() => {
+                      navigate('/app/history');
+                      setShowUserMenu(false);
+                    }}
+                    className="flex items-center gap-2.5 px-3 py-2.5 text-sm text-zinc-300 hover:bg-zinc-800/50 hover:text-zinc-100 rounded-lg transition-colors text-left font-medium"
+                  >
                     <History className="size-4 text-zinc-400" />
                     Interview History
                   </button>

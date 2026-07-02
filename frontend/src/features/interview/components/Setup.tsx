@@ -13,6 +13,7 @@ const Setup: React.FC<SetupProps> = ({ onStart }) => {
   const [interviewType, setInterviewType] = useState('Technical');
   const [resume, setResume] = useState<File | null>(null);
   const [isAnalyzed, setIsAnalyzed] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   
@@ -23,6 +24,7 @@ const Setup: React.FC<SetupProps> = ({ onStart }) => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setResume(e.target.files[0]);
+      setError(null);
     }
   };
 
@@ -30,6 +32,7 @@ const Setup: React.FC<SetupProps> = ({ onStart }) => {
     e.preventDefault();
     if (!role || !experience || !resume) return;
     
+    setError(null);
     analyzeResume({ 
       role, 
       experience, 
@@ -38,6 +41,9 @@ const Setup: React.FC<SetupProps> = ({ onStart }) => {
     }, {
       onSuccess: () => {
         setIsAnalyzed(true);
+      },
+      onError: (err: any) => {
+        setError(err.response?.data?.message || "Failed to analyze resume. Please ensure the PDF has readable text.");
       }
     });
   };
@@ -77,6 +83,13 @@ const Setup: React.FC<SetupProps> = ({ onStart }) => {
             Configure your interview parameters. Our AI will tailor the questions specifically to your role, experience level, and resume.
           </p>
         </div>
+
+        {error && (
+          <div className="mb-6 p-4 bg-red-950/50 border border-red-500/50 rounded-xl flex items-center gap-3 text-red-200">
+            <Sparkles className="w-5 h-5 text-red-400 flex-shrink-0" />
+            <p className="text-sm font-medium">{error}</p>
+          </div>
+        )}
 
         <form onSubmit={isAnalyzed ? (e) => { e.preventDefault(); handleStartInterview(); } : handleAnalyze} className="bg-[#121214]/80 backdrop-blur-xl p-8 rounded-3xl shadow-2xl border border-zinc-800/80">
           <div className="space-y-6">
@@ -129,12 +142,15 @@ const Setup: React.FC<SetupProps> = ({ onStart }) => {
                   value={interviewType}
                   onChange={(e) => setInterviewType(e.target.value)}
                   disabled={isAnalyzing || isGenerating || isAnalyzed}
-                  className="w-full appearance-none pl-4 pr-10 py-3 bg-zinc-900/50 border border-zinc-700/50 rounded-xl text-zinc-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full appearance-none pl-11 pr-10 py-3 bg-zinc-900/50 hover:bg-zinc-900/80 border border-zinc-700/50 hover:border-zinc-600 rounded-xl text-zinc-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-inner"
                 >
-                  <option value="Technical">Technical Interview</option>
-                  <option value="HR">Behavioral Interview</option>
+                  <option value="Technical" className="bg-zinc-900 text-zinc-100 py-2">Technical Interview</option>
+                  <option value="HR" className="bg-zinc-900 text-zinc-100 py-2">Behavioral Interview</option>
                 </select>
-                <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Briefcase className="h-4 w-4 text-emerald-500/80" />
+                </div>
+                <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
                   <ChevronDown className="h-5 w-5 text-zinc-500" />
                 </div>
               </div>
