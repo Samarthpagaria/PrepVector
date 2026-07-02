@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { setInterview, generateQuestions, submitAnswerApi, finishInterviewApi } from "../services/interview.api";
+import { setInterview, generateQuestions, submitAnswerApi, finishInterviewApi, getMyInterviewsApi, getInterviewReportApi } from "../services/interview.api";
 import { useInterviewStore } from "../store/useInterview.store";
 import { useAuthStore } from "../../../store/useAuth.store";
 
@@ -86,3 +86,18 @@ export const useFinishInterview = () => {
         }
     })
 }
+
+export const useGetMyInterviews = () => {
+    return useQuery({
+        queryKey: ["interviews"],
+        queryFn: getMyInterviewsApi
+    });
+};
+
+export const useGetInterviewReport = (interviewId: string) => {
+    return useQuery({
+        queryKey: ["interview-report", interviewId],
+        queryFn: () => getInterviewReportApi(interviewId),
+        enabled: !!interviewId,
+    });
+};

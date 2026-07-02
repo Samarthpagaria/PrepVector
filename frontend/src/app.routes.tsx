@@ -9,6 +9,9 @@ import Dashboard from "./features/dashboard/pages/Dashboard";
 import ResumeBuilder from "./features/ResumeBuilder/pages/Resumebuilder";
 import Preview from "./features/resume/pages/Preview";
 
+import InterviewHistory from "./features/interview/pages/InterviewHistory";
+import InterviewReport from "./features/interview/pages/InterviewReport";
+
 export const router = createBrowserRouter([ 
     {
         path: "/",
@@ -25,6 +28,14 @@ export const router = createBrowserRouter([
     {
         path: "/report/:interviewId",
         element: <ReportDetails />,
+    },
+    {
+        path: "/history",
+        element: <InterviewHistory />,
+    },
+    {
+        path: "/interview-report/:interviewId",
+        element: <InterviewReport />,
     },
     {
         path: "app",

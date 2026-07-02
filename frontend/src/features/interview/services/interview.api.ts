@@ -53,3 +53,13 @@ export const finishInterviewApi = async (data: {
     const response = await api.post("/api/v1/interview/finish-interview", data);
     return response.data;
 }
+
+export const getMyInterviewsApi = async () => {
+    const response = await api.get("/api/v1/interview/get-interview");
+    return response.data;
+}
+
+export const getInterviewReportApi = async (interviewId: string) => {
+    const response = await api.get(`/api/v1/interview/report/${interviewId}`);
+    return response.data;
+}

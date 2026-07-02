@@ -126,6 +126,20 @@ const Interview: React.FC<InterviewProps> = ({ interviewData, onFinish }) => {
 
     loadVoices();
     window.speechSynthesis.onvoiceschanged = loadVoices;
+
+    return () => {
+      window.speechSynthesis.onvoiceschanged = null;
+    };
+  }, []);
+
+  // Global cleanup on unmount
+  useEffect(() => {
+    return () => {
+      SpeechRecognition.stopListening();
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+    };
   }, []);
 
   /* ------------- SPEAK FUNCTION ------------- */
@@ -457,9 +471,9 @@ const Interview: React.FC<InterviewProps> = ({ interviewData, onFinish }) => {
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
               placeholder={isIntroPhase ? "Wait for the interview to start..." : (isMicOn ? "Speak to type..." : "Type your answer here...")}
-              disabled={isSubmitting || timeLeft <= 0 || isIntroPhase}
+              disabled={isSubmitting || timeLeft <= 0 || isIntroPhase || isMicOn}
               className={`w-full flex-1 bg-transparent text-zinc-200 resize-none focus:outline-none text-lg leading-relaxed disabled:opacity-50 transition-all
-                ${isMicOn ? 'placeholder:text-emerald-700/50' : 'placeholder:text-zinc-600'}`}
+                ${isMicOn ? 'placeholder:text-emerald-700/50 cursor-not-allowed' : 'placeholder:text-zinc-600'}`}
             />
             
             {timeLeft <= 0 && !isIntroPhase && (
