@@ -40,6 +40,10 @@ export const analyzeResume = asyncHandler(async (req, res) => {
   ];
   const airesponse = await askAI(messages);
   const parsed = JSON.parse(airesponse);
+  return res.status(200).json({
+    success: true,
+    data: parsed
+  });
 });
 
 /**
@@ -181,9 +185,9 @@ export const generateQuestion = asyncHandler(async (req, res) => {
       return {
         question: q,
         difficulty: difficulties[index] || "medium",
+        timeLimit: 300
       };
     }),
-    timeLimit: [300, 300, 300, 300, 300, 300, 300][index],
     finalScore: 0,
     status: "Incomplete",
   });
