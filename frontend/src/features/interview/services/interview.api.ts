@@ -36,3 +36,20 @@ export const generateQuestions = async (data: {
     const response = await api.post("/api/v1/interview/generate-questions", data);
     return response.data;
 }
+
+export const submitAnswerApi = async (data: {
+    interviewId: string;
+    questionIndex: number;
+    answer: string;
+    timeTaken: number;
+}) => {
+    const response = await api.post("/api/v1/interview/submit-answer", data);
+    return response.data;
+}
+
+export const finishInterviewApi = async (data: {
+    interviewId: string;
+}) => {
+    const response = await api.post("/api/v1/interview/finish-interview", data);
+    return response.data;
+}

@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { setInterview, generateQuestions } from "../services/interview.api";
+import { setInterview, generateQuestions, submitAnswerApi, finishInterviewApi } from "../services/interview.api";
 import { useInterviewStore } from "../store/useInterview.store";
 import { useAuthStore } from "../../../store/useAuth.store";
 
@@ -53,6 +53,36 @@ export const useGenerateQuestions = () => {
         },
         onError: (error) => {
             console.log("[useGenerateQuestions] mutation failed:", error);
+        }
+    })
+}
+
+export const useSubmitAnswer = () => {
+    return useMutation({
+        mutationFn: (data: any) => {
+            console.log("[useSubmitAnswer] Starting mutation with data:", data);
+            return submitAnswerApi(data);
+        },
+        onSuccess: (data) => {
+            console.log("[useSubmitAnswer] mutation success! Response Data:", data);
+        },
+        onError: (error) => {
+            console.log("[useSubmitAnswer] mutation failed:", error);
+        }
+    })
+}
+
+export const useFinishInterview = () => {
+    return useMutation({
+        mutationFn: (data: any) => {
+            console.log("[useFinishInterview] Starting mutation with data:", data);
+            return finishInterviewApi(data);
+        },
+        onSuccess: (data) => {
+            console.log("[useFinishInterview] mutation success! Response Data:", data);
+        },
+        onError: (error) => {
+            console.log("[useFinishInterview] mutation failed:", error);
         }
     })
 }
