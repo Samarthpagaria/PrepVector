@@ -26,6 +26,21 @@ const templates = [
     id: "aesthetic",
     name: "Aesthetic",
     preview: "A beautiful 2-column layout with gradients, timeline indicators, and skill bars."
+  },
+  {
+    id: "editorial",
+    name: "Editorial",
+    preview: "A stylish two-column layout with a light gray background and bold typography."
+  },
+  {
+    id: "vibrant",
+    name: "Vibrant",
+    preview: "A highly visual, block-based layout with vibrant colors, pills, and dynamic shape accents."
+  },
+  {
+    id: "scrapbook",
+    name: "Scrapbook",
+    preview: "A highly creative scrapbook-style layout with polaroids, sticky notes, and marker highlights."
   }
 ];
 
