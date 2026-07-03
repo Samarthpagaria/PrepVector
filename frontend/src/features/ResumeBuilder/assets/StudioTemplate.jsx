@@ -155,16 +155,21 @@ const StudioTemplate = ({ data, accentColor }) => {
                                     <span className="text-[11px] font-semibold" style={{ color: accentOrange }}>Contact</span>
                                 </div>
                                 
-                                <div className="text-[10px] leading-[1.7] tracking-[0.3px] w-full" style={{ color: lightText }}>
+                                <div className="text-[10px] leading-[1.7] tracking-[0.3px] w-full grid grid-cols-2 gap-x-4 gap-y-1" style={{ color: lightText }}>
                                     {data.personal_info?.email && (
                                         <div className="truncate">{data.personal_info.email}</div>
                                     )}
                                     {data.personal_info?.phone && (
-                                        <div>Tel. {data.personal_info.phone}</div>
+                                        <div className="truncate">Tel. {data.personal_info.phone}</div>
                                     )}
                                     {data.personal_info?.address && (
                                         <div className="truncate">Address: {data.personal_info.address}</div>
                                     )}
+                                    {data.personal_info?.customLinks?.map((link, i) => (
+                                        <a key={i} href={link.url} target="_blank" rel="noreferrer" className="truncate hover:text-white transition-colors block">
+                                            {link.name}: {link.url.replace(/^https?:\/\/(www\.)?/, '')}
+                                        </a>
+                                    ))}
                                 </div>
                             </div>
                         </div>
@@ -191,6 +196,11 @@ const StudioTemplate = ({ data, accentColor }) => {
                                                     <p className="text-[10px] leading-[1.6]" style={{ color: secondaryText }}>
                                                         {proj.description}
                                                     </p>
+                                                    {proj.url && (
+                                                        <a href={proj.url} target="_blank" rel="noreferrer" className="text-[10px] font-medium underline mt-1.5 block hover:text-black transition-colors" style={{ color: accentOrange }}>
+                                                            {proj.url.replace(/^https?:\/\/(www\.)?/, '')}
+                                                        </a>
+                                                    )}
                                                 </div>
                                             ))}
                                         </div>

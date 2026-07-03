@@ -87,6 +87,11 @@ const MinimalTemplate = ({ data, accentColor }) => {
                             <div key={index} className="flex flex-col gap-2 justify-between items-baseline">
                                 <h3 className="text-lg font-medium ">{proj.name}</h3>
                                 <p className="text-gray-600">{proj.description}</p>
+                                {proj.url && (
+                                    <a href={proj.url} target="_blank" rel="noopener noreferrer" className="text-sm font-medium hover:underline" style={{ color: accentColor }}>
+                                        {proj.url.replace(/^https?:\/\/(www\.)?/, '')}
+                                    </a>
+                                )}
                             </div>
                         ))}
                     </div>

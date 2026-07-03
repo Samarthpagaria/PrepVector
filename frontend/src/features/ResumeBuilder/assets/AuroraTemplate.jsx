@@ -40,7 +40,7 @@ const AuroraTemplate = ({ data, accentColor }) => {
                     
                     {/* HEADER CARD */}
                     <GlassCard className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                        <div>
+                        <div className="flex-1">
                             <h1 className="text-5xl sm:text-6xl font-black text-white tracking-tight mb-2">
                                 {data.personal_info?.full_name || "Your Name"}
                             </h1>
@@ -49,9 +49,24 @@ const AuroraTemplate = ({ data, accentColor }) => {
                                     {data.personal_info.profession}
                                 </h2>
                             )}
+                            
+                            {/* Custom Links with proper horizontal space */}
+                            {data.personal_info?.customLinks?.length > 0 && (
+                                <div className="flex flex-wrap gap-x-5 gap-y-2 mt-4 text-sm text-zinc-300 font-medium">
+                                    {data.personal_info.customLinks.map((link, idx) => (
+                                        <a key={idx} href={link.url} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 hover:text-white hover:underline transition-all">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 opacity-70" style={{ color: primaryColor }}>
+                                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                                                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                                            </svg>
+                                            {link.name || link.url.replace(/^https?:\/\/(www\.)?/, '')}
+                                        </a>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                         
-                        <div className="flex flex-col gap-2 text-sm text-zinc-300 font-medium text-left md:text-right w-full md:w-auto">
+                        <div className="flex flex-col gap-2 text-sm text-zinc-300 font-medium text-left md:text-right shrink-0">
                             {data.personal_info?.phone && (
                                 <p>{data.personal_info.phone}</p>
                             )}
@@ -64,21 +79,6 @@ const AuroraTemplate = ({ data, accentColor }) => {
                                 <p className="truncate hover:whitespace-normal hover:break-all hover:overflow-visible transition-all">
                                     {data.personal_info.address}
                                 </p>
-                            )}
-                            {/* Render up to 2 social links to save space in header */}
-                            {(data.personal_info?.linkedin || data.personal_info?.portfolio) && (
-                                <div className="flex flex-col gap-1 mt-1">
-                                    {data.personal_info?.linkedin && (
-                                        <a href={data.personal_info.linkedin} target="_blank" rel="noreferrer" className="truncate hover:underline hover:whitespace-normal hover:break-all hover:overflow-visible transition-all">
-                                            LinkedIn
-                                        </a>
-                                    )}
-                                    {data.personal_info?.portfolio && (
-                                        <a href={data.personal_info.portfolio} target="_blank" rel="noreferrer" className="truncate hover:underline hover:whitespace-normal hover:break-all hover:overflow-visible transition-all">
-                                            Portfolio
-                                        </a>
-                                    )}
-                                </div>
                             )}
                         </div>
                     </GlassCard>

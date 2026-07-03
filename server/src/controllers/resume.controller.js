@@ -166,6 +166,7 @@ const updateResume = asyncHandler(async (req, res) => {
     }
     resumeDataCopy.personal_info.image = imgUrl;
   }
+
   const resume = await Resume.findOneAndUpdate(
     { userId, _id: resumeId },
     resumeDataCopy,
