@@ -21,7 +21,7 @@ const ProfessionalSummaryForm: React.FC<ProfessionalSummaryFormProps> = ({ summa
   };
 
   const generateSummary = async () => {
-    if (!summary.trim()) return;
+    if (!summary?.trim()) return;
     
     setIsGenerating(true);
     
@@ -53,7 +53,7 @@ const ProfessionalSummaryForm: React.FC<ProfessionalSummaryFormProps> = ({ summa
         
         <button
           onClick={generateSummary}
-          disabled={isGenerating || !summary.trim()}
+          disabled={isGenerating || !summary?.trim()}
           className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg text-fuchsia-400 bg-fuchsia-500/10 hover:bg-fuchsia-500/20 border border-fuchsia-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}

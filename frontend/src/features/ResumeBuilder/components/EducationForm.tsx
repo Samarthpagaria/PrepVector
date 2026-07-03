@@ -9,6 +9,7 @@ interface Education {
   field: string;
   graduation_date: string;
   gpa: string;
+  percentage: string;
 }
 
 interface EducationFormProps {
@@ -30,7 +31,8 @@ const EducationForm: React.FC<EducationFormProps> = ({ education = [], onChange 
       degree: "",
       field: "",
       graduation_date: "",
-      gpa: ""
+      gpa: "",
+      percentage: ""
     };
     onChange([...education, newEducation]);
   };
@@ -118,14 +120,24 @@ const EducationForm: React.FC<EducationFormProps> = ({ education = [], onChange 
                   className="w-full px-3 py-2 bg-[#121214] border border-zinc-700/80 rounded-lg text-sm text-zinc-200 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all [color-scheme:dark] [&::-webkit-calendar-picker-indicator]:opacity-50 hover:[&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:cursor-pointer"
                 />
               </div>
-              <div className="space-y-1.5 md:col-span-2">
+              <div className="space-y-1.5 md:col-span-1">
                 <label className="text-xs font-medium text-zinc-400">GPA (optional)</label>
                 <input
                   type="text"
                   value={edu.gpa}
                   onChange={(e) => updateEducation(index, "gpa", e.target.value)}
                   placeholder="e.g. 3.8/4.0"
-                  className="w-full md:w-1/2 px-3 py-2 bg-[#121214] border border-zinc-700/80 rounded-lg text-sm text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all"
+                  className="w-full px-3 py-2 bg-[#121214] border border-zinc-700/80 rounded-lg text-sm text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all"
+                />
+              </div>
+              <div className="space-y-1.5 md:col-span-1">
+                <label className="text-xs font-medium text-zinc-400">Percentage (optional)</label>
+                <input
+                  type="text"
+                  value={edu.percentage || ""}
+                  onChange={(e) => updateEducation(index, "percentage", e.target.value)}
+                  placeholder="e.g. 95%"
+                  className="w-full px-3 py-2 bg-[#121214] border border-zinc-700/80 rounded-lg text-sm text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all"
                 />
               </div>
             </div>

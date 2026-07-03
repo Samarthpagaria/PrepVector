@@ -58,7 +58,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ experiences = [], onCha
   };
 
   const generateDescription = async (index: number, experience: Experience) => {
-    if (!experience.description.trim()) return;
+    if (!experience.description?.trim()) return;
     
     setEnhancingIndex(index);
     
@@ -172,7 +172,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ experiences = [], onCha
                 <label className="text-xs font-medium text-zinc-400">Job Description</label>
                 <button
                   onClick={() => generateDescription(index, exp)}
-                  disabled={enhancingIndex === index || !exp.description.trim()}
+                  disabled={enhancingIndex === index || !exp.description?.trim()}
                   className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-md text-fuchsia-400 bg-fuchsia-500/10 hover:bg-fuchsia-500/20 border border-fuchsia-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {enhancingIndex === index ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}

@@ -65,12 +65,13 @@ const enhanceJobDescription = asyncHandler(async (req, res) => {
     const response = await ai_model.invoke([
         {
             role:"system",
-            content:`You are an expert in resume writing. Your task is to
-            enhance the job description of a resume. The job description
-            should be only in 1-2 sentence also highlighting key
-            responsibilities and achievements. Use action verbs and
-            quantifiable results where possible. Make it ATS-friend1y. and
-            only return text no options or anything else.   `,
+            content: `You are an expert resume writer. Enhance the provided job experience description to be highly impactful, extremely concise, and ATS-friendly.
+CRITICAL RULES:
+1. Condense the information into a single, cohesive paragraph of 1-3 highly impactful sentences. DO NOT use bullet points.
+2. Start with a strong action verb.
+3. Focus heavily on quantifiable metrics and concrete results (e.g., %, $, time saved).
+4. KEEP IT EXTREMELY BRIEF. Eliminate all fluff, filler words, and long-winded explanations.
+5. Return ONLY the finalized text. Do not include introductory phrases, options, or markdown formatting.`,
         },
         {
             role:"user",
@@ -86,6 +87,50 @@ const enhanceJobDescription = asyncHandler(async (req, res) => {
     return res.status(200).json({
         success:true,
         message:"job description enhanced successfully",
+        data:response.content,
+    })
+})
+
+/**
+ * @name enhanceProjectDescription
+ * @description controller for enhancing a resume's Project Description 
+ * @access Private
+ * @path /api/v1/ai/enhance-project-desc
+ * @method POST
+ */
+const enhanceProjectDescription = asyncHandler(async (req, res) => {
+    const { userContent } = req.body;
+    if(!userContent){
+        return res.status(400).json({
+            success:false,
+            message:"Missing required fields"
+        })
+    }
+    const response = await ai_model.invoke([
+        {
+            role:"system",
+            content: `You are an expert resume writer. Enhance the provided project description to be highly impactful, extremely concise, and ATS-friendly.
+CRITICAL RULES:
+1. Condense the information into a single, cohesive paragraph of 1-3 highly impactful sentences. DO NOT use bullet points.
+2. Start with a strong action verb.
+3. Focus heavily on technical implementation, technologies used, and quantifiable results.
+4. KEEP IT EXTREMELY BRIEF. Eliminate all fluff, filler words, and long-winded explanations.
+5. Return ONLY the finalized text. Do not include introductory phrases, options, or markdown formatting.`,
+        },
+        {
+            role:"user",
+            content:userContent,
+        },
+    ]);
+    if(!response){
+        return res.status(500).json({
+            success:false,
+            message:"Failed to enhance project description"
+        })
+    }
+    return res.status(200).json({
+        success:true,
+        message:"Project description enhanced successfully",
         data:response.content,
     })
 })
@@ -320,4 +365,4 @@ Rules:
   });
 });
 
-export { enhanceProfessionalSummary, enhanceJobDescription, uploadResume }; 
+export { enhanceProfessionalSummary, enhanceJobDescription, enhanceProjectDescription, uploadResume }; 

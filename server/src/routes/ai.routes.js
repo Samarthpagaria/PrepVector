@@ -1,5 +1,5 @@
 import express from "express"
-import { enhanceProfessionalSummary, enhanceJobDescription, uploadResume } from "../controllers/aiController.js"
+import { enhanceProfessionalSummary, enhanceJobDescription, enhanceProjectDescription, uploadResume } from "../controllers/aiController.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 const router = express.Router();
 
@@ -20,6 +20,15 @@ router.post('/enhance-pro-sum', verifyJWT, enhanceProfessionalSummary)
  * @method POST
  */
 router.post('/enhance-job-desc', verifyJWT, enhanceJobDescription)
+
+/**
+ * @name enhanceProjectDescription
+ * @description Controller for using AI to enhance a specific project description
+ * @access Private
+ * @path /api/v1/ai/enhance-project-desc
+ * @method POST
+ */
+router.post('/enhance-project-desc', verifyJWT, enhanceProjectDescription)
 
 /**
  * @name uploadResume

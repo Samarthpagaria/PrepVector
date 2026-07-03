@@ -72,6 +72,7 @@ const ResumeScehma = new mongoose.Schema(
           graduation_date: { type: String },
           field: { type: String },
           gpa: { type: String },
+          percentage: { type: String },
         },
       ],
     },

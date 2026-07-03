@@ -59,6 +59,11 @@ export const enhanceJobDescription = async (prompt: string) => {
     return response.data;
 };
 
+export const enhanceProjectDescription = async (prompt: string) => {
+    const response = await api.post('/api/v1/ai/enhance-project-desc', { userContent: prompt });
+    return response.data;
+};
+
 export const getPublicResumeById = async (resumeId: string) => {
     const response = await api.get(`/api/v1/resumes/public/${resumeId}`);
     return response.data;

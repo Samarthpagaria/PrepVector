@@ -25,7 +25,7 @@ const SkillsForm: React.FC<SkillsFormProps> = ({ skills = [], onChange }) => {
   };
 
   const addSkill = () => {
-    const trimmed = inputValue.trim();
+    const trimmed = inputValue?.trim() || "";
     if (trimmed && !skills.includes(trimmed)) {
       onChange([...skills, trimmed]);
       setInputValue("");
@@ -65,7 +65,7 @@ const SkillsForm: React.FC<SkillsFormProps> = ({ skills = [], onChange }) => {
             />
             <button
               onClick={addSkill}
-              disabled={!inputValue.trim()}
+              disabled={!inputValue?.trim()}
               className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 disabled:bg-zinc-800 disabled:text-zinc-500 text-zinc-950 font-medium rounded-lg transition-colors cursor-pointer disabled:cursor-not-allowed"
             >
               Add

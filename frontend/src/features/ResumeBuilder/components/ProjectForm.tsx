@@ -1,7 +1,8 @@
 import React from 'react';
-import { Plus, Trash2, Save, Loader2 } from 'lucide-react';
+import { Plus, Trash2, Save, Loader2, Sparkles } from 'lucide-react';
 import { useResumeStore } from '../store/resumeStore';
 import { useSaveResume } from '../hooks/useResumeBuilder';
+import { enhanceProjectDescription } from '../services/resumeBuilder.api';
 
 interface Project {
   name: string;
@@ -18,6 +19,7 @@ interface ProjectFormProps {
 const ProjectForm: React.FC<ProjectFormProps> = ({ projects = [], onChange }) => {
   const { resumeData } = useResumeStore();
   const { mutate: saveResume, isPending } = useSaveResume();
+  const [enhancingIndex, setEnhancingIndex] = React.useState<number | null>(null);
 
   const handleSave = () => {
     saveResume({ resumeId: resumeData._id, resumeData });
@@ -41,6 +43,25 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projects = [], onChange }) =>
     const updated = [...projects];
     updated[index] = { ...updated[index], [fieldName]: value };
     onChange(updated);
+  };
+
+  const generateDescription = async (index: number, project: Project) => {
+    if (!project.description?.trim()) return;
+    
+    setEnhancingIndex(index);
+    
+    try {
+      const prompt = `enhance this project description ${project.description} for the project ${project.name} of type ${project.type}.`;
+      const response = await enhanceProjectDescription(prompt);
+      
+      if (response.success) {
+        updateProject(index, "description", response.data);
+      }
+    } catch (error) {
+      console.error("Failed to enhance project description", error);
+    } finally {
+      setEnhancingIndex(null);
+    }
   };
 
   return (
@@ -108,7 +129,17 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projects = [], onChange }) =>
                 />
               </div>
               <div className="space-y-1.5 md:col-span-2">
-                <label className="text-xs font-medium text-zinc-400">Description</label>
+                <div className="flex justify-between items-end">
+                  <label className="text-xs font-medium text-zinc-400">Description</label>
+                  <button
+                    onClick={() => generateDescription(index, proj)}
+                    disabled={enhancingIndex === index || !proj.description?.trim()}
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-md text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {enhancingIndex === index ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                    {enhancingIndex === index ? 'Generating...' : 'Enhance with AI'}
+                  </button>
+                </div>
                 <textarea
                   value={proj.description}
                   onChange={(e) => updateProject(index, "description", e.target.value)}
