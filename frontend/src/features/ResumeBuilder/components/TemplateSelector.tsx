@@ -41,6 +41,21 @@ const templates = [
     id: "scrapbook",
     name: "Scrapbook",
     preview: "A highly creative scrapbook-style layout with polaroids, sticky notes, and marker highlights."
+  },
+  {
+    id: "cinematic",
+    name: "Cinematic",
+    preview: "A striking dark-themed layout with a massive hero image, white wireframe borders, and star accents."
+  },
+  {
+    id: "studio",
+    name: "Studio",
+    preview: "A highly stylized beige layout with a giant name typography, rounded profile cards, and oversized quote marks."
+  },
+  {
+    id: "aurora",
+    name: "Aurora",
+    preview: "A dark neon cyberpunk aesthetic with glassmorphism cards and a glowing pink timeline."
   }
 ];
 
@@ -63,7 +78,7 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({ selectedTemplate, o
       </button>
 
       {isOpen && (
-        <div className='absolute top-full right-0 w-72 p-3 mt-2 space-y-3 z-50 bg-[#121214] rounded-xl border border-zinc-800 shadow-2xl'>
+        <div className='absolute top-full right-0 w-72 p-3 mt-2 space-y-3 z-50 bg-[#121214] rounded-xl border border-zinc-800 shadow-2xl max-h-[60vh] overflow-y-auto' style={{ scrollbarWidth: 'thin', scrollbarColor: '#a1a1aa transparent' }}>
           {templates.map((template) => (
             <div 
               key={template.id} 

@@ -7,6 +7,9 @@ import AestheticTemplate from '../assets/AestheticTemplate';
 import EditorialTemplate from '../assets/EditorialTemplate';
 import VibrantTemplate from '../assets/VibrantTemplate';
 import ScrapbookTemplate from '../assets/ScrapbookTemplate';
+import CinematicTemplate from '../assets/CinematicTemplate';
+import StudioTemplate from '../assets/StudioTemplate';
+import AuroraTemplate from '../assets/AuroraTemplate';
 
 interface ResumePreviewProps {
   data: any;
@@ -33,6 +36,12 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ data, template, accentCol
         return <VibrantTemplate data={data} accentColor={accentColor} />;
       case "scrapbook":
         return <ScrapbookTemplate data={data} accentColor={accentColor} />;
+      case "cinematic":
+        return <CinematicTemplate data={data} accentColor={accentColor} />;
+      case "studio":
+        return <StudioTemplate data={data} accentColor={accentColor} />;
+      case "aurora":
+        return <AuroraTemplate data={data} accentColor={accentColor} />;
       case "classic":
       default:
         // Adding Classic as a fallback since it exists in assets
