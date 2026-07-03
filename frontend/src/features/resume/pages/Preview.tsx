@@ -45,14 +45,13 @@ const Preview = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#09090b] text-zinc-200 p-4 sm:p-8 flex justify-center">
-      <div className="w-full max-w-[1000px] bg-white rounded-xl shadow-2xl overflow-hidden">
+    <div className="min-h-screen w-full bg-gray-100">
          <ResumePreview 
             data={resumeData} 
             template={resumeData.template || "classic"} 
             accentColor={resumeData.accent_color || "#10b981"} 
+            hideScroll={true}
           />
-      </div>
     </div>
   );
 };

@@ -76,6 +76,8 @@ const AestheticTemplate = ({ data, accentColor }) => {
                                             <p className="text-sm text-slate-500">{edu.institution}</p>
                                             <p className="text-xs font-medium mt-1" style={{ color: accentColor }}>
                                                 {formatDate(edu.start_date)} - {formatDate(edu.graduation_date)}
+                                                {edu.gpa && <span> | GPA: {edu.gpa}</span>}
+                                                {edu.percentage && <span> | Percentage: {edu.percentage}</span>}
                                             </p>
                                         </div>
                                     ))}

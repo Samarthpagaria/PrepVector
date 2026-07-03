@@ -146,6 +146,7 @@ const ModernTemplate = ({ data, accentColor }) => {
 										<div className="flex justify-between items-center text-sm text-gray-600">
 											<span>{formatDate(edu.graduation_date)}</span>
 											{edu.gpa && <span>GPA: {edu.gpa}</span>}
+											{edu.percentage && <span>Percentage: {edu.percentage}</span>}
 										</div>
 									</div>
 								))}

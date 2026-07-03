@@ -91,6 +91,8 @@ const MinimalImageTemplate = ({ data, accentColor }) => {
                                         <p className="text-zinc-600">{edu.institution}</p>
                                         <p className="text-xs text-zinc-500">
                                             {formatDate(edu.graduation_date)}
+                                            {edu.gpa && <span> | GPA: {edu.gpa}</span>}
+                                            {edu.percentage && <span> | Percentage: {edu.percentage}</span>}
                                         </p>
                                     </div>
                                 ))}

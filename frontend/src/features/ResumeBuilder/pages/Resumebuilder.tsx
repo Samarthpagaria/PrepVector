@@ -1,4 +1,4 @@
-import { ArrowLeft, Briefcase, ChevronLeft, ChevronRight, DownloadIcon, EyeIcon, EyeOffIcon, FileText, FolderIcon, GraduationCap, Share2Icon, Sparkles, User } from 'lucide-react'
+import { ArrowLeft, Briefcase, ChevronLeft, ChevronRight, DownloadIcon, EyeIcon, EyeOffIcon, FileText, FolderIcon, GraduationCap, Share2Icon, Sparkles, User, Save } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router'
 import PersonalInfoForm from '../components/PersonalInfoForm'
@@ -94,6 +94,14 @@ const Resumebuilder = () => {
     const downloadResume = () => {
         window.print();
     };
+
+    const handleFinish = () => {
+        saveResume({ resumeId: resumeData._id, resumeData }, {
+            onSuccess: () => {
+                openToast('Resume saved successfully! You can now download it.', 'success');
+            }
+        });
+    };
   return (
       <div className="min-h-screen bg-[#09090b] text-zinc-200 font-sans print:bg-white">
           <style type="text/css" media="print">
@@ -115,13 +123,29 @@ const Resumebuilder = () => {
               </Link>
 
               <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-zinc-800/50 rounded-lg border border-zinc-700/50 mr-2">
+                      <span className="text-xs font-medium text-zinc-400">Public Link:</span>
+                      <button 
+                          onClick={changeResumeVisibility} 
+                          className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${resumeData.isPublic ? 'bg-emerald-500' : 'bg-zinc-600'}`}
+                      >
+                          <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${resumeData.isPublic ? 'translate-x-4.5' : 'translate-x-1'}`} />
+                      </button>
+                      <span className={`text-xs font-medium w-6 ${resumeData.isPublic ? 'text-emerald-400' : 'text-zinc-500'}`}>
+                          {resumeData.isPublic ? 'On' : 'Off'}
+                      </span>
+                  </div>
+                  
+                  {resumeData.isPublic && (
+                      <a href={`/view/${resumeId}`} target="_blank" rel="noopener noreferrer" className='flex items-center p-2 px-3 gap-2 text-sm font-medium bg-emerald-500/10 text-emerald-500 rounded-lg border border-emerald-500/20 hover:bg-emerald-500/20 transition-all cursor-pointer'>
+                          <EyeIcon className='w-4 h-4'/>
+                          <span className="max-sm:hidden">View Live</span>
+                      </a>
+                  )}
+
                   <button onClick={handleShare} className='flex items-center p-2 px-3 gap-2 text-sm font-medium bg-blue-500/10 text-blue-500 rounded-lg border border-blue-500/20 hover:bg-blue-500/20 transition-all cursor-pointer'>
                       <Share2Icon className='w-4 h-4'/>
                       <span className="max-sm:hidden">Share</span>
-                  </button>
-                  <button onClick={changeResumeVisibility} className='flex items-center p-2 px-3 gap-2 text-sm font-medium bg-zinc-800/50 text-zinc-300 rounded-lg border border-zinc-700/50 hover:bg-zinc-800 transition-all cursor-pointer'>
-                      {resumeData.isPublic ? <EyeIcon className='w-4 h-4' /> : <EyeOffIcon className='w-4 h-4' />}
-                      <span className="max-sm:hidden">{resumeData.isPublic ? 'Public' : 'Private'}</span>
                   </button>
                   <button onClick={downloadResume} className='flex items-center p-2 px-4 gap-2 text-sm font-medium bg-emerald-500 hover:bg-emerald-600 text-zinc-950 rounded-lg shadow-lg shadow-emerald-500/20 transition-all cursor-pointer'>
                       <DownloadIcon className='w-4 h-4'/>
@@ -167,13 +191,21 @@ const Resumebuilder = () => {
                                   >
                                       <ChevronLeft className='w-4 h-4'/> Prev
                                   </button>
-                                  <button 
-                                    className='flex items-center gap-1 p-2 rounded-lg text-sm font-medium text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100 transition-colors disabled:opacity-30 disabled:cursor-not-allowed' 
-                                    disabled={activeSectionIndex === sections.length - 1} 
-                                    onClick={() => setActiveSectionIndex((prev) => Math.min(prev+1, sections.length-1))}
-                                  >
-                                      Next <ChevronRight className='w-4 h-4'/>
-                                  </button>
+                                  {activeSectionIndex === sections.length - 1 ? (
+                                      <button 
+                                          className='flex items-center gap-1 p-2 rounded-lg text-sm font-medium text-emerald-400 hover:bg-emerald-500/10 hover:text-emerald-300 transition-colors' 
+                                          onClick={handleFinish}
+                                      >
+                                          Finish <Save className='w-4 h-4'/>
+                                      </button>
+                                  ) : (
+                                      <button 
+                                          className='flex items-center gap-1 p-2 rounded-lg text-sm font-medium text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100 transition-colors' 
+                                          onClick={() => setActiveSectionIndex((prev) => Math.min(prev+1, sections.length-1))}
+                                      >
+                                          Next <ChevronRight className='w-4 h-4'/>
+                                      </button>
+                                  )}
                               </div>
                               </div>
                           </div>

@@ -109,6 +109,7 @@ const MinimalTemplate = ({ data, accentColor }) => {
                                     </h3>
                                     <p className="text-gray-600">{edu.institution}</p>
                                     {edu.gpa && <p className="text-sm text-gray-500">GPA: {edu.gpa}</p>}
+                                    {edu.percentage && <p className="text-sm text-gray-500">Percentage: {edu.percentage}</p>}
                                 </div>
                                 <span className="text-sm text-gray-500">
                                     {formatDate(edu.graduation_date)}

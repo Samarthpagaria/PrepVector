@@ -10,9 +10,10 @@ interface ResumePreviewProps {
   template: string;
   accentColor: string;
   classes?: string;
+  hideScroll?: boolean;
 }
 
-const ResumePreview: React.FC<ResumePreviewProps> = ({ data, template, accentColor, classes = "" }) => {
+const ResumePreview: React.FC<ResumePreviewProps> = ({ data, template, accentColor, classes = "", hideScroll = false }) => {
   const renderTemplate = () => {
     switch (template) {
       case "modern":
@@ -31,7 +32,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ data, template, accentCol
   };
 
   return (
-    <div className='w-full bg-gray-100 flex justify-center overflow-y-auto rounded-xl h-full' style={{ scrollbarWidth: 'thin', scrollbarColor: '#a1a1aa transparent' }}>
+    <div className={`w-full bg-gray-100 flex justify-center rounded-xl ${hideScroll ? 'min-h-full py-8' : 'overflow-y-auto h-full'}`} style={{ scrollbarWidth: 'thin', scrollbarColor: '#a1a1aa transparent' }}>
       {/* 
         This wrapper holds the actual resume content. 
         It has standard borders/shadows for the web view, but they are removed during printing.
