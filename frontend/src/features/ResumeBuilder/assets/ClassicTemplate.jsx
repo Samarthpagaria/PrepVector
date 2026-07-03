@@ -17,6 +17,9 @@ const ClassicTemplate = ({ data, accentColor }) => {
                 <h1 className="text-3xl font-bold mb-2" style={{ color: accentColor }}>
                     {data.personal_info?.full_name || "Your Name"}
                 </h1>
+                {data.personal_info?.profession && (
+                    <p className="text-xl font-medium text-gray-700 mb-4">{data.personal_info.profession}</p>
+                )}
 
                 <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-600">
                     {data.personal_info?.email && (
@@ -38,9 +41,11 @@ const ClassicTemplate = ({ data, accentColor }) => {
                         </div>
                     )}
                     {data.personal_info?.customLinks?.map((link, index) => (
-                        <div key={index} className="flex items-center gap-2 justify-end">
+                        <div key={index} className="flex items-center gap-1">
                             <Globe className="size-4" />
-                            <span className="break-all">{link.url.replace(/^https?:\/\/(www\.)?/, '')}</span>
+                            <a href={link.url} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                                {link.name || link.url.replace(/^https?:\/\/(www\.)?/, '')}
+                            </a>
                         </div>
                     ))}
                 </div>

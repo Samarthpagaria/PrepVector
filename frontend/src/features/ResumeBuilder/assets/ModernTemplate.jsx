@@ -14,11 +14,14 @@ const ModernTemplate = ({ data, accentColor }) => {
 		<div className="max-w-4xl mx-auto bg-white text-gray-800">
 			{/* Header */}
 			<header className="p-8 text-white" style={{ backgroundColor: accentColor }}>
-				<h1 className="text-4xl font-light mb-3">
+				<h1 className="text-4xl font-light mb-1">
 					{data.personal_info?.full_name || "Your Name"}
 				</h1>
+				{data.personal_info?.profession && (
+					<p className="text-xl opacity-90 mb-6 font-medium">{data.personal_info.profession}</p>
+				)}
 
-				<div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm ">
+				<div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm mt-4">
 					{data.personal_info?.email && (
 						<div className="flex items-center gap-2">
 							<Mail className="size-4" />
@@ -38,10 +41,10 @@ const ModernTemplate = ({ data, accentColor }) => {
 						</div>
 					)}
 					{data.personal_info?.customLinks?.map((link, index) => (
-						<a key={index} target="_blank" href={link.url} className="flex items-center gap-2">
+						<a key={index} target="_blank" rel="noopener noreferrer" href={link.url} className="flex items-center gap-2 hover:underline">
 							<Globe className="size-4" />
 							<span className="break-all text-xs">
-								{link.url.replace(/^https?:\/\/(www\.)?/, '')}
+								{link.name || link.url.replace(/^https?:\/\/(www\.)?/, '')}
 							</span>
 						</a>
 					))}

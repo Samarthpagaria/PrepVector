@@ -33,14 +33,18 @@ export const updateResume = async (resumeId: string, resumeData: any, removeBack
             formData.append("image", resumeData.personal_info.image);
         }
 
+        console.log("[FRONTEND API] updateResume payload:", updatedResumeData);
+        
         const response = await api.put("/api/v1/resumes/update", formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
         });
         
+        console.log("[FRONTEND API] updateResume success response:", response.data);
         return response.data;
     } catch (error) {
+        console.error("[FRONTEND API] updateResume error:", error);
         throw error;
     }
 };

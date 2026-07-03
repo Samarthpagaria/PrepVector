@@ -40,26 +40,33 @@ export const useResumeStore = create<ResumeStore>((set) => ({
   resumeData: defaultResumeData,
   
   // Replace the entire resume object (or multiple fields)
-  setResumeData: (data) => set((state) => ({ 
-    resumeData: { ...state.resumeData, ...data } 
-  })),
+  setResumeData: (data) => set((state) => {
+    console.log("[ZUSTAND STORE] setResumeData payload:", data);
+    return { resumeData: { ...state.resumeData, ...data } };
+  }),
   
   // Update a top-level field (e.g., 'professional_summary', 'experience')
-  updateResumeData: (field, value) => set((state) => ({
-    resumeData: {
-      ...state.resumeData,
-      [field]: value
-    }
-  })),
-  
-  // Specifically update nested personal_info fields
-  updatePersonalInfo: (field, value) => set((state) => ({
-    resumeData: {
-      ...state.resumeData,
-      personal_info: {
-        ...state.resumeData.personal_info,
+  updateResumeData: (field, value) => set((state) => {
+    console.log(`[ZUSTAND STORE] updateResumeData | field: ${field}, value:`, value);
+    return {
+      resumeData: {
+        ...state.resumeData,
         [field]: value
       }
-    }
-  }))
+    };
+  }),
+  
+  // Specifically update nested personal_info fields
+  updatePersonalInfo: (field, value) => set((state) => {
+    console.log(`[ZUSTAND STORE] updatePersonalInfo | field: ${field}, value:`, value);
+    return {
+      resumeData: {
+        ...state.resumeData,
+        personal_info: {
+          ...state.resumeData.personal_info,
+          [field]: value
+        }
+      }
+    };
+  })
 }));

@@ -12,17 +12,28 @@ const MinimalTemplate = ({ data, accentColor }) => {
     return (
         <div className="max-w-4xl mx-auto p-8 bg-white text-gray-900 font-light">
             {/* Header */}
-            <header className="mb-10">
-                <h1 className="text-4xl font-thin mb-4 tracking-wide">
+            <header className="mb-10 flex flex-col items-center">
+                <h1 className="text-4xl font-bold tracking-tight mb-2 text-gray-900" style={{ color: accentColor }}>
                     {data.personal_info?.full_name || "Your Name"}
                 </h1>
+                {data.personal_info?.profession && (
+                    <p className="text-lg font-medium text-gray-600 mb-4">{data.personal_info.profession}</p>
+                )}
 
-                <div className="flex flex-wrap gap-6 text-sm text-gray-600">
-                    {data.personal_info?.email && <span>{data.personal_info.email}</span>}
-                    {data.personal_info?.phone && <span>{data.personal_info.phone}</span>}
-                    {data.personal_info?.location && <span>{data.personal_info.location}</span>}
+                <div className="flex flex-wrap gap-4 text-sm text-gray-500 justify-center">
+                    {data.personal_info?.email && (
+                        <span>{data.personal_info.email}</span>
+                    )}
+                    {data.personal_info?.phone && (
+                        <span>{data.personal_info.phone}</span>
+                    )}
+                    {data.personal_info?.location && (
+                        <span>{data.personal_info.location}</span>
+                    )}
                     {data.personal_info?.customLinks?.map((link, index) => (
-                        <span key={index} className="break-all">{link.url.replace(/^https?:\/\/(www\.)?/, '')}</span>
+                        <a key={index} target="_blank" rel="noopener noreferrer" href={link.url} className="hover:underline" style={{ color: accentColor }}>
+                            {link.name || link.url.replace(/^https?:\/\/(www\.)?/, '')}
+                        </a>
                     ))}
                 </div>
             </header>

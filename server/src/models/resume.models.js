@@ -17,44 +17,29 @@ const ResumeScehma = new mongoose.Schema(
     skills: {
       type: [{ type: String }],
     },
-    professional_info: {
-      image: {
-        type: String,
-        default: "",
+    personal_info: {
+      image: { type: String, default: "" },
+      full_name: { type: String, default: "" },
+      profession: { type: String, default: "" },
+      phone: { type: String, default: "" },
+      location: { type: String, default: "" },
+      email: { type: String, default: "" },
+      customLinks: {
+        type: [
+          {
+            name: { type: String },
+            url: { type: String },
+          }
+        ],
+        default: []
       },
-      full_name: {
-        type: String,
-        default: "",
-      },
-      profession: {
-        type: String,
-        default: "",
-      },
-      phone: {
-        type: String,
-        default: "",
-      },
-      location: {
-        type: String,
-        default: "",
-      },
-      linkedin: {
-        type: String,
-        default: "",
-      },
-      email: {
-        type: String,
-        default: "",
-      },
-      portfolio: {
-        type: String,
-        default: "",
-      },
-      github: {
-        type: String,
-        default: "",
-      },
+      // Keep old fields for backward compatibility
+      linkedin: { type: String, default: "" },
+      portfolio: { type: String, default: "" },
+      github: { type: String, default: "" },
     },
+    // Keep professional_info for backward compatibility with older AI responses
+    professional_info: { type: mongoose.Schema.Types.Mixed },
     experience: {
       type: [
         {

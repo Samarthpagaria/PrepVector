@@ -39,9 +39,9 @@ const AestheticTemplate = ({ data, accentColor }) => {
                         <Star className="absolute bottom-4 -right-4 w-4 h-4 text-slate-900" />
                         
                         {(data.personal_info?.image && typeof data.personal_info.image === 'string') ? (
-                            <img src={data.personal_info.image} alt="Profile" className="w-48 h-48 rounded-full object-cover shadow-2xl relative z-10 border-4 border-white" />
+                            <img src={data.personal_info.image} alt="Profile" className="w-48 h-48 rounded-full object-cover shadow-2xl relative z-10 border-4 border-white" style={{ backgroundColor: accentColor }} />
                         ) : (data.personal_info?.image && typeof data.personal_info.image === 'object') ? (
-                            <img src={URL.createObjectURL(data.personal_info.image)} alt="Profile" className="w-48 h-48 rounded-full object-cover shadow-2xl relative z-10 border-4 border-white" />
+                            <img src={URL.createObjectURL(data.personal_info.image)} alt="Profile" className="w-48 h-48 rounded-full object-cover shadow-2xl relative z-10 border-4 border-white" style={{ backgroundColor: accentColor }} />
                         ) : (
                             <div className="w-48 h-48 rounded-full bg-slate-200 shadow-2xl relative z-10 border-4 border-white flex items-center justify-center text-slate-400">
                                 Photo

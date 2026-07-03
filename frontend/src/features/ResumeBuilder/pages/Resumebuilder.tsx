@@ -49,6 +49,7 @@ const Resumebuilder = () => {
                 fetchedData.personal_info = fetchedData.professional_info;
             }
             
+            console.log("[COMPONENT: ResumeBuilder] Fetched backend resume mapped to Zustand:", fetchedData);
             setResumeData(fetchedData);
             document.title = fetchedData.title || "Resume Builder";
         }

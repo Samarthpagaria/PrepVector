@@ -18,12 +18,12 @@ const MinimalImageTemplate = ({ data, accentColor }) => {
                     {/* Image */}
                     {data.personal_info?.image && typeof data.personal_info.image === 'string' ? (
                         <div className="mb-6">
-                            <img src={data.personal_info.image} alt="Profile" className="w-32 h-32 object-cover rounded-full mx-auto" style={{ background: accentColor+'70' }} />
+                            <img src={data.personal_info.image} alt="Profile" className="w-32 h-32 object-cover rounded-full mx-auto" style={{ backgroundColor: accentColor }} />
                         </div>
                     ) : (
                         data.personal_info?.image && typeof data.personal_info.image === 'object' ? (
                             <div className="mb-6">
-                                <img src={URL.createObjectURL(data.personal_info.image)} alt="Profile" className="w-32 h-32 object-cover rounded-full mx-auto" />
+                                <img src={URL.createObjectURL(data.personal_info.image)} alt="Profile" className="w-32 h-32 object-cover rounded-full mx-auto" style={{ backgroundColor: accentColor }} />
                             </div>
                         ) : null
                     )}
@@ -69,9 +69,10 @@ const MinimalImageTemplate = ({ data, accentColor }) => {
                             )}
                             {data.personal_info?.customLinks?.map((link, index) => (
                                 <div key={index} className="flex items-center gap-2">
-                                    {/* Generic icon since we don't know the exact platform, or could use lucide Link/Globe */}
                                     <Globe size={14} style={{ color: accentColor }} />
-                                    <a href={link.url} target="_blank" className="break-all">{link.url.replace(/^https?:\/\/(www\.)?/, '')}</a>
+                                    <a href={link.url} target="_blank" rel="noopener noreferrer" className="break-all hover:underline">
+                                        {link.name || link.url.replace(/^https?:\/\/(www\.)?/, '')}
+                                    </a>
                                 </div>
                             ))}
                         </div>

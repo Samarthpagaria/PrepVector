@@ -162,7 +162,12 @@ const Navbar = () => {
               )}
             </div>
           ) : (
-            <div className="h-8 w-8 rounded-full bg-zinc-900 border border-zinc-700 flex items-center justify-center text-sm font-medium text-zinc-300" />
+            <Link 
+              to="/sign-in"
+              className="px-5 py-2 text-sm font-semibold text-zinc-900 bg-white hover:bg-zinc-200 rounded-full transition-colors shadow-sm"
+            >
+              Sign In
+            </Link>
           )}
         </div>
       </div>

@@ -18,6 +18,7 @@ const createResume = asyncHandler(async (req, res) => {
     userId,
     title,
   });
+  console.log("[BACKEND] createResume | New resume created:", newResume._id, "Title:", title);
   return res.status(201).json({
     message: "Resume created successfully",
     resume: newResume,
@@ -80,6 +81,7 @@ const getResumeById = asyncHandler(async (req, res) => {
       message: "Resume not found",
     });
   }
+  console.log(`[BACKEND] getResumeById | Fetched resume ${resumeId} for user ${userId}`);
   return res.status(200).json({
     message: "Resume fetched successfully",
     resume,
@@ -128,6 +130,7 @@ const updateResume = asyncHandler(async (req, res) => {
       message: "Please provide resume id , data and title.",
     });
   }
+  console.log(`[BACKEND] updateResume | Request to update resume ${resumeId}. Image included: ${!!image}`);
   let resumeDataCopy;
   if (typeof resumeData === 'string') {
     resumeDataCopy = await JSON.parse(resumeData);
@@ -135,9 +138,15 @@ const updateResume = asyncHandler(async (req, res) => {
     resumeDataCopy = structuredClone(resumeData);
   }
   if (image) {
+    console.log(`[BACKEND] updateResume | req.file:`, JSON.stringify({
+      originalname: image.originalname,
+      mimetype: image.mimetype,
+      size: image.size,
+      hasBuffer: !!image.buffer
+    }));
     const response = await imagekit.files.upload({
-      file: image.buffer,
-      fileName: image.originalname,
+      file: image.buffer ? image.buffer.toString('base64') : image,
+      fileName: image.originalname || 'image.png',
       folder:"user-resume",
       transformation: {
         pre:
@@ -145,7 +154,17 @@ const updateResume = asyncHandler(async (req, res) => {
           (removebackground ? ",e-bgremove" : ""),
       },
     });
-    resumeDataCopy.professional_info.image = response.url;
+    if (!resumeDataCopy.personal_info) resumeDataCopy.personal_info = {};
+    resumeDataCopy.personal_info.image = response.url;
+  } else if (resumeDataCopy.personal_info?.image) {
+    // If no new image was uploaded, but the toggle was changed, update the URL query params
+    let imgUrl = resumeDataCopy.personal_info.image;
+    if (removebackground === "yes" && !imgUrl.includes("e-bgremove")) {
+      imgUrl = imgUrl.includes("?") ? imgUrl + ",e-bgremove" : imgUrl + "?tr=e-bgremove";
+    } else if (removebackground !== "yes" && imgUrl.includes("e-bgremove")) {
+      imgUrl = imgUrl.replace(",e-bgremove", "").replace("?tr=e-bgremove", "");
+    }
+    resumeDataCopy.personal_info.image = imgUrl;
   }
   const resume = await Resume.findOneAndUpdate(
     { userId, _id: resumeId },
@@ -159,11 +178,13 @@ const updateResume = asyncHandler(async (req, res) => {
       message: "Resume not found",
     });
   }
+  console.log(`[BACKEND] updateResume | Successfully updated resume ${resumeId}`);
   return res.status(200).json({
     message: "Resume updated successfully",
     resume,
   });
 });
+
 /**
  * @name getAllResumes
  * @description controller to get all resumes for a specific user
