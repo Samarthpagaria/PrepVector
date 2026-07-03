@@ -212,7 +212,7 @@ export const generateQuestion = asyncHandler(async (req, res) => {
     data: {
       interviewId: interview._id,
       creditsLeft: user.credits,
-      userName: user.name,
+      userName: user.username,
       questions: interview.question,
     },
   });

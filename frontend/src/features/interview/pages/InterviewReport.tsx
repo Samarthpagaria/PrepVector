@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router';
 import { useGetInterviewReport } from '../hooks/useInterview';
 import { ChevronLeft, BrainCircuit, Activity, MessageSquare, Target, CheckCircle, Download, Loader2 } from 'lucide-react';
 import Loader from '../../../components/shared/Loader';

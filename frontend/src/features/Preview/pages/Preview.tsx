@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router';
 import Loader from '../../../components/shared/Loader';
 import ResumePreview from '@/features/ResumeBuilder/components/ResumePreview';
 import { dummyResumeData } from '@/features/ResumeBuilder/pages/Resumebuilder';
