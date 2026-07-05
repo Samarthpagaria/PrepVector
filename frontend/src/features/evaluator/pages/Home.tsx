@@ -7,8 +7,9 @@ import { AuthModal } from '../components/AuthModal';
 import { Star, User, Loader2, FileText, CheckCircle2, ChevronRight } from 'lucide-react';
 import { useGenerateReport, useGetAllReports } from '../hooks/useEvaluator';
 import { useAuthStore } from '../../../store/useAuth.store';
-import { useNavigate } from 'react-router';
+import { useNavigate, Link } from 'react-router';
 import Loader from '../../../components/shared/Loader';
+import Navbar from '../../../components/shared/Navbar';
 
 const idleMessages = [
   "AI analyzes your resume against the job description.",
@@ -137,14 +138,22 @@ const Home = () => {
   };
 
   return (
-    <main className="min-h-screen bg-[#09090b] text-zinc-200 p-4 md:p-8 font-sans flex flex-col items-center justify-center relative">
+    <>
+      {user && <Navbar />}
+      <main className="min-h-screen bg-[#09090b] text-zinc-200 p-4 md:p-8 font-sans flex flex-col items-center justify-center relative">
       
       {/* Header */}
       <div className="text-center mb-10 w-full max-w-5xl pt-10 relative">
-        {user && (
+        {user ? (
           <div className="absolute top-0 right-0 flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-emerald-400 text-xs font-semibold shadow-[0_0_15px_rgba(16,185,129,0.1)]">
             <Star className="w-3.5 h-3.5 fill-emerald-400" />
             {20 - (user.reportGenerationCount || 0)} Reports Left
+          </div>
+        ) : (
+          <div className="absolute top-0 right-0">
+             <Link to="/sign-in" className="px-5 py-2 text-sm font-semibold text-zinc-900 bg-white hover:bg-zinc-200 rounded-full transition-colors shadow-sm">
+                Sign In
+             </Link>
           </div>
         )}
         <h1 className="text-3xl md:text-[32px] font-semibold mb-3 tracking-tight text-zinc-100">
@@ -310,6 +319,7 @@ const Home = () => {
       )}
 
     </main>
+    </>
   );
 };
 
