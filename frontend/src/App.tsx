@@ -17,7 +17,7 @@ function App() {
     }
   }, [data, isLoading,setUser]);
 
-  if (isLoading) return <Loader fullScreen text="Loading app..." />;
+  if (isLoading) return <Loader fullScreen text="Waking up the backend server... This might take up to 50 seconds on initial load." />;
   
   return (
     <>

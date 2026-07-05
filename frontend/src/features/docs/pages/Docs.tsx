@@ -410,9 +410,10 @@ export default function Docs() {
                     <div className="w-2 h-2 rounded-full bg-emerald-500"></div> Backend
                   </h3>
                   <ul className="space-y-3 text-sm text-zinc-300">
-                    <li><strong className="text-zinc-500 block text-[11px] uppercase tracking-wider mb-1">Runtime & Start</strong> <code className="text-xs bg-zinc-900 border border-zinc-800 px-2 py-1 rounded block w-max">node src/server.js</code></li>
-                    <li><strong className="text-zinc-500 block text-[11px] uppercase tracking-wider mb-1 mt-3">Port</strong> <code className="text-xs text-zinc-300">8000</code></li>
-                    <li><strong className="text-zinc-500 block text-[11px] uppercase tracking-wider mb-1 mt-3">Requirements</strong> <span className="text-xs">Live MongoDB, OpenRouter API key, <code className="bg-zinc-800 px-1 py-0.5 rounded text-zinc-400">.env</code></span></li>
+                    <li><strong className="text-zinc-500 block text-[11px] uppercase tracking-wider mb-1">Live URL</strong> <code className="text-[11px] text-emerald-400 font-semibold break-all bg-emerald-950/20 px-1.5 py-0.5 rounded">https://prepvector.onrender.com</code></li>
+                    <li><strong className="text-zinc-500 block text-[11px] uppercase tracking-wider mb-1 mt-3">Health Check</strong> <code className="text-[11px] bg-zinc-900 border border-zinc-800 px-2 py-1 rounded block w-max text-zinc-300">GET /health</code></li>
+                    <li><strong className="text-zinc-500 block text-[11px] uppercase tracking-wider mb-1 mt-3">Cold Start (Render)</strong> <span className="text-xs leading-relaxed inline-block text-zinc-400">Server spins down when idle. Initial wake-up takes ~50s. Handled by global loaders in frontend.</span></li>
+                    <li><strong className="text-zinc-500 block text-[11px] uppercase tracking-wider mb-1 mt-3">Requirements</strong> <span className="text-xs">Live MongoDB, OpenRouter API key, <code className="bg-zinc-800 px-1 py-0.5 rounded text-zinc-400">FRONTEND_URL</code> config</span></li>
                   </ul>
                 </div>
 
