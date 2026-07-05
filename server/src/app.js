@@ -2,6 +2,7 @@ import express, { urlencoded } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import errorHandler from "./middlewares/error.middleware.js";
+import mongoose from "mongoose";
 
 const app = express();
 app.use(
@@ -28,6 +29,27 @@ app.use("/api/v1/resumes", resumeRouter);
 app.use("/api/v1/ai", aiRouter);
 
 
+
+// Health route for cron jobs
+app.get("/health", (req, res) => {
+  const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
+  
+  if (dbStatus === 'connected') {
+    return res.status(200).json({
+      status: "success",
+      message: "Backend is running and healthy",
+      db: dbStatus,
+      timestamp: new Date().toISOString()
+    });
+  } else {
+    return res.status(503).json({
+      status: "error",
+      message: "Backend is running but database is not connected",
+      db: dbStatus,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
 
 // Error handling middleware
 app.use(errorHandler);
