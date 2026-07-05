@@ -138,9 +138,9 @@ const Home = () => {
   };
 
   return (
-    <>
+    <div className="min-h-screen bg-[#09090b] text-zinc-200 font-sans flex flex-col relative">
       {user && <Navbar />}
-      <main className="min-h-screen bg-[#09090b] text-zinc-200 p-4 md:p-8 font-sans flex flex-col items-center justify-center relative">
+      <main className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 w-full">
       
       {/* Header */}
       <div className="text-center mb-10 w-full max-w-5xl pt-10 relative">
@@ -318,8 +318,8 @@ const Home = () => {
         <Loader fullScreen text={loadingMessages[loadingStep]} />
       )}
 
-    </main>
-    </>
+      </main>
+    </div>
   );
 };
 
