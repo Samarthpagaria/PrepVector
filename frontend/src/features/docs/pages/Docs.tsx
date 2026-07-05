@@ -381,7 +381,6 @@ export default function Docs() {
                   <ul className="list-disc pl-5 space-y-3 marker:text-red-500/50 text-red-300/80 text-sm">
                     <li><strong>No network-level rate limiting</strong> (e.g. <code className="bg-red-950/50 px-1 py-0.5 rounded text-red-400/90 text-xs">express-rate-limit</code>) — credit quotas exist at the application layer, but the server itself has no brute-force/DoS protection.</li>
                     <li><strong>No request-body validation middleware</strong> — Zod is used only to structure AI output, not to validate incoming API requests.</li>
-                    <li><strong>No helmet</strong> — standard security headers are not set.</li>
                   </ul>
                 </div>
               </div>
@@ -427,6 +426,39 @@ export default function Docs() {
                     <li><strong className="text-zinc-500 block text-[11px] uppercase tracking-wider mb-1 mt-3">Cost Control</strong> <span className="text-xs leading-relaxed inline-block">Application-level credit deduction (50 credits/query), relies on OpenRouter's free tier/billing.</span></li>
                   </ul>
                 </div>
+              </div>
+            </section>
+
+            {/* Section 9 */}
+            <section id="techstack" className="space-y-6 pb-20 scroll-mt-24">
+              <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+                <span className="text-emerald-500">9.</span> Tech Stack & Packages
+              </h2>
+              <p className="text-sm text-zinc-400 bg-zinc-900/50 p-4 rounded-lg border border-zinc-800/50">
+                Core technologies and libraries powering the PrepVector ecosystem.
+              </p>
+              
+              <div className="flex flex-wrap gap-2 mt-6">
+                <span className="px-3 py-1.5 bg-zinc-900/80 border border-emerald-500/30 rounded-md text-xs font-semibold text-emerald-400 shadow-sm">React 19</span>
+                <span className="px-3 py-1.5 bg-zinc-900/80 border border-emerald-500/30 rounded-md text-xs font-semibold text-emerald-400 shadow-sm">Vite</span>
+                <span className="px-3 py-1.5 bg-zinc-900/80 border border-emerald-500/30 rounded-md text-xs font-semibold text-emerald-400 shadow-sm">TypeScript</span>
+                <span className="px-3 py-1.5 bg-zinc-900/80 border border-emerald-500/30 rounded-md text-xs font-semibold text-emerald-400 shadow-sm">Tailwind CSS 4</span>
+                <span className="px-3 py-1.5 bg-zinc-900/80 border border-emerald-500/30 rounded-md text-xs font-semibold text-emerald-400 shadow-sm">Zustand</span>
+                <span className="px-3 py-1.5 bg-zinc-900/80 border border-emerald-500/30 rounded-md text-xs font-semibold text-emerald-400 shadow-sm">Express 5</span>
+                <span className="px-3 py-1.5 bg-zinc-900/80 border border-emerald-500/30 rounded-md text-xs font-semibold text-emerald-400 shadow-sm">MongoDB</span>
+                <span className="px-3 py-1.5 bg-zinc-900/80 border border-emerald-500/30 rounded-md text-xs font-semibold text-emerald-400 shadow-sm">Mongoose</span>
+                <span className="px-3 py-1.5 bg-zinc-900/80 border border-zinc-800 rounded-md text-xs font-medium text-zinc-300 hover:border-zinc-600 transition-colors">Helmet</span>
+                <span className="px-3 py-1.5 bg-zinc-900/80 border border-zinc-800 rounded-md text-xs font-medium text-zinc-300 hover:border-zinc-600 transition-colors">Shadcn UI</span>
+                <span className="px-3 py-1.5 bg-zinc-900/80 border border-zinc-800 rounded-md text-xs font-medium text-zinc-300 hover:border-zinc-600 transition-colors">Lucide React</span>
+                <span className="px-3 py-1.5 bg-zinc-900/80 border border-zinc-800 rounded-md text-xs font-medium text-zinc-300 hover:border-zinc-600 transition-colors">React Router 8</span>
+                <span className="px-3 py-1.5 bg-zinc-900/80 border border-zinc-800 rounded-md text-xs font-medium text-zinc-300 hover:border-zinc-600 transition-colors">Axios</span>
+                <span className="px-3 py-1.5 bg-zinc-900/80 border border-zinc-800 rounded-md text-xs font-medium text-zinc-300 hover:border-zinc-600 transition-colors">Zod</span>
+                <span className="px-3 py-1.5 bg-zinc-900/80 border border-zinc-800 rounded-md text-xs font-medium text-zinc-300 hover:border-zinc-600 transition-colors">LangChain</span>
+                <span className="px-3 py-1.5 bg-zinc-900/80 border border-zinc-800 rounded-md text-xs font-medium text-zinc-300 hover:border-zinc-600 transition-colors">pdf-parse</span>
+                <span className="px-3 py-1.5 bg-zinc-900/80 border border-zinc-800 rounded-md text-xs font-medium text-zinc-300 hover:border-zinc-600 transition-colors">jsPDF</span>
+                <span className="px-3 py-1.5 bg-zinc-900/80 border border-zinc-800 rounded-md text-xs font-medium text-zinc-300 hover:border-zinc-600 transition-colors">html2canvas</span>
+                <span className="px-3 py-1.5 bg-zinc-900/80 border border-zinc-800 rounded-md text-xs font-medium text-zinc-300 hover:border-zinc-600 transition-colors">JSONWebToken</span>
+                <span className="px-3 py-1.5 bg-zinc-900/80 border border-zinc-800 rounded-md text-xs font-medium text-zinc-300 hover:border-zinc-600 transition-colors">Bcrypt</span>
               </div>
             </section>
 

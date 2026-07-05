@@ -1,10 +1,12 @@
 import express, { urlencoded } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import helmet from "helmet";
 import errorHandler from "./middlewares/error.middleware.js";
 import mongoose from "mongoose";
 
 const app = express();
+app.use(helmet());
 app.use(
   cors({
     origin: [
