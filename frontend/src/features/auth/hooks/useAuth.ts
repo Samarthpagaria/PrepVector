@@ -13,6 +13,9 @@ export const useRegister = () => {
             openToast("Registration successful! Welcome aboard.");
             
             if (data && data.user) {
+                if (data.token) {
+                    localStorage.setItem('token', data.token);
+                }
                 setUser(data.user);
             }
         },
@@ -32,6 +35,9 @@ export const useLogin = () => {
             openToast("Logged in successfully!");
             
             if (data && data.user) {
+                if (data.token) {
+                    localStorage.setItem('token', data.token);
+                }
                 setUser(data.user);
             }
         },
@@ -49,6 +55,7 @@ export const useLogout = () => {
         mutationFn: logoutUser,
         onSuccess: () => {
             openToast("Logged out successfully");
+            localStorage.removeItem('token');
             logout();
         },
         onError: (error: any) => {

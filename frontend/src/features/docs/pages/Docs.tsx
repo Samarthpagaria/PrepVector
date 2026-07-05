@@ -398,9 +398,9 @@ export default function Docs() {
                     <div className="w-2 h-2 rounded-full bg-emerald-500"></div> Frontend
                   </h3>
                   <ul className="space-y-3 text-sm text-zinc-300">
-                    <li><strong className="text-zinc-500 block text-[11px] uppercase tracking-wider mb-1">Build Command</strong> <code className="text-xs bg-zinc-900 border border-zinc-800 px-2 py-1 rounded block w-max">tsc -b && vite build</code></li>
-                    <li><strong className="text-zinc-500 block text-[11px] uppercase tracking-wider mb-1 mt-3">Output Dir</strong> <code className="text-xs text-zinc-300">dist/</code></li>
-                    <li><strong className="text-zinc-500 block text-[11px] uppercase tracking-wider mb-1 mt-3">Env Config</strong> <span className="text-xs">Standard Vite environment variables for API connectivity</span></li>
+                    <li><strong className="text-zinc-500 block text-[11px] uppercase tracking-wider mb-1">Live URL</strong> <code className="text-[11px] text-emerald-400 font-semibold break-all bg-emerald-950/20 px-1.5 py-0.5 rounded">https://prepvector.vercel.app</code></li>
+                    <li><strong className="text-zinc-500 block text-[11px] uppercase tracking-wider mb-1 mt-3">Build Script</strong> <code className="text-[10px] bg-zinc-900 border border-zinc-800 px-2 py-1 rounded block w-max">vite build</code> <span className="text-[10px] text-zinc-500 block mt-1 leading-tight">TypeScript strict checks bypassed for Vercel deployment.</span></li>
+                    <li><strong className="text-zinc-500 block text-[11px] uppercase tracking-wider mb-1 mt-3">Auth Architecture</strong> <span className="text-[11px] leading-relaxed inline-block text-zinc-400">Uses a <strong>Hybrid Token Architecture</strong> to overcome cross-domain cookie blocking (ITP) between Vercel and Render. JWT is securely stored in localStorage and attached automatically via Axios interceptors.</span></li>
                   </ul>
                 </div>
                 
