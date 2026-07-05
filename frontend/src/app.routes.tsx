@@ -3,6 +3,7 @@ import SignIn from "./features/auth/pages/SignIn";
 import SignUp from "./features/auth/pages/SignUp";
 import Home from "./features/evaluator/pages/Home";
 import ReportDetails from "./features/evaluator/pages/ReportDetails";
+import Docs from "./features/docs/pages/Docs";
 
 import Layout from "./layouts/Layout";
 import Dashboard from "./features/dashboard/pages/Dashboard";
@@ -18,6 +19,10 @@ export const router = createBrowserRouter([
     {
         path: "/",
         element: <Home />,
+    },
+    {
+        path: "/docs",
+        element: <Docs />,
     },
     {
         path: "/sign-in",

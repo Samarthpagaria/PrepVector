@@ -59,6 +59,11 @@ const Navbar = () => {
               PrepVector
             </span>
           </Link>
+          <div className="hidden md:flex items-center">
+            <Link to="/docs" className="text-sm font-medium text-zinc-300 hover:text-emerald-400 transition-colors">
+              Docs
+            </Link>
+          </div>
           {user && (
             <div className="hidden md:flex items-center gap-6">
               <Link to="/app/interview" className="text-sm font-medium text-zinc-300 hover:text-emerald-400 transition-colors">
