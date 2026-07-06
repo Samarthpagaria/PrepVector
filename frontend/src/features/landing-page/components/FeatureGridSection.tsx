@@ -48,6 +48,7 @@ const features = [
         colSpan: "md:col-span-1"
     }
 ];
+
 const getBorderClasses = (idx: number) => {
     switch(idx) {
         case 0: return "border-b md:border-r border-dashed border-zinc-800";

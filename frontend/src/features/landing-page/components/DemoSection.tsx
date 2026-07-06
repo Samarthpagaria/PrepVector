@@ -326,16 +326,11 @@ const DemoSection = () => {
                             </div>
 
                             {/* Right Pane (Live Preview) */}
-                            <div className="w-full md:w-[55%] h-[300px] md:h-auto p-4 md:p-6 bg-[#0a0a0a] border-t md:border-t-0 md:border-l border-gray-800 overflow-y-auto pointer-events-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                            <div className="w-full md:w-[55%] h-[300px] md:h-auto p-4 md:p-6 bg-[#0a0a0a] border-t md:border-t-0 md:border-l border-gray-800 overflow-y-auto pointer-events-none">
                                 <div className="bg-[#111111] p-4 md:p-6 rounded-lg shadow-sm border border-gray-800 min-h-full">
-                                    <h3 className={`text-xl font-bold text-white font-mono ${role ? 'mb-1' : 'mb-4 border-b border-gray-800 pb-2'}`}>
+                                    <h3 className="text-xl font-bold text-white mb-4 font-mono border-b border-gray-800 pb-2">
                                         {name || "Your Name"}
                                     </h3>
-                                    {role && (
-                                        <div className="text-sm font-semibold text-[#4ADE80] font-mono mb-4 border-b border-gray-800 pb-2">
-                                            {role}
-                                        </div>
-                                    )}
                                     
                                     <div className="mb-6">
                                         <h4 className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Skills</h4>
@@ -350,13 +345,6 @@ const DemoSection = () => {
                                                 <span className="text-gray-600 text-sm italic font-mono">Skills appear here</span>
                                             )}
                                         </div>
-                                    </div>
-
-                                    <div className="mb-6">
-                                        <h4 className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Education</h4>
-                                        <p className="text-sm text-gray-300 font-mono leading-relaxed whitespace-pre-wrap">
-                                            {education || <span className="text-gray-600 italic">Education text goes here...</span>}
-                                        </p>
                                     </div>
 
                                     <div>
@@ -389,15 +377,15 @@ const DemoSection = () => {
                     <motion.div
                         animate={{ y: [0, -8, 0] }}
                         transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut", delay: 0 }}
-                        className="absolute top-[40px] right-[-15px] lg:right-[-35px] rotate-6 bg-[#111111] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] rounded-full px-3 py-1.5 border border-gray-800 text-xs font-medium text-white font-mono z-20 hidden md:flex items-center"
+                        className="absolute top-[40px] right-[-45px] rotate-6 bg-[#111111] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] rounded-full px-3 py-1.5 border border-gray-800 text-xs font-medium text-white font-mono z-20 hidden md:flex items-center"
                     >
-                        <span className="text-[#2ECC71] mr-1 text-sm leading-none">✓</span> 7+ templates
+                        <span className="text-[#2ECC71] mr-1 text-sm leading-none">✓</span> Real-time Sync
                     </motion.div>
                     
                     <motion.div
                         animate={{ y: [0, -8, 0] }}
                         transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                        className="absolute bottom-[20px] left-[-15px] lg:left-[-35px] -rotate-3 bg-[#111111] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] rounded-full px-3 py-1.5 border border-gray-800 text-xs font-medium text-white font-mono z-20 hidden md:flex items-center"
+                        className="absolute bottom-[-20px] left-[-40px] -rotate-3 bg-[#111111] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] rounded-full px-3 py-1.5 border border-gray-800 text-xs font-medium text-white font-mono z-20 hidden md:flex items-center"
                     >
                         <span className="text-[#2ECC71] mr-1 text-sm leading-none">✓</span> Auto-Format
                     </motion.div>
@@ -405,7 +393,7 @@ const DemoSection = () => {
                     <motion.div
                         animate={{ y: [0, -8, 0] }}
                         transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                        className="absolute bottom-[-10px] right-[10px] lg:right-[-15px] rotate-[4deg] bg-[#111111] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] rounded-full px-3 py-1.5 border border-gray-800 text-xs font-medium text-white font-mono z-20 hidden md:flex items-center"
+                        className="absolute bottom-[-10px] right-[-20px] rotate-[4deg] bg-[#111111] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] rounded-full px-3 py-1.5 border border-gray-800 text-xs font-medium text-white font-mono z-20 hidden md:flex items-center"
                     >
                         <span className="text-[#2ECC71] mr-1 text-sm leading-none">✓</span> ATS Optimized
                     </motion.div>
