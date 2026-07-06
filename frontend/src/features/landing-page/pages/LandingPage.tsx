@@ -2,6 +2,9 @@ import Navbar from "../components/Navbar";
 import HeroSection from "../components/HeroSection";
 import SlantedDivider from "../components/SlantedDivider";
 import DemoSection from "../components/DemoSection";
+import MockInterviewSection from "../components/MockInterviewSection";
+import FeatureGridSection from "../components/FeatureGridSection";
+import WhyPrepVectorSection from "../components/WhyPrepVectorSection";
 
 const LandingPage = () => {
     return (
@@ -16,6 +19,9 @@ const LandingPage = () => {
                 <HeroSection />
                 <SlantedDivider />
                 <DemoSection />
+                <MockInterviewSection />
+                <FeatureGridSection />
+                <WhyPrepVectorSection />
             </div>
 
             {/* Right Section */}

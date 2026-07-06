@@ -10,18 +10,21 @@ const steps = [
 const DemoSection = () => {
     // Form State
     const [name, setName] = useState('');
+    const [role, setRole] = useState('');
     const [skills, setSkills] = useState('');
+    const [education, setEducation] = useState('');
     const [experience, setExperience] = useState('');
     
     // Animation State
     const [isPlaying, setIsPlaying] = useState(true);
-    const [showToast, setShowToast] = useState(false);
     const [isPulsing, setIsPulsing] = useState(false);
-    const [activeField, setActiveField] = useState<'name' | 'skills' | 'experience' | null>(null);
+    const [activeField, setActiveField] = useState<'name' | 'role' | 'skills' | 'education' | 'experience' | null>(null);
 
     // Refs for native focus
     const nameRef = useRef<HTMLInputElement>(null);
+    const roleRef = useRef<HTMLInputElement>(null);
     const skillsRef = useRef<HTMLInputElement>(null);
+    const eduRef = useRef<HTMLInputElement>(null);
     const expRef = useRef<HTMLTextAreaElement>(null);
 
     // Auto-Demo Sequence
@@ -55,9 +58,10 @@ const DemoSection = () => {
         const runSequence = () => {
             // T+0s: Reset all
             setName('');
+            setRole('');
             setSkills('');
+            setEducation('');
             setExperience('');
-            setShowToast(false);
             setIsPulsing(false);
             setActiveField(null);
             
@@ -68,43 +72,51 @@ const DemoSection = () => {
             // T+1.5s: Type Name
             timeouts.push(setTimeout(() => {
                 setActiveField('name');
-                nameRef.current?.focus();
+                nameRef.current?.focus({ preventScroll: true });
                 typeText("Samarth Pagaria", setName, 60, () => setActiveField(null));
             }, 1500));
 
-            // T+4s: Type Skills
+            // T+3.5s: Type Role
+            timeouts.push(setTimeout(() => {
+                setActiveField('role');
+                roleRef.current?.focus({ preventScroll: true });
+                typeText("Senior Full-Stack Engineer", setRole, 50, () => setActiveField(null));
+            }, 3500));
+
+            // T+5.5s: Type Skills
             timeouts.push(setTimeout(() => {
                 setActiveField('skills');
-                skillsRef.current?.focus();
+                skillsRef.current?.focus({ preventScroll: true });
                 typeText("React, Node.js, TypeScript", setSkills, 50, () => setActiveField(null));
-            }, 4000));
+            }, 5500));
 
-            // T+6s: Type Experience
+            // T+7.5s: Type Education
+            timeouts.push(setTimeout(() => {
+                setActiveField('education');
+                eduRef.current?.focus({ preventScroll: true });
+                typeText("B.Tech in Computer Science", setEducation, 40, () => setActiveField(null));
+            }, 7500));
+
+            // T+9.5s: Type Experience
             timeouts.push(setTimeout(() => {
                 setActiveField('experience');
-                expRef.current?.focus();
+                expRef.current?.focus({ preventScroll: true });
                 typeText("Built AI Resume Analyzer using Langchain & Express", setExperience, 40, () => setActiveField(null));
-            }, 6500));
+            }, 9500));
 
-            // T+9s: Show Toast
+            // T+12.5s: Pulse Save Button & Blur
             timeouts.push(setTimeout(() => {
                 if (document.activeElement instanceof HTMLElement) {
                     document.activeElement.blur();
                 }
-                setShowToast(true);
-                timeouts.push(setTimeout(() => setShowToast(false), 2000));
-            }, 9000));
-
-            // T+9.5s: Pulse Save Button
-            timeouts.push(setTimeout(() => {
                 setIsPulsing(true);
                 timeouts.push(setTimeout(() => setIsPulsing(false), 2000));
-            }, 9500));
+            }, 12500));
 
-            // T+12s: Restart Loop
+            // T+15s: Restart Loop
             timeouts.push(setTimeout(() => {
                 runSequence();
-            }, 12500));
+            }, 15000));
         };
 
         runSequence();
@@ -115,10 +127,10 @@ const DemoSection = () => {
     }, [isPlaying]);
 
     return (
-        <section className="relative bg-[#F9FFFC] py-20 overflow-hidden">
+        <section className="relative pt-12 pb-20 overflow-hidden bg-[#050505]">
             {/* Background Texture */}
             <div 
-                className="absolute inset-0 opacity-40 pointer-events-none"
+                className="absolute inset-0 opacity-20 pointer-events-none"
                 style={{
                     backgroundImage: 'radial-gradient(#e5e7eb 1px, transparent 1px)',
                     backgroundSize: '24px 24px'
@@ -127,80 +139,76 @@ const DemoSection = () => {
 
             {/* Container */}
             <div className="relative z-10 max-w-6xl mx-auto px-4">
-                <div className="grid md:grid-cols-2 gap-12 items-center">
+                <div className="flex flex-col gap-16 items-center">
                     
-                    {/* Left Column: Text & Timeline */}
-                    <div className="flex flex-col items-start pr-0 md:pr-10">
+                    {/* Top Content: Text & Checklist */}
+                    <div className="flex flex-col w-full">
                         {/* Badge */}
-                        <div className="inline-flex items-center px-3 py-1.5 rounded-full bg-[#E8F5E9] text-[#0A5C36] text-xs font-bold uppercase tracking-widest mb-6">
-                            ✨ Resume Builder
+                        <div className="inline-flex items-center px-3 py-1.5 rounded-full bg-white/5 text-white border border-white/30 text-xs font-bold uppercase tracking-widest mb-6 w-max">
+                            <div>Resume Builder</div>
                         </div>
                         
                         {/* Heading */}
-                        <h2 className="font-mono text-4xl md:text-5xl text-[#1A2E24] font-bold leading-tight mb-4 tracking-tight">
+                        <h2 className="font-mono text-3xl md:text-3xl text-white font-bold leading-tight mb-8 tracking-tight max-w-3xl">
                             Build a resume that doesn't feel like homework.
                         </h2>
                         
-                        {/* Description */}
-                        <p className="text-gray-600 max-w-sm text-[1.1rem] leading-relaxed mb-6 font-mono">
-                            Create an ATS-optimized, beautifully formatted resume in minutes without ever fighting with margins or layout blocks.
-                        </p>
+                        <div className="grid md:grid-cols-2 gap-12 w-full">
+                            {/* Subtext & CTA */}
+                            <div className="flex flex-col items-start">
+                                <p className="text-gray-400 text-[1.05rem] leading-relaxed mb-3 font-mono">
+                                    Create an ATS-optimized, beautifully formatted resume in minutes without ever fighting with margins or layout blocks.
+                                </p>
+                                <button className=" text-white px-2 py-1 hover:border border-white rounded-full font-mono font-semibold ">
+                                    Start Building →
+                                </button>
+                            </div>
 
-                        {/* Steps Timeline */}
-                        <div className="relative pl-6 flex flex-col gap-8 border-l-2 border-gray-200 mt-4 ml-2">
-                            {steps.map((step, idx) => (
-                                <motion.div
-                                    key={step.id}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true, margin: "-50px" }}
-                                    transition={{ duration: 0.5, delay: idx * 0.2 }}
-                                    className="relative"
-                                >
-                                    {/* Step Dot */}
-                                    <div className="absolute -left-[35px] top-1 w-4 h-4 rounded-full bg-[#0A5C36] ring-4 ring-[#F9FFFC]" />
-                                    
-                                    <h4 className="text-[#1A2E24] font-bold text-lg font-mono mb-1">{step.title}</h4>
-                                    <p className="text-gray-500 text-sm font-mono">{step.desc}</p>
-                                </motion.div>
-                            ))}
+                            {/* Animated Checklist */}
+                            <div className="flex flex-col gap-4">
+                                {steps.map((step, idx) => (
+                                    <motion.div
+                                        key={step.id}
+                                        initial={{ opacity: 0, x: -20 }}
+                                        whileInView={{ opacity: 1, x: 0 }}
+                                        viewport={{ once: true, margin: "-50px" }}
+                                        transition={{ duration: 0.5, delay: idx * 0.4 }}
+                                        className="flex items-center gap-3 "
+                                    >
+                                        <motion.div 
+                                            initial={{ scale: 0 }}
+                                            whileInView={{ scale: 1 }}
+                                            viewport={{ once: true }}
+                                            transition={{ type: "spring", stiffness: 200, delay: (idx * 0.4) + 0.3 }}
+                                            className="w-5 h-5 rounded-full bg-[#2ECC71] flex items-center justify-center shrink-0"
+                                        >
+                                            <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        </motion.div>
+                                        
+                                        <div className="flex flex-col">
+                                            <span className="text-white font-bold font-mono text-sm">{step.title}</span>
+                                            <span className="text-gray-400 font-mono text-xs">{step.desc}</span>
+                                        </div>
+                                    </motion.div>
+                                ))}
+                            </div>
                         </div>
-
-                        {/* CTA Button */}
-                        <button className="bg-[#0A5C36] text-white px-8 py-4 rounded-xl font-mono font-semibold hover:bg-[#1A7A4A] transition-all hover:-translate-y-0.5 hover:shadow-xl mt-12">
-                            Start Building →
-                        </button>
                     </div>
                     
-                    {/* Right Column: Browser Mockup Cluster */}
-                    <div className="relative">
+                    {/* Bottom Content: Browser Mockup Cluster */}
+                    <div className="relative w-full mt-8">
                         {/* Browser Mockup */}
                         <motion.div 
                             initial={{ opacity: 0, x: 20 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true, margin: "-50px" }}
                             transition={{ duration: 0.6, delay: 0.3 }}
-                            className="relative rounded-xl overflow-hidden shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] border border-gray-200/50 bg-white transform -translate-y-1 hover:-translate-y-2 transition-transform duration-300"
+                            className="relative rounded-xl overflow-hidden shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)] border border-gray-800 bg-black transform -translate-y-1 hover:-translate-y-2 transition-transform duration-300"
                         >
-                        {/* Save Toast Notification */}
-                        <AnimatePresence>
-                            {showToast && (
-                                <motion.div 
-                                    initial={{ opacity: 0, y: -20, x: 20 }}
-                                    animate={{ opacity: 1, y: 0, x: 0 }}
-                                    exit={{ opacity: 0, y: -10, x: 20 }}
-                                    className="absolute top-14 right-4 bg-[#2ECC71] text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-xl z-50 flex items-center gap-2 font-mono"
-                                >
-                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    Saved!
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-
                         {/* Top Bar */}
-                        <div className="bg-[#1A1E24] py-3 px-4 flex justify-between items-center relative z-10">
+                        <div className="bg-[#050505] border-b border-gray-800 py-3 px-4 flex justify-between items-center relative z-10">
                             {/* Traffic Lights */}
                             <div className="flex gap-2">
                                 <div className="w-3 h-3 rounded-full bg-[#FF5F56]" />
@@ -213,20 +221,30 @@ const DemoSection = () => {
                                 Resume Builder
                             </div>
                             
-                            {/* Save Button */}
-                            <motion.div 
-                                animate={isPulsing ? { scale: [1, 1.2, 1], color: ['#2ECC71', '#4ADE80', '#2ECC71'] } : {}}
-                                transition={{ duration: 0.4 }}
-                                className="text-[#2ECC71] text-sm font-semibold font-mono"
-                            >
-                                Save ✓
-                            </motion.div>
+                            {/* Save Button & Actions */}
+                            <div className="flex items-center gap-4">
+                                {/* Extra Builder Actions */}
+                                <div className="hidden md:flex items-center gap-3 text-gray-400 font-mono text-xs">
+                                    <span className="hover:text-white transition-colors cursor-pointer flex items-center gap-1">
+                                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                        </svg>
+                                        PDF
+                                    </span>
+                                    <span className="hover:text-white transition-colors cursor-pointer flex items-center gap-1">
+                                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                                        </svg>
+                                        Templates
+                                    </span>
+                                </div>
+                            </div>
                         </div>
 
                         {/* Body (Split Pane) */}
                         <div className="flex flex-col md:flex-row h-auto md:h-[480px]">
                             {/* Left Pane (Form) */}
-                            <div className="w-full md:w-[45%] h-[300px] md:h-auto p-4 md:p-6 bg-white flex flex-col gap-4 overflow-y-auto pointer-events-none">
+                            <div className="w-full md:w-[45%] h-[300px] md:h-auto p-4 md:p-6 bg-black flex flex-col gap-4 overflow-y-auto pointer-events-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                                 <div>
                                     <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Full Name</label>
                                     <div className="relative">
@@ -236,7 +254,21 @@ const DemoSection = () => {
                                             value={name}
                                             onChange={(e) => setName(e.target.value)}
                                             placeholder="Samarth Pagaria"
-                                            className="w-full p-2 border border-gray-200 rounded-md text-sm focus:border-[#0A5C36] focus:ring-1 focus:ring-[#0A5C36] outline-none transition-colors font-mono bg-white"
+                                            className="w-full p-2 border border-gray-800 rounded-md text-sm text-white focus:border-[#0A5C36] focus:ring-1 focus:ring-[#0A5C36] outline-none transition-colors font-mono bg-transparent"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Role / Title</label>
+                                    <div className="relative">
+                                        <input 
+                                            ref={roleRef}
+                                            type="text" 
+                                            value={role}
+                                            onChange={(e) => setRole(e.target.value)}
+                                            placeholder="Senior Full-Stack Engineer"
+                                            className="w-full p-2 border border-gray-800 rounded-md text-sm text-white focus:border-[#0A5C36] focus:ring-1 focus:ring-[#0A5C36] outline-none transition-colors font-mono bg-transparent"
                                         />
                                     </div>
                                 </div>
@@ -250,7 +282,21 @@ const DemoSection = () => {
                                             value={skills}
                                             onChange={(e) => setSkills(e.target.value)}
                                             placeholder="React, Node.js, TypeScript"
-                                            className="w-full p-2 border border-gray-200 rounded-md text-sm focus:border-[#0A5C36] focus:ring-1 focus:ring-[#0A5C36] outline-none transition-colors font-mono bg-white"
+                                            className="w-full p-2 border border-gray-800 rounded-md text-sm text-white focus:border-[#0A5C36] focus:ring-1 focus:ring-[#0A5C36] outline-none transition-colors font-mono bg-transparent"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Education</label>
+                                    <div className="relative">
+                                        <input 
+                                            ref={eduRef}
+                                            type="text" 
+                                            value={education}
+                                            onChange={(e) => setEducation(e.target.value)}
+                                            placeholder="B.Tech Computer Science"
+                                            className="w-full p-2 border border-gray-800 rounded-md text-sm text-white focus:border-[#0A5C36] focus:ring-1 focus:ring-[#0A5C36] outline-none transition-colors font-mono bg-transparent"
                                         />
                                     </div>
                                 </div>
@@ -264,38 +310,59 @@ const DemoSection = () => {
                                             onChange={(e) => setExperience(e.target.value)}
                                             placeholder="Built AI Resume Analyzer..."
                                             rows={5}
-                                            className="w-full p-2 border border-gray-200 rounded-md text-sm focus:border-[#0A5C36] focus:ring-1 focus:ring-[#0A5C36] outline-none transition-colors font-mono resize-none bg-white"
+                                            className="w-full p-2 border border-gray-800 rounded-md text-sm text-white focus:border-[#0A5C36] focus:ring-1 focus:ring-[#0A5C36] outline-none transition-colors font-mono resize-none bg-transparent"
                                         />
                                     </div>
+                                </div>
+                                
+                                <div className="mt-2">
+                                    <button className="w-full bg-white text-black py-2.5 rounded-md font-mono text-sm font-bold hover:bg-gray-200 transition-colors flex items-center justify-center gap-2">
+                                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        Save Profile
+                                    </button>
                                 </div>
                             </div>
 
                             {/* Right Pane (Live Preview) */}
-                            <div className="w-full md:w-[55%] h-[300px] md:h-auto p-4 md:p-6 bg-[#F9FAFB] border-t md:border-t-0 md:border-l border-gray-200 overflow-y-auto pointer-events-none">
-                                <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm border border-gray-100 min-h-full">
-                                    <h3 className="text-xl font-bold text-[#1A2E24] mb-4 font-mono border-b border-gray-100 pb-2">
+                            <div className="w-full md:w-[55%] h-[300px] md:h-auto p-4 md:p-6 bg-[#0a0a0a] border-t md:border-t-0 md:border-l border-gray-800 overflow-y-auto pointer-events-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                                <div className="bg-[#111111] p-4 md:p-6 rounded-lg shadow-sm border border-gray-800 min-h-full">
+                                    <h3 className={`text-xl font-bold text-white font-mono ${role ? 'mb-1' : 'mb-4 border-b border-gray-800 pb-2'}`}>
                                         {name || "Your Name"}
                                     </h3>
+                                    {role && (
+                                        <div className="text-sm font-semibold text-[#4ADE80] font-mono mb-4 border-b border-gray-800 pb-2">
+                                            {role}
+                                        </div>
+                                    )}
                                     
                                     <div className="mb-6">
-                                        <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Skills</h4>
+                                        <h4 className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Skills</h4>
                                         <div className="flex flex-wrap gap-2">
                                             {skills ? (
                                                 skills.split(',').map((skill, i) => skill.trim() && (
-                                                    <span key={i} className="px-2 py-1 bg-[#E8F5E9] text-[#0A5C36] text-[10px] font-semibold rounded-md border border-green-200">
+                                                    <span key={i} className="px-2 py-1 bg-[#1A2E24] text-[#4ADE80] text-[10px] font-semibold rounded-md border border-[#0A5C36]">
                                                         {skill.trim()}
                                                     </span>
                                                 ))
                                             ) : (
-                                                <span className="text-gray-300 text-sm italic font-mono">Skills appear here</span>
+                                                <span className="text-gray-600 text-sm italic font-mono">Skills appear here</span>
                                             )}
                                         </div>
                                     </div>
 
+                                    <div className="mb-6">
+                                        <h4 className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Education</h4>
+                                        <p className="text-sm text-gray-300 font-mono leading-relaxed whitespace-pre-wrap">
+                                            {education || <span className="text-gray-600 italic">Education text goes here...</span>}
+                                        </p>
+                                    </div>
+
                                     <div>
-                                        <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Experience</h4>
-                                        <p className="text-sm text-gray-600 font-mono leading-relaxed whitespace-pre-wrap">
-                                            {experience || <span className="text-gray-300 italic">Experience text goes here...</span>}
+                                        <h4 className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Experience</h4>
+                                        <p className="text-sm text-gray-300 font-mono leading-relaxed whitespace-pre-wrap">
+                                            {experience || <span className="text-gray-600 italic">Experience text goes here...</span>}
                                         </p>
                                     </div>
                                 </div>
@@ -307,40 +374,40 @@ const DemoSection = () => {
                     
                     {/* Mobile Badges */}
                     <div className="flex md:hidden flex-wrap justify-center gap-3 mt-6">
-                        <div className="bg-white shadow-sm rounded-full px-4 py-2 border border-gray-100 text-xs font-medium text-[#1A2E24] font-mono flex items-center">
-                            <span className="text-[#2ECC71] mr-1 text-sm leading-none">✓</span> Live Preview
+                        <div className="bg-[#111111] shadow-sm rounded-full px-3 py-1.5 border border-gray-800 text-xs font-medium text-white font-mono flex items-center">
+                            <span className="text-[#2ECC71] mr-1 text-sm leading-none">✓</span> 7+ templates
                         </div>
-                        <div className="bg-white shadow-sm rounded-full px-4 py-2 border border-gray-100 text-xs font-medium text-[#1A2E24] font-mono flex items-center">
-                            <span className="text-[#2ECC71] mr-1 text-sm leading-none">✓</span> Multiple Templates
+                        <div className="bg-[#111111] shadow-sm rounded-full px-3 py-1.5 border border-gray-800 text-xs font-medium text-white font-mono flex items-center">
+                            <span className="text-[#2ECC71] mr-1 text-sm leading-none">✓</span> Auto-Format
                         </div>
-                        <div className="bg-white shadow-sm rounded-full px-4 py-2 border border-gray-100 text-xs font-medium text-[#1A2E24] font-mono flex items-center">
-                            <span className="text-[#2ECC71] mr-1 text-sm leading-none">✓</span> ATS Friendly
+                        <div className="bg-[#111111] shadow-sm rounded-full px-3 py-1.5 border border-gray-800 text-xs font-medium text-white font-mono flex items-center">
+                            <span className="text-[#2ECC71] mr-1 text-sm leading-none">✓</span> ATS Optimized
                         </div>
                     </div>
 
                     {/* Desktop Floating Cards */}
                     <motion.div
-                        animate={{ y: [0, -10, 0] }}
-                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0 }}
-                        className="absolute top-[-20px] right-[-30px] bg-white shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] rounded-full px-5 py-2.5 border border-gray-100 text-sm font-medium text-[#1A2E24] font-mono z-20 hidden md:flex items-center"
+                        animate={{ y: [0, -8, 0] }}
+                        transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut", delay: 0 }}
+                        className="absolute top-[40px] right-[-15px] lg:right-[-35px] rotate-6 bg-[#111111] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] rounded-full px-3 py-1.5 border border-gray-800 text-xs font-medium text-white font-mono z-20 hidden md:flex items-center"
                     >
-                        <span className="text-[#2ECC71] mr-1 text-lg leading-none">✓</span> Live Preview
+                        <span className="text-[#2ECC71] mr-1 text-sm leading-none">✓</span> 7+ templates
                     </motion.div>
                     
                     <motion.div
-                        animate={{ y: [0, -10, 0] }}
-                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                        className="absolute bottom-[-20px] left-[-40px] bg-white shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] rounded-full px-5 py-2.5 border border-gray-100 text-sm font-medium text-[#1A2E24] font-mono z-20 hidden md:flex items-center"
+                        animate={{ y: [0, -8, 0] }}
+                        transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                        className="absolute bottom-[20px] left-[-15px] lg:left-[-35px] -rotate-3 bg-[#111111] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] rounded-full px-3 py-1.5 border border-gray-800 text-xs font-medium text-white font-mono z-20 hidden md:flex items-center"
                     >
-                        <span className="text-[#2ECC71] mr-1 text-lg leading-none">✓</span> Multiple Templates
+                        <span className="text-[#2ECC71] mr-1 text-sm leading-none">✓</span> Auto-Format
                     </motion.div>
                     
                     <motion.div
-                        animate={{ y: [0, -10, 0] }}
-                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                        className="absolute bottom-[-10px] right-[-20px] bg-white shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] rounded-full px-5 py-2.5 border border-gray-100 text-sm font-medium text-[#1A2E24] font-mono z-20 hidden md:flex items-center"
+                        animate={{ y: [0, -8, 0] }}
+                        transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                        className="absolute bottom-[-10px] right-[10px] lg:right-[-15px] rotate-[4deg] bg-[#111111] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] rounded-full px-3 py-1.5 border border-gray-800 text-xs font-medium text-white font-mono z-20 hidden md:flex items-center"
                     >
-                        <span className="text-[#2ECC71] mr-1 text-lg leading-none">✓</span> ATS Friendly
+                        <span className="text-[#2ECC71] mr-1 text-sm leading-none">✓</span> ATS Optimized
                     </motion.div>
                 </div>
 
