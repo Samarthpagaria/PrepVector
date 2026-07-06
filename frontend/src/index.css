@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@import url('https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,100..900;1,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
 
 @custom-variant dark (&:is(.dark *));
 
@@ -13,6 +14,7 @@
 @theme inline {
     --font-heading: var(--font-sans);
     --font-sans: 'Epilogue', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -143,4 +145,105 @@
   textarea {
     @apply outline-none focus:ring-2 border border-zinc-700 bg-zinc-900 text-zinc-100 placeholder:text-zinc-500 focus:ring-emerald-500/50 focus:border-emerald-500 rounded-lg resize-none transition-all duration-300;
   }
+}
+
+@keyframes breathing {
+  0% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.05) translateY(-2%); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.8; }
+}
+
+.animate-breathing {
+  animation: breathing 8s ease-in-out infinite;
+}
+
+@keyframes blob {
+  0% { transform: translate(0px, 0px) scale(1); }
+  33% { transform: translate(30px, -50px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+.animate-blob {
+  animation: blob 15s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+.gradient-button {
+  background: #09090b;
+  position: relative;
+  overflow: hidden;
+  border-radius: 11px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1), 0 0 15px -3px rgba(220, 38, 38, 0.15);
+  z-index: 1;
+  transition: box-shadow 0.4s ease;
+}
+
+/* Red gradient initially at top-right */
+.gradient-button::before {
+  content: "";
+  position: absolute;
+  inset: -100px;
+  background: radial-gradient(circle at center, rgba(220, 38, 38, 0.6) 0%, transparent 50%);
+  transform: translate(50px, -50px);
+  z-index: -1;
+  opacity: 1;
+  transition: all 0.5s ease;
+}
+
+/* Orange gradient initially hidden, but positioned at top-right */
+.gradient-button::after {
+  content: "";
+  position: absolute;
+  inset: -100px;
+  background: radial-gradient(circle at center, rgba(249, 115, 22, 0.85) 0%, rgba(234, 179, 8, 0.4) 40%, transparent 60%);
+  transform: translate(50px, -50px);
+  z-index: -1;
+  opacity: 0;
+  transition: all 0.5s ease;
+}
+
+/* On hover, move BOTH to bottom-left and crossfade (Red fades out, Orange fades in) */
+.gradient-button:hover::before {
+  transform: translate(-50px, 50px);
+  opacity: 0;
+}
+
+.gradient-button:hover::after {
+  transform: translate(-50px, 50px);
+  opacity: 1;
+}
+
+.gradient-button:hover {
+  box-shadow: inset 0 0 0 1px rgba(249, 115, 22, 0.4), 0 0 25px -5px rgba(249, 115, 22, 0.5);
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient-x {
+  background-size: 200% 200%;
+  animation: gradientMove 3s ease infinite;
+}
+
+.bg-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 128px 128px;
+}
+
+.bg-noise-fine {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 128 128' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.95' numOctaves='6' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 64px 64px;
 }
