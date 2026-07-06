@@ -10,21 +10,17 @@ const steps = [
 const DemoSection = () => {
     // Form State
     const [name, setName] = useState('');
-    const [role, setRole] = useState('');
     const [skills, setSkills] = useState('');
-    const [education, setEducation] = useState('');
     const [experience, setExperience] = useState('');
     
     // Animation State
     const [isPlaying, setIsPlaying] = useState(true);
     const [isPulsing, setIsPulsing] = useState(false);
-    const [activeField, setActiveField] = useState<'name' | 'role' | 'skills' | 'education' | 'experience' | null>(null);
+    const [activeField, setActiveField] = useState<'name' | 'skills' | 'experience' | null>(null);
 
     // Refs for native focus
     const nameRef = useRef<HTMLInputElement>(null);
-    const roleRef = useRef<HTMLInputElement>(null);
     const skillsRef = useRef<HTMLInputElement>(null);
-    const eduRef = useRef<HTMLInputElement>(null);
     const expRef = useRef<HTMLTextAreaElement>(null);
 
     // Auto-Demo Sequence
@@ -58,65 +54,39 @@ const DemoSection = () => {
         const runSequence = () => {
             // T+0s: Reset all
             setName('');
-            setRole('');
             setSkills('');
-            setEducation('');
             setExperience('');
             setIsPulsing(false);
             setActiveField(null);
-            
-            if (document.activeElement instanceof HTMLElement) {
-                document.activeElement.blur();
-            }
 
             // T+1.5s: Type Name
             timeouts.push(setTimeout(() => {
                 setActiveField('name');
-                nameRef.current?.focus({ preventScroll: true });
                 typeText("Samarth Pagaria", setName, 60, () => setActiveField(null));
             }, 1500));
 
-            // T+3.5s: Type Role
-            timeouts.push(setTimeout(() => {
-                setActiveField('role');
-                roleRef.current?.focus({ preventScroll: true });
-                typeText("Senior Full-Stack Engineer", setRole, 50, () => setActiveField(null));
-            }, 3500));
-
-            // T+5.5s: Type Skills
+            // T+4s: Type Skills
             timeouts.push(setTimeout(() => {
                 setActiveField('skills');
-                skillsRef.current?.focus({ preventScroll: true });
                 typeText("React, Node.js, TypeScript", setSkills, 50, () => setActiveField(null));
-            }, 5500));
+            }, 4000));
 
-            // T+7.5s: Type Education
-            timeouts.push(setTimeout(() => {
-                setActiveField('education');
-                eduRef.current?.focus({ preventScroll: true });
-                typeText("B.Tech in Computer Science", setEducation, 40, () => setActiveField(null));
-            }, 7500));
-
-            // T+9.5s: Type Experience
+            // T+6s: Type Experience
             timeouts.push(setTimeout(() => {
                 setActiveField('experience');
-                expRef.current?.focus({ preventScroll: true });
                 typeText("Built AI Resume Analyzer using Langchain & Express", setExperience, 40, () => setActiveField(null));
-            }, 9500));
+            }, 6500));
 
-            // T+12.5s: Pulse Save Button & Blur
+            // T+9s: Pulse Save Button & Blur
             timeouts.push(setTimeout(() => {
-                if (document.activeElement instanceof HTMLElement) {
-                    document.activeElement.blur();
-                }
                 setIsPulsing(true);
                 timeouts.push(setTimeout(() => setIsPulsing(false), 2000));
-            }, 12500));
+            }, 9000));
 
-            // T+15s: Restart Loop
+            // T+12s: Restart Loop
             timeouts.push(setTimeout(() => {
                 runSequence();
-            }, 15000));
+            }, 12500));
         };
 
         runSequence();
@@ -244,7 +214,7 @@ const DemoSection = () => {
                         {/* Body (Split Pane) */}
                         <div className="flex flex-col md:flex-row h-auto md:h-[480px]">
                             {/* Left Pane (Form) */}
-                            <div className="w-full md:w-[45%] h-[300px] md:h-auto p-4 md:p-6 bg-black flex flex-col gap-4 overflow-y-auto pointer-events-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                            <div className="w-full md:w-[45%] h-[300px] md:h-auto p-4 md:p-6 bg-black flex flex-col gap-4 overflow-y-auto pointer-events-none">
                                 <div>
                                     <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Full Name</label>
                                     <div className="relative">
@@ -254,21 +224,7 @@ const DemoSection = () => {
                                             value={name}
                                             onChange={(e) => setName(e.target.value)}
                                             placeholder="Samarth Pagaria"
-                                            className="w-full p-2 border border-gray-800 rounded-md text-sm text-white focus:border-[#0A5C36] focus:ring-1 focus:ring-[#0A5C36] outline-none transition-colors font-mono bg-transparent"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Role / Title</label>
-                                    <div className="relative">
-                                        <input 
-                                            ref={roleRef}
-                                            type="text" 
-                                            value={role}
-                                            onChange={(e) => setRole(e.target.value)}
-                                            placeholder="Senior Full-Stack Engineer"
-                                            className="w-full p-2 border border-gray-800 rounded-md text-sm text-white focus:border-[#0A5C36] focus:ring-1 focus:ring-[#0A5C36] outline-none transition-colors font-mono bg-transparent"
+                                            className={`w-full p-2 border rounded-md text-sm text-white outline-none transition-colors font-mono bg-transparent ${activeField === 'name' ? 'border-[#0A5C36] ring-1 ring-[#0A5C36]' : 'border-gray-800'}`}
                                         />
                                     </div>
                                 </div>
@@ -282,21 +238,7 @@ const DemoSection = () => {
                                             value={skills}
                                             onChange={(e) => setSkills(e.target.value)}
                                             placeholder="React, Node.js, TypeScript"
-                                            className="w-full p-2 border border-gray-800 rounded-md text-sm text-white focus:border-[#0A5C36] focus:ring-1 focus:ring-[#0A5C36] outline-none transition-colors font-mono bg-transparent"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Education</label>
-                                    <div className="relative">
-                                        <input 
-                                            ref={eduRef}
-                                            type="text" 
-                                            value={education}
-                                            onChange={(e) => setEducation(e.target.value)}
-                                            placeholder="B.Tech Computer Science"
-                                            className="w-full p-2 border border-gray-800 rounded-md text-sm text-white focus:border-[#0A5C36] focus:ring-1 focus:ring-[#0A5C36] outline-none transition-colors font-mono bg-transparent"
+                                            className={`w-full p-2 border rounded-md text-sm text-white outline-none transition-colors font-mono bg-transparent ${activeField === 'skills' ? 'border-[#0A5C36] ring-1 ring-[#0A5C36]' : 'border-gray-800'}`}
                                         />
                                     </div>
                                 </div>
@@ -310,7 +252,7 @@ const DemoSection = () => {
                                             onChange={(e) => setExperience(e.target.value)}
                                             placeholder="Built AI Resume Analyzer..."
                                             rows={5}
-                                            className="w-full p-2 border border-gray-800 rounded-md text-sm text-white focus:border-[#0A5C36] focus:ring-1 focus:ring-[#0A5C36] outline-none transition-colors font-mono resize-none bg-transparent"
+                                            className={`w-full p-2 border rounded-md text-sm text-white outline-none transition-colors font-mono resize-none bg-transparent ${activeField === 'experience' ? 'border-[#0A5C36] ring-1 ring-[#0A5C36]' : 'border-gray-800'}`}
                                         />
                                     </div>
                                 </div>

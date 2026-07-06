@@ -16,7 +16,7 @@ const Navbar = () => {
     const [isDark, setIsDark] = useState(true); 
 
     return (
-        <nav className="w-full flex items-center justify-between py-3 px-6 border-b border-white/10 bg-black/50 backdrop-blur-md">
+        <nav className="sticky top-0 z-50 w-full flex items-center justify-between py-3 px-6 border-b border-zinc-800 bg-black/40 backdrop-blur-md shadow-sm">
             {/* Left side: Actual Logo and Same Font */}
             <div className="flex items-center gap-2">
                 <Link to="/" className="flex items-center gap-1.5 transition-opacity hover:opacity-80">

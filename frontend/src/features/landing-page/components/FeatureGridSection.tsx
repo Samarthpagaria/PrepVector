@@ -116,12 +116,14 @@ const FeatureGridSection = () => {
                         return (
                             <motion.div
                                 key={idx}
-                                initial={{ opacity: 0 }}
-                                whileInView={{ opacity: 1 }}
-                                viewport={{ once: true, margin: "-50px" }}
-                                transition={{ duration: 0.5, delay: idx * 0.1 }}
-                                className={`relative flex flex-col items-center justify-center text-center p-10 md:p-14 ${feature.colSpan} ${getBorderClasses(idx)}`}
+                                className={`group relative flex flex-col items-center justify-center text-center p-10 md:p-14 ${feature.colSpan} ${getBorderClasses(idx)} overflow-hidden`}
                             >
+                                {/* Hover background with green radial and noise */}
+                                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0">
+                                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(46,204,113,0.15)_0%,transparent_80%)]" />
+                                    <div className="absolute inset-0 bg-noise opacity-[0.06] mix-blend-screen" />
+                                </div>
+
                                 {/* Mobile crosshairs for bottom edge of every cell except the last one */}
                                 {idx < 8 && (
                                     <>
@@ -162,8 +164,8 @@ const FeatureGridSection = () => {
                                 {idx === 5 && <Crosshair position="hidden md:block top-[100%] left-[100%]" />}
                                 {idx === 6 && <Crosshair position="hidden md:block top-[100%] left-[100%]" />}
 
-                                <h3 className="text-xl font-bold text-white mb-4 tracking-tight font-mono">{feature.title}</h3>
-                                <p className="text-xs md:text-sm text-zinc-500 leading-relaxed font-mono max-w-[280px]">
+                                <h3 className="relative z-10 text-xl font-bold text-white mb-4 tracking-tight font-mono group-hover:text-[#2ECC71] transition-colors duration-300">{feature.title}</h3>
+                                <p className="relative z-10 text-xs md:text-sm text-zinc-500 leading-relaxed font-mono max-w-[280px] group-hover:text-zinc-300 transition-colors duration-300">
                                     {feature.desc}
                                 </p>
                             </motion.div>

@@ -6,7 +6,7 @@ import { GradientButton } from '../../../components/ui/gradient-button';
 
 const FooterSection = () => {
     return (
-        <footer className="w-full bg-black py-8 px-4 sm:px-6 lg:px-8 border-t border-zinc-900">
+        <footer className="w-full bg-black pt-8 pb-32 px-4 sm:px-6 lg:px-8 border-t border-zinc-900 relative z-10">
             <div className="max-w-6xl mx-auto bg-[#0a0a0a] border border-zinc-800 rounded-3xl px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl relative overflow-hidden">
                 {/* Subtle glow */}
                 <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 via-transparent to-transparent pointer-events-none" />
