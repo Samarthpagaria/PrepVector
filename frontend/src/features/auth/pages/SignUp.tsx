@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Link, useNavigate } from "react-router"
 import { useRegister } from '../hooks/useAuth'
+import { useAuthStore } from "../../../store/useAuth.store"
+import { useEffect } from "react"
 import { WebGLDotBackground } from "@/components/ui/webgl-dot-background"
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import lottieLogoUrl from '../../../assets/prepVectorLogo.lottie?url';
@@ -11,6 +13,13 @@ const SignUp = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
+  const user = useAuthStore(state => state.user)
+
+  useEffect(() => {
+    if (user) {
+      navigate('/app')
+    }
+  }, [user, navigate])
 
   const { mutate: registerUser, isPending, isError } = useRegister()
 
@@ -19,7 +28,7 @@ const SignUp = () => {
     registerUser(
       { username, email, password },
       {
-        onSuccess: () => navigate('/'),
+        onSuccess: () => navigate('/app'),
       }
     )
   }

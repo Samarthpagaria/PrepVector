@@ -6,11 +6,13 @@ import { useAuthStore } from '../../store/useAuth.store';
 import lottieLogoUrl from '../../assets/prepVectorLogo.lottie?url';
 import { Button } from '../ui/button';
 import { logoutUser as logoutUserApi } from '../../features/auth/services/auth.api';
+import { useToastStore } from '../../store/toastStore';
 
 const Navbar = () => {
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
   const navigate = useNavigate();
+  const openToast = useToastStore((state) => state.openToast);
 
   const [showCreditsPopup, setShowCreditsPopup] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -43,10 +45,10 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-zinc-800 bg-zinc-950/10 backdrop-blur-sm px-4 py-3.5 shadow-sm">
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
+    <nav className="sticky top-0 z-50 w-full flex items-center justify-between py-3 px-6 border-b border-zinc-800 bg-black/40 backdrop-blur-md shadow-sm">
+      <div className="w-full flex items-center justify-between">
         <div className="flex items-center gap-8">
-          <Link to="/app" className="flex items-center gap-2 transition-opacity hover:opacity-80">
+          <Link to={user ? "/app" : "/"} className="flex items-center gap-2 transition-opacity hover:opacity-80">
             <div className="w-8 h-8 flex items-center justify-center">
               <DotLottieReact
                 src={lottieLogoUrl}
@@ -55,25 +57,28 @@ const Navbar = () => {
                 style={{ width: '100%', height: '100%' }}
               />
             </div>
-            <span className="text-xl font-bold tracking-tight text-zinc-100">
+            <span className="text-lg font-bold tracking-tight text-white font-mono">
               PrepVector
             </span>
           </Link>
-          <div className="hidden md:flex items-center">
+          <div className="hidden md:flex items-center gap-6">
+            <Link to="/analyze-resume" className="text-sm font-medium text-zinc-300 hover:text-emerald-400 transition-colors">
+              Analyze Resume
+            </Link>
+            {user && (
+              <>
+                <Link to="/app/interview" className="text-sm font-medium text-zinc-300 hover:text-emerald-400 transition-colors">
+                  Mock Interview
+                </Link>
+                <Link to="/app" className="text-sm font-medium text-zinc-300 hover:text-emerald-400 transition-colors">
+                  Build Resume
+                </Link>
+              </>
+            )}
             <Link to="/docs" className="text-sm font-medium text-zinc-300 hover:text-emerald-400 transition-colors">
               Docs
             </Link>
           </div>
-          {user && (
-            <div className="hidden md:flex items-center gap-6">
-              <Link to="/app/interview" className="text-sm font-medium text-zinc-300 hover:text-emerald-400 transition-colors">
-                Mock Interview
-              </Link>
-              <Link to="/app/history" className="text-sm font-medium text-zinc-300 hover:text-emerald-400 transition-colors">
-                History
-              </Link>
-            </div>
-          )}
         </div>
         <div className="flex items-center gap-4">
           
@@ -144,7 +149,13 @@ const Navbar = () => {
                     Interview History
                   </button>
                   
-                  <button className="flex items-center gap-2.5 px-3 py-2.5 text-sm text-zinc-300 hover:bg-zinc-800/50 hover:text-zinc-100 rounded-lg transition-colors text-left font-medium">
+                  <button 
+                    onClick={() => {
+                      openToast("Coming Soon!");
+                      setShowUserMenu(false);
+                    }}
+                    className="flex items-center gap-2.5 px-3 py-2.5 text-sm text-zinc-300 hover:bg-zinc-800/50 hover:text-zinc-100 rounded-lg transition-colors text-left font-medium"
+                  >
                     <CreditCard className="size-4 text-zinc-400" />
                     Pricing
                   </button>

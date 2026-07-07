@@ -1,4 +1,4 @@
-import { PlusIcon, UploadCloudIcon, Trash2Icon, FileTextIcon, PencilIcon } from 'lucide-react'
+import { PlusIcon, UploadCloudIcon, Trash2Icon, FileTextIcon, PencilIcon, FileText, ChevronRight, Briefcase, Calendar, CheckCircle2, XCircle } from 'lucide-react'
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router'
 import CreateResumeModal from '../components/CreateResumeModal' 
@@ -7,6 +7,8 @@ import { useGetAllResumes, useDeleteResume, useUpdateResumeTitle } from '../hook
 import { useAuthStore } from '../../../store/useAuth.store'
 import { useQueryClient } from '@tanstack/react-query'
 import { useToastStore } from '../../../store/toastStore'
+import { useGetAllReports } from '../../evaluator/hooks/useEvaluator'
+import { useGetMyInterviews } from '../../interview/hooks/useInterview'
 
 const Dashboard = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -17,6 +19,10 @@ const Dashboard = () => {
   // Real backend data via TanStack Query
   const { data, isLoading, isError } = useGetAllResumes();
   const allResumes = data?.resumes || [];
+
+  const { data: reports, isLoading: isReportsLoading } = useGetAllReports();
+  const { data: interviewsData, isLoading: isInterviewsLoading } = useGetMyInterviews();
+  const allInterviews = interviewsData?.data || [];
   
   const user = useAuthStore(state => state.user);
   const navigate = useNavigate();
@@ -128,11 +134,11 @@ const Dashboard = () => {
                             onClick={() => navigate(`/app/builder/${resume._id}`)}
                             className="group relative bg-zinc-950 p-5 hover:bg-linear-to-br hover:from-zinc-900 hover:to-emerald-950/40 transition-all duration-300 cursor-pointer flex flex-col aspect-square"
                         >
-                            {/* Thin white crosshairs at all 4 corners of every cell */}
-                            <PlusIcon className="absolute -top-[8px] -left-[8px] text-white drop-shadow-[0_0_3px_rgba(255,255,255,0.6)] size-4 pointer-events-none z-10" strokeWidth={1} />
-                            <PlusIcon className="absolute -top-[8px] -right-[8px] text-white drop-shadow-[0_0_3px_rgba(255,255,255,0.6)] size-4 pointer-events-none z-10" strokeWidth={1} />
-                            <PlusIcon className="absolute -bottom-[8px] -left-[8px] text-white drop-shadow-[0_0_3px_rgba(255,255,255,0.6)] size-4 pointer-events-none z-10" strokeWidth={1} />
-                            <PlusIcon className="absolute -bottom-[8px] -right-[8px] text-white drop-shadow-[0_0_3px_rgba(255,255,255,0.6)] size-4 pointer-events-none z-10" strokeWidth={1} />
+                            {/* Glowing emerald crosshairs at all 4 corners of every cell */}
+                            <svg style={{ filter: "drop-shadow(0px 0px 6px #10b981) drop-shadow(0px 0px 12px #10b981)" }} className="absolute -top-[8px] -left-[8px] text-emerald-500 z-10 pointer-events-none" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 0V16M0 8H16" stroke="currentColor" strokeWidth="1.5"/></svg>
+                            <svg style={{ filter: "drop-shadow(0px 0px 6px #10b981) drop-shadow(0px 0px 12px #10b981)" }} className="absolute -top-[8px] -right-[8px] text-emerald-500 z-10 pointer-events-none" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 0V16M0 8H16" stroke="currentColor" strokeWidth="1.5"/></svg>
+                            <svg style={{ filter: "drop-shadow(0px 0px 6px #10b981) drop-shadow(0px 0px 12px #10b981)" }} className="absolute -bottom-[8px] -left-[8px] text-emerald-500 z-10 pointer-events-none" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 0V16M0 8H16" stroke="currentColor" strokeWidth="1.5"/></svg>
+                            <svg style={{ filter: "drop-shadow(0px 0px 6px #10b981) drop-shadow(0px 0px 12px #10b981)" }} className="absolute -bottom-[8px] -right-[8px] text-emerald-500 z-10 pointer-events-none" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 0V16M0 8H16" stroke="currentColor" strokeWidth="1.5"/></svg>
 
                             {/* Header: Icon & Actions */}
                             <div className="flex justify-between items-start w-full mb-auto">
@@ -199,6 +205,154 @@ const Dashboard = () => {
                             </div>
                         </div>
                     ))}
+                </div>
+            )}
+
+            {/* Analyze Resume Reports Section */}
+            <div className="mt-12 mb-4 flex items-center justify-between">
+                <h2 className="text-lg font-semibold bg-linear-to-r from-green-50 via-emerald-500 to-green-50 bg-clip-text text-transparent">Your Analyze Resume Reports</h2>
+            </div>
+            <hr className='border-zinc-800 mb-6' />
+
+            {isReportsLoading ? (
+                <div className="flex justify-center py-10">
+                    <svg className="animate-spin h-8 w-8 text-emerald-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </div>
+            ) : reports && reports.length > 0 ? (
+                <div className="w-full bg-zinc-950 rounded-2xl border border-zinc-800 overflow-hidden mb-12">
+                    <div className="flex flex-col">
+                        {reports.map((report: any) => (
+                            <div 
+                                key={report._id}
+                                onClick={() => navigate(`/report/${report._id}`)}
+                                className="group flex items-center justify-between p-5 border-b border-zinc-800 last:border-0 hover:bg-zinc-900/50 cursor-pointer transition-all duration-200"
+                            >
+                                <div className="flex items-center gap-4">
+                                    <div className="w-10 h-10 rounded-full bg-emerald-500/5 flex items-center justify-center border border-emerald-500/10 group-hover:bg-emerald-500/10 group-hover:border-emerald-500/20 transition-all">
+                                        <FileText className="w-4 h-4 text-emerald-500/70 group-hover:text-emerald-400 transition-colors" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-[15px] font-medium text-zinc-200 group-hover:text-emerald-400 transition-colors">
+                                            {report.title || "Interview Strategy Report"}
+                                        </h3>
+                                        <p className="text-xs text-zinc-500 mt-1">
+                                            {new Date(report.createdAt).toLocaleDateString(undefined, {
+                                                year: 'numeric',
+                                                month: 'short',
+                                                day: 'numeric'
+                                            })}
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <div className="flex items-center gap-5">
+                                    <div className="flex flex-col items-end">
+                                        <span className="text-[10px] uppercase tracking-wider text-zinc-500 font-medium mb-1">Match</span>
+                                        <span className={`text-sm font-bold ${report.matchScore >= 85 ? 'text-emerald-400' : report.matchScore >= 70 ? 'text-orange-400' : 'text-red-400'}`}>
+                                            {report.matchScore || 0}%
+                                        </span>
+                                    </div>
+                                    <ChevronRight className="w-5 h-5 text-zinc-700 group-hover:text-emerald-400 transition-colors" />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            ) : (
+                <div className="text-center py-10 text-zinc-500">
+                    No mock interview reports found. Generate one from the Analyze Resume page!
+                </div>
+            )}
+
+            {/* Mock Interview History Section */}
+            <div className="mt-12 mb-4 flex items-center justify-between">
+                <h2 className="text-lg font-semibold bg-linear-to-r from-green-50 via-emerald-500 to-green-50 bg-clip-text text-transparent">Your Mock Interview History</h2>
+            </div>
+            <hr className='border-zinc-800 mb-6' />
+
+            {isInterviewsLoading ? (
+                <div className="flex justify-center py-10">
+                    <svg className="animate-spin h-8 w-8 text-emerald-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </div>
+            ) : allInterviews && allInterviews.length > 0 ? (
+                <div className="grid gap-4 mb-12">
+                    {allInterviews.map((interview: any) => {
+                        const isCompleted = interview.status === 'Completed';
+                        const date = new Date(interview.createdAt).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                        });
+                        const score = interview.finalScore || 0;
+                        const normalizedScore = (score > 10 ? score / 10 : score).toFixed(1);
+
+                        return (
+                            <div
+                                key={interview._id}
+                                onClick={() => isCompleted && navigate(`/app/interview-report/${interview._id}`)}
+                                className={`group relative bg-zinc-950 rounded-2xl border border-zinc-800 p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between transition-all duration-300 ${
+                                    isCompleted 
+                                        ? 'hover:bg-zinc-900/50 hover:border-emerald-500/30 cursor-pointer'
+                                        : 'opacity-70 cursor-default'
+                                }`}
+                            >
+                                <div className="flex-1 min-w-0 mb-6 sm:mb-0 relative z-10">
+                                    <h3 className="text-lg font-bold text-zinc-100 truncate mb-2 group-hover:text-emerald-400 transition-colors">
+                                        {interview.role}
+                                    </h3>
+                                    <div className="flex items-center text-xs font-medium text-zinc-400 gap-3 flex-wrap">
+                                        <span className="flex items-center gap-1.5 px-2.5 py-1 bg-zinc-900 border border-zinc-800 rounded-lg">
+                                            <Briefcase className="w-3.5 h-3.5 text-emerald-500" />
+                                            {interview.experience} Exp
+                                        </span>
+                                        <span className="flex items-center gap-1.5 px-2.5 py-1 bg-zinc-900 border border-zinc-800 rounded-lg">
+                                            {interview.mode || "Technical"}
+                                        </span>
+                                        <span className="flex items-center gap-1.5 px-2.5 py-1 bg-zinc-900 border border-zinc-800 rounded-lg">
+                                            <Calendar className="w-3.5 h-3.5 text-emerald-500" />
+                                            {date}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center gap-6 sm:gap-8 self-end sm:self-auto w-full sm:w-auto justify-between sm:justify-end relative z-10 border-t sm:border-t-0 border-zinc-800 pt-5 sm:pt-0">
+                                    <div className="text-center sm:text-right">
+                                        <div className="flex items-baseline gap-1 justify-center sm:justify-end mb-1">
+                                            <span className="text-2xl font-black text-zinc-100 leading-none tracking-tight group-hover:text-emerald-500 transition-colors">
+                                                {normalizedScore}
+                                            </span>
+                                            <span className="text-xs font-bold text-zinc-500">/ 10</span>
+                                        </div>
+                                        <span className="text-[9px] text-zinc-500 uppercase tracking-widest font-bold">
+                                            Score
+                                        </span>
+                                    </div>
+
+                                    <div className="flex items-center gap-4">
+                                        <div className={`px-3 py-1.5 rounded-lg text-[10px] font-bold tracking-wider uppercase flex items-center gap-1.5 ${
+                                            isCompleted
+                                                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                                                : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                                        }`}>
+                                            {isCompleted ? <CheckCircle2 className="w-3.5 h-3.5" /> : <XCircle className="w-3.5 h-3.5" />}
+                                            {isCompleted ? 'Completed' : 'Incomplete'}
+                                        </div>
+                                        <ChevronRight className="w-5 h-5 text-zinc-600 group-hover:text-emerald-400 transition-colors" />
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            ) : (
+                <div className="text-center py-10 text-zinc-500">
+                    No mock interviews found. Start an interview to see your reports here!
                 </div>
             )}
         </div>

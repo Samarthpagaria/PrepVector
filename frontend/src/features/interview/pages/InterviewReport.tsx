@@ -140,20 +140,20 @@ const InterviewReport = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
+    <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
       {/* Header */}
       <div className="mb-8">
         <div className="flex justify-between items-center mb-4">
           <button 
             onClick={() => navigate('/app/history')}
-            className="flex items-center gap-2 text-gray-500 hover:text-indigo-600 transition-colors text-sm font-medium"
+            className="flex items-center gap-2 text-zinc-400 hover:text-emerald-400 transition-colors text-sm font-medium"
           >
             <ChevronLeft className="w-4 h-4" /> Back to History
           </button>
           <button
             onClick={handleDownloadPdf}
             disabled={isDownloading}
-            className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white px-4 py-2 rounded-lg transition-colors text-sm font-medium"
+            className="flex items-center gap-2 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 border border-emerald-500/20 disabled:opacity-50 px-4 py-2 rounded-lg transition-colors text-sm font-medium"
           >
             {isDownloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
             {isDownloading ? 'Generating PDF...' : 'Download PDF'}
@@ -161,39 +161,41 @@ const InterviewReport = () => {
         </div>
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-              <Activity className="w-8 h-8 text-indigo-600" />
-              Interview Performance Report
+            <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-3">
+              <Activity className="w-7 h-7 text-emerald-500" />
+              <span className="bg-linear-to-r from-green-50 via-emerald-500 to-green-50 bg-clip-text text-transparent">
+                Interview Performance Report
+              </span>
             </h1>
-            <p className="text-gray-500 dark:text-gray-400 mt-2">
+            <p className="text-zinc-400 mt-2 text-sm sm:text-base">
               Detailed breakdown of your AI interview performance.
             </p>
           </div>
-          <div className="bg-indigo-50 dark:bg-indigo-900/30 px-6 py-4 rounded-2xl border border-indigo-100 dark:border-indigo-800 flex items-center gap-4">
+          <div className="bg-emerald-500/10 px-6 py-4 rounded-2xl border border-emerald-500/20 flex items-center gap-4">
             <div>
-              <p className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider mb-1">Final Score</p>
+              <p className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest mb-1">Final Score</p>
               <div className="flex items-end gap-1">
-                <span className="text-4xl font-black text-indigo-700 dark:text-indigo-300 leading-none">{finalScore}</span>
-                <span className="text-lg text-indigo-500 dark:text-indigo-400 font-bold pb-1">/ 10</span>
+                <span className="text-4xl font-black text-emerald-400 leading-none">{finalScore}</span>
+                <span className="text-lg text-emerald-500/60 font-bold pb-1">/ 10</span>
               </div>
             </div>
-            <div className="w-12 h-12 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center shadow-sm">
-              <BrainCircuit className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+            <div className="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shadow-sm hidden sm:flex">
+              <BrainCircuit className="w-6 h-6 text-emerald-400" />
             </div>
           </div>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-gray-200 dark:border-gray-700 mb-8">
+      <div className="border-b border-zinc-800 mb-6">
         <nav className="-mb-px flex space-x-8">
           <button
             onClick={() => setActiveTab('overview')}
             className={`${
               activeTab === 'overview'
-                ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-            } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
+                ? 'border-emerald-500 text-emerald-400'
+                : 'border-transparent text-zinc-500 hover:text-zinc-300 hover:border-zinc-700'
+            } whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm transition-colors`}
           >
             Metrics Overview
           </button>
@@ -201,9 +203,9 @@ const InterviewReport = () => {
             onClick={() => setActiveTab('detailed')}
             className={`${
               activeTab === 'detailed'
-                ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-            } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
+                ? 'border-emerald-500 text-emerald-400'
+                : 'border-transparent text-zinc-500 hover:text-zinc-300 hover:border-zinc-700'
+            } whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm transition-colors`}
           >
             Detailed Feedback
           </button>
@@ -212,55 +214,55 @@ const InterviewReport = () => {
 
       {/* Overview Tab Content */}
       {activeTab === 'overview' && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
           {/* Radar Chart */}
-          <div id="radar-chart-container" className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col items-center">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white self-start mb-6">Skill Balance</h3>
-            <div className="w-full h-[300px]">
+          <div id="radar-chart-container" className="bg-[#121214] rounded-2xl p-6 border border-zinc-800 shadow-sm flex flex-col items-center justify-between">
+            <h3 className="text-base font-semibold text-zinc-100 self-start mb-4">Skill Balance</h3>
+            <div className="w-full h-[280px]">
               <ResponsiveContainer width="100%" height="100%">
-                <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
-                  <PolarGrid stroke="#e5e7eb" />
-                  <PolarAngleAxis dataKey="subject" tick={{ fill: '#6b7280', fontSize: 12, fontWeight: 500 }} />
-                  <PolarRadiusAxis angle={30} domain={[0, 10]} tick={{ fill: '#9ca3af' }} />
-                  <Radar name="Score" dataKey="A" stroke="#4f46e5" fill="#4f46e5" fillOpacity={0.4} />
+                <RadarChart cx="50%" cy="50%" outerRadius="65%" data={radarData}>
+                  <PolarGrid stroke="#27272a" />
+                  <PolarAngleAxis dataKey="subject" tick={{ fill: '#a1a1aa', fontSize: 11, fontWeight: 500 }} />
+                  <PolarRadiusAxis angle={30} domain={[0, 10]} tick={false} axisLine={false} />
+                  <Radar name="Score" dataKey="A" stroke="#10b981" fill="#10b981" fillOpacity={0.4} />
                 </RadarChart>
               </ResponsiveContainer>
             </div>
             
-            <div className="w-full grid grid-cols-3 gap-2 mt-4 text-center">
+            <div className="w-full grid grid-cols-3 gap-2 mt-4 text-center border-t border-zinc-800/50 pt-5">
               <div>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">{confidence}</p>
-                <p className="text-xs text-gray-500 uppercase tracking-wider mt-1">Confidence</p>
+                <p className="text-xl font-bold text-emerald-400">{Number(confidence || 0).toFixed(1)}</p>
+                <p className="text-[10px] text-zinc-500 uppercase tracking-widest mt-1">Confidence</p>
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">{communication}</p>
-                <p className="text-xs text-gray-500 uppercase tracking-wider mt-1">Communication</p>
+                <p className="text-xl font-bold text-blue-400">{Number(communication || 0).toFixed(1)}</p>
+                <p className="text-[10px] text-zinc-500 uppercase tracking-widest mt-1">Comm.</p>
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">{correctness}</p>
-                <p className="text-xs text-gray-500 uppercase tracking-wider mt-1">Correctness</p>
+                <p className="text-xl font-bold text-amber-400">{Number(correctness || 0).toFixed(1)}</p>
+                <p className="text-[10px] text-zinc-500 uppercase tracking-widest mt-1">Correctness</p>
               </div>
             </div>
           </div>
 
           {/* Bar Chart */}
-          <div id="bar-chart-container" className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">Performance Trend per Question</h3>
-            <div className="w-full h-[350px]">
+          <div id="bar-chart-container" className="lg:col-span-2 bg-[#121214] rounded-2xl p-6 border border-zinc-800 shadow-sm">
+            <h3 className="text-base font-semibold text-zinc-100 mb-4">Performance Trend per Question</h3>
+            <div className="w-full h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={barData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
-                  <XAxis dataKey="name" tick={{ fill: '#6b7280' }} axisLine={false} tickLine={false} />
-                  <YAxis domain={[0, 10]} tick={{ fill: '#6b7280' }} axisLine={false} tickLine={false} />
+                <BarChart data={barData} margin={{ top: 10, right: 10, left: -20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#27272a" />
+                  <XAxis dataKey="name" tick={{ fill: '#a1a1aa', fontSize: 12 }} axisLine={false} tickLine={false} />
+                  <YAxis domain={[0, 10]} tick={{ fill: '#a1a1aa', fontSize: 12 }} axisLine={false} tickLine={false} />
                   <RechartsTooltip 
-                    cursor={{ fill: 'rgba(79, 70, 229, 0.05)' }}
-                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
+                    cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
+                    contentStyle={{ backgroundColor: '#18181b', borderRadius: '12px', border: '1px solid #27272a', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.5)', color: '#fff' }}
                   />
-                  <Legend iconType="circle" wrapperStyle={{ paddingTop: '20px' }} />
-                  <Bar dataKey="Score" fill="#4f46e5" radius={[4, 4, 0, 0]} maxBarSize={40} />
-                  <Bar dataKey="Confidence" fill="#10b981" radius={[4, 4, 0, 0]} maxBarSize={40} />
-                  <Bar dataKey="Correctness" fill="#f59e0b" radius={[4, 4, 0, 0]} maxBarSize={40} />
+                  <Legend iconType="circle" wrapperStyle={{ paddingTop: '10px', fontSize: '12px', color: '#a1a1aa' }} />
+                  <Bar dataKey="Score" fill="#10b981" radius={[4, 4, 0, 0]} maxBarSize={30} />
+                  <Bar dataKey="Confidence" fill="#3b82f6" radius={[4, 4, 0, 0]} maxBarSize={30} />
+                  <Bar dataKey="Correctness" fill="#f59e0b" radius={[4, 4, 0, 0]} maxBarSize={30} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -270,47 +272,47 @@ const InterviewReport = () => {
 
       {/* Detailed Feedback Tab Content */}
       {activeTab === 'detailed' && (
-        <div className="space-y-6">
+        <div className="space-y-4">
           {questionWiseScore?.map((item: any, index: number) => (
-            <div key={index} className="bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8 border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
+            <div key={index} className="bg-[#121214] rounded-2xl p-5 md:p-6 border border-zinc-800 shadow-sm hover:border-zinc-700 transition-colors">
               
               <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
                 
                 {/* Question Section */}
                 <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-3">
-                    <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 font-bold text-sm">
+                  <div className="flex items-start gap-3 mb-3">
+                    <span className="flex items-center justify-center w-7 h-7 rounded bg-emerald-500/10 text-emerald-400 font-bold text-xs shrink-0 mt-0.5">
                       Q{index + 1}
                     </span>
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-white leading-relaxed">
+                    <h3 className="text-base font-medium text-zinc-100 leading-relaxed">
                       {item.question}
                     </h3>
                   </div>
                   
-                  <div className="bg-gray-50 dark:bg-gray-900/50 rounded-xl p-5 mt-4 border border-gray-100 dark:border-gray-800">
+                  <div className="bg-zinc-900/50 rounded-xl p-4 mt-4 border border-zinc-800/80">
                     <div className="flex items-center gap-2 mb-2">
-                      <MessageSquare className="w-4 h-4 text-indigo-500" />
-                      <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100">AI Feedback</h4>
+                      <MessageSquare className="w-4 h-4 text-emerald-500" />
+                      <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">AI Feedback</h4>
                     </div>
-                    <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+                    <p className="text-zinc-400 text-sm leading-relaxed">
                       {item.feedback || "No feedback provided."}
                     </p>
                   </div>
                 </div>
 
                 {/* Score Pills Section */}
-                <div className="flex flex-row md:flex-col gap-3 min-w-[140px] flex-wrap">
-                  <div className="bg-white dark:bg-gray-800 border border-indigo-100 dark:border-indigo-900/50 rounded-xl p-3 flex items-center justify-between shadow-sm">
-                    <span className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Score</span>
-                    <span className="text-lg font-bold text-indigo-600 dark:text-indigo-400">{item.score}/10</span>
+                <div className="flex flex-row md:flex-col gap-2 min-w-[140px] flex-wrap md:border-l border-zinc-800/50 md:pl-6 pt-4 md:pt-0 border-t md:border-t-0 border-zinc-800/50">
+                  <div className="bg-zinc-900/80 border border-emerald-500/20 rounded-xl p-2.5 flex flex-1 md:flex-none items-center justify-between shadow-sm">
+                    <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Score</span>
+                    <span className="text-sm font-bold text-emerald-400">{item.score}/10</span>
                   </div>
-                  <div className="bg-white dark:bg-gray-800 border border-emerald-100 dark:border-emerald-900/50 rounded-xl p-3 flex items-center justify-between shadow-sm">
-                    <span className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Confidence</span>
-                    <span className="text-lg font-bold text-emerald-600 dark:text-emerald-400">{item.confidence}/10</span>
+                  <div className="bg-zinc-900/80 border border-blue-500/20 rounded-xl p-2.5 flex flex-1 md:flex-none items-center justify-between shadow-sm">
+                    <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Confidence</span>
+                    <span className="text-sm font-bold text-blue-400">{item.confidence}/10</span>
                   </div>
-                  <div className="bg-white dark:bg-gray-800 border border-amber-100 dark:border-amber-900/50 rounded-xl p-3 flex items-center justify-between shadow-sm">
-                    <span className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Correctness</span>
-                    <span className="text-lg font-bold text-amber-600 dark:text-amber-400">{item.correctness}/10</span>
+                  <div className="bg-zinc-900/80 border border-amber-500/20 rounded-xl p-2.5 flex flex-1 md:flex-none items-center justify-between shadow-sm">
+                    <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Correctness</span>
+                    <span className="text-sm font-bold text-amber-400">{item.correctness}/10</span>
                   </div>
                 </div>
 

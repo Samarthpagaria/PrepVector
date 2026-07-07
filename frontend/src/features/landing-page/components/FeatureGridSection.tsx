@@ -65,8 +65,13 @@ const getBorderClasses = (idx: number) => {
 };
 
 const Crosshair = ({ position }: { position: string }) => (
-    <svg className={`absolute w-3 h-3 text-zinc-600 pointer-events-none ${position} z-10`} style={{ transform: 'translate(-50%, -50%)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+    <svg 
+        style={{ filter: "drop-shadow(0px 0px 6px #10b981) drop-shadow(0px 0px 12px #10b981)" }}
+        className={`absolute ${position} w-4 h-4 text-emerald-500 -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none`} 
+        viewBox="0 0 16 16" 
+        fill="none"
+    >
+        <path d="M8 0V16M0 8H16" stroke="currentColor" strokeWidth="1.5" />
     </svg>
 );
 

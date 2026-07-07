@@ -6,8 +6,19 @@ import MockInterviewSection from "../components/MockInterviewSection";
 import FeatureGridSection from "../components/FeatureGridSection";
 import TestimonialsSection from "../components/TestimonialsSection";
 import FooterSection from "../components/FooterSection";
+import { useEffect } from "react";
+import { useNavigate } from "react-router";
+import { useAuthStore } from "../../../store/useAuth.store";
 
 const LandingPage = () => {
+    const user = useAuthStore(state => state.user);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (user) {
+            navigate("/app");
+        }
+    }, [user, navigate]);
     return (
         <div className="min-h-screen w-full bg-black text-white font-mono grid grid-cols-[1fr_2fr_1fr]">
             {/* Left Section */}
