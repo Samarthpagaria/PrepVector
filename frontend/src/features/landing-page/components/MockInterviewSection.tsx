@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router';
 
 type InterviewStep = 'idle' | 'asking' | 'listening' | 'transcribing' | 'evaluating' | 'next';
 
@@ -182,9 +183,9 @@ const MockInterviewSection = () => {
                                 <p className="text-gray-400 text-[1.05rem] leading-relaxed mb-3 font-mono">
                                     Experience realistic HR and technical interviews with an AI interviewer that adapts to your role, asks follow-up questions, and scores every answer in real time.
                                 </p>
-                                <button className=" text-white px-2 py-1 hover:border border-white rounded-full font-mono font-semibold ">
+                                <Link to="/sign-in" className=" text-white px-2 py-1 hover:border border-white rounded-full font-mono font-semibold inline-block">
                                     Start a Mock Interview →
-                                </button>
+                                </Link>
                             </div>
 
                             {/* Animated Checklist */}

@@ -37,7 +37,7 @@ export const UploadResume = ({ file, onFileSelect }: UploadResumeProps) => {
     <div>
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-[13px] font-medium text-zinc-200">Upload Resume</h3>
-        <span className="px-2 py-0.5 rounded text-[10px] font-medium tracking-wider text-emerald-400 bg-emerald-500/10 uppercase">
+        <span className="px-2 py-0.5 rounded text-[10px] font-medium tracking-wider text-teal-400 bg-zinc-900 border border-teal-500/20 uppercase">
           Recommended
         </span>
       </div>
@@ -59,7 +59,7 @@ export const UploadResume = ({ file, onFileSelect }: UploadResumeProps) => {
           className={`group flex flex-col items-center justify-center p-8 rounded-xl border border-dashed transition-all cursor-pointer ${
             isDragging 
               ? 'border-emerald-500 bg-emerald-500/10' 
-              : 'border-zinc-700 bg-zinc-900/30 hover:bg-zinc-800/40 hover:border-emerald-500/40'
+              : 'border-neutral-800 bg-black hover:bg-neutral-900/40 hover:border-emerald-500/40'
           }`}
         >
           <CloudUpload className={`w-6 h-6 mb-3 transition-colors ${isDragging ? 'text-emerald-500' : 'text-zinc-500 group-hover:text-emerald-500'}`} />

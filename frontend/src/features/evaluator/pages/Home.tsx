@@ -9,7 +9,7 @@ import { useGenerateReport, useGetAllReports } from '../hooks/useEvaluator';
 import { useAuthStore } from '../../../store/useAuth.store';
 import { useNavigate, Link } from 'react-router';
 import Loader from '../../../components/shared/Loader';
-import Navbar from '../../../components/shared/Navbar';
+import Navbar from '../../landing-page/components/Navbar';
 
 const idleMessages = [
   "AI analyzes your resume against the job description.",
@@ -139,7 +139,7 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-[#09090b] text-zinc-200 font-sans flex flex-col relative">
-      {user && <Navbar />}
+      <Navbar />
       <main className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 w-full">
       
       {/* Header */}
@@ -149,13 +149,7 @@ const Home = () => {
             <Star className="w-3.5 h-3.5 fill-emerald-400" />
             {20 - (user.reportGenerationCount || 0)} Reports Left
           </div>
-        ) : (
-          <div className="absolute top-0 right-0">
-             <Link to="/sign-in" className="px-5 py-2 text-sm font-semibold text-zinc-900 bg-white hover:bg-zinc-200 rounded-full transition-colors shadow-sm">
-                Sign In
-             </Link>
-          </div>
-        )}
+        ) : null}
         <h1 className="text-3xl md:text-[32px] font-semibold mb-3 tracking-tight text-zinc-100">
           Create Your Custom <span className="text-emerald-500">Interview Plan</span>
         </h1>
@@ -165,13 +159,13 @@ const Home = () => {
       </div>
 
       {/* Main Card */}
-      <div className="w-full max-w-[1000px] bg-[#121214] rounded-2xl border border-zinc-800/60 shadow-2xl flex flex-col relative overflow-hidden">
+      <div className="w-full max-w-[1000px] bg-black rounded-2xl border border-neutral-800 shadow-2xl flex flex-col relative overflow-hidden">
         
         {/* Content Area */}
         <div className="grid grid-cols-1 md:grid-cols-2">
           
           {/* Left Column */}
-          <div className="p-7 md:p-8 border-b md:border-b-0 md:border-r border-zinc-800/60">
+          <div className="p-7 md:p-8 border-b md:border-b-0 md:border-r border-neutral-800">
             <JobDescription value={jobDescription} onChange={setJobDescription} />
           </div>
 
@@ -179,27 +173,17 @@ const Home = () => {
           <div className="p-7 md:p-8 flex flex-col">
             <div className="flex items-center gap-2.5 mb-6">
               <User className="w-4 h-4 text-emerald-500" />
-              <h2 className="text-base font-medium text-zinc-100">Your Profile</h2>
+              <h2 className="text-base font-medium bg-linear-to-r from-green-50 via-emerald-500 to-green-50 bg-clip-text text-transparent">Your Profile</h2>
             </div>
             
             <UploadResume file={resumeFile} onFileSelect={setResumeFile} />
             
-            <div className="flex items-center gap-4 my-7">
-              <div className="h-px bg-zinc-800/60 flex-1"></div>
-              <span className="text-[10px] font-medium text-zinc-600 uppercase tracking-widest">OR</span>
-              <div className="h-px bg-zinc-800/60 flex-1"></div>
-            </div>
-            
             <SelfDescription value={selfDescription} onChange={setSelfDescription} />
-            
-            <div className="mt-5">
-              <HelperNote />
-            </div>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="px-7 py-4 md:px-8 border-t border-zinc-800/60 bg-[#09090b] flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="px-7 py-4 md:px-8 border-t border-neutral-800 bg-[#09090b] flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="h-6 overflow-hidden relative flex-1 flex items-center">
              {!isLoading ? (
                <span 
@@ -220,8 +204,10 @@ const Home = () => {
           <button 
             onClick={handleGenerate}
             disabled={isLoading}
-            className="flex items-center gap-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 disabled:bg-emerald-600/50 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+            className="gradient-button-green inline-flex items-center justify-center px-6 py-2.5 h-auto text-sm font-bold border-0 min-w-0 rounded-lg group text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 disabled:opacity-50 disabled:pointer-events-none"
           >
+            <div className="absolute inset-0 bg-noise opacity-40 mix-blend-overlay pointer-events-none rounded-lg" />
+            <span className="relative z-10 flex items-center gap-2">
             {isLoading ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -233,12 +219,13 @@ const Home = () => {
                 Generate Strategy
               </>
             )}
+            </span>
           </button>
         </div>
 
         {/* Blurred Fake Report Overlay */}
         {showAuthModal && (
-          <div className="absolute inset-0 z-40 bg-[#09090b]/80 backdrop-blur-[2px] flex items-center justify-center p-8">
+          <div className="absolute inset-0 z-40 bg-black/95 backdrop-blur-[2px] flex items-center justify-center p-8">
             <div className="w-full h-full border border-zinc-800/80 rounded-xl bg-zinc-900/50 overflow-hidden flex flex-col blur-sm opacity-60">
               <div className="p-6 border-b border-zinc-800/80 flex items-center gap-4">
                 <div className="w-12 h-12 rounded-full bg-emerald-500/20" />
@@ -261,7 +248,7 @@ const Home = () => {
       {/* Recent Reports Section (Only if user is logged in) */}
       {user && reports && reports.length > 0 && (
         <div className="w-full max-w-[1000px] mt-8 bg-[#121214] rounded-2xl border border-zinc-800/60 shadow-xl overflow-hidden mb-12">
-          <div className="px-6 py-5 border-b border-zinc-800/60 flex items-center gap-2">
+          <div className="px-6 py-5 border-b border-neutral-800 flex items-center gap-2">
             <FileText className="w-4 h-4 text-emerald-500" />
             <h2 className="text-sm font-semibold text-zinc-100 uppercase tracking-widest">My Recent Reports</h2>
           </div>
@@ -270,7 +257,7 @@ const Home = () => {
               <div 
                 key={report._id}
                 onClick={() => navigate(`/report/${report._id}`)}
-                className="group flex items-center justify-between p-5 border-b border-zinc-800/60 last:border-0 hover:bg-zinc-900/50 cursor-pointer transition-all duration-200"
+                className="group flex items-center justify-between p-5 border-b border-neutral-800 last:border-0 hover:bg-zinc-900/50 cursor-pointer transition-all duration-200"
               >
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-full bg-emerald-500/5 flex items-center justify-center border border-emerald-500/10 group-hover:bg-emerald-500/10 group-hover:border-emerald-500/20 transition-all">

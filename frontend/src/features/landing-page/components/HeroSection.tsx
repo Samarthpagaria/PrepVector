@@ -122,7 +122,7 @@ const HeroSection = () => {
                 {/* CTAs */}
                 <div className="flex flex-col sm:flex-row items-center gap-2.5">
                     <Link
-                        to="/app"
+                        to="/sign-in"
                         className="group relative inline-flex items-center gap-1.5 px-5 py-2 rounded-lg font-mono font-bold text-xs text-zinc-950 overflow-hidden transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98]"
                     >
                         <span className="absolute inset-0 bg-gradient-to-r from-emerald-300 via-green-300 to-teal-300 animate-gradient-x" />
@@ -139,7 +139,7 @@ const HeroSection = () => {
 
                     <div className="relative group rounded-lg p-[1px]  transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98]">
                         <Link
-                            to="/app/interview"
+                            to="/sign-in"
                             className="relative flex items-center gap-1.5 px-5 py-2 rounded-[7px] font-mono font-semibold text-xs bg-zinc-950/80 backdrop-blur-md hover:bg-zinc-900/80 transition-colors"
                         >
                             <span className="flex items-center gap-1.5 ">

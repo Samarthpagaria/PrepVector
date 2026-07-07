@@ -31,7 +31,7 @@ const FooterSection = () => {
 
                 {/* Right: Signup Button */}
                 <div className="shrink-0 z-10">
-                    <Link to="/auth/signup">
+                    <Link to="/sign-in">
                         <GradientButton className="h-10 px-6 py-2 rounded-xl text-sm font-bold font-mono">
                             Get Started
                         </GradientButton>

@@ -247,6 +247,52 @@
   box-shadow: inset 0 0 0 1px rgba(249, 115, 22, 0.4), 0 0 25px -5px rgba(249, 115, 22, 0.5);
 }
 
+.gradient-button-green {
+  background: #09090b;
+  position: relative;
+  overflow: hidden;
+  border-radius: 11px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1), 0 0 15px -3px rgba(16, 185, 129, 0.15);
+  z-index: 1;
+  transition: box-shadow 0.4s ease;
+}
+
+.gradient-button-green::before {
+  content: "";
+  position: absolute;
+  inset: -100px;
+  background: radial-gradient(circle at center, rgba(16, 185, 129, 0.6) 0%, transparent 50%);
+  transform: translate(50px, -50px);
+  z-index: -1;
+  opacity: 1;
+  transition: all 0.5s ease;
+}
+
+.gradient-button-green::after {
+  content: "";
+  position: absolute;
+  inset: -100px;
+  background: radial-gradient(circle at center, rgba(20, 184, 166, 0.85) 0%, rgba(45, 212, 191, 0.4) 40%, transparent 60%);
+  transform: translate(50px, -50px);
+  z-index: -1;
+  opacity: 0;
+  transition: all 0.5s ease;
+}
+
+.gradient-button-green:hover::before {
+  transform: translate(-50px, 50px);
+  opacity: 0;
+}
+
+.gradient-button-green:hover::after {
+  transform: translate(-50px, 50px);
+  opacity: 1;
+}
+
+.gradient-button-green:hover {
+  box-shadow: inset 0 0 0 1px rgba(20, 184, 166, 0.4), 0 0 25px -5px rgba(20, 184, 166, 0.5);
+}
+
 @keyframes gradientMove {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }

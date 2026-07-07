@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router';
 
 const steps = [
     { id: 1, title: 'Personal Details', desc: 'Add your core contact info.' },
@@ -129,9 +130,9 @@ const DemoSection = () => {
                                 <p className="text-gray-400 text-[1.05rem] leading-relaxed mb-3 font-mono">
                                     Create an ATS-optimized, beautifully formatted resume in minutes without ever fighting with margins or layout blocks.
                                 </p>
-                                <button className=" text-white px-2 py-1 hover:border border-white rounded-full font-mono font-semibold ">
+                                <Link to="/sign-in" className=" text-white px-2 py-1 hover:border border-white rounded-full font-mono font-semibold ">
                                     Start Building →
-                                </button>
+                                </Link>
                             </div>
 
                             {/* Animated Checklist */}

@@ -59,7 +59,7 @@ const Navbar = () => {
                 <div className="flex items-center gap-3">
                     {/* Analyze Resume Button using GradientButton */}
                     <GradientButton asChild className="px-4 py-1.5 h-auto text-xs font-bold font-mono border-0 min-w-0 rounded-lg">
-                        <Link to="/test" className="group">
+                        <Link to="/analyze-resume" className="group">
                             <div className="absolute inset-0 bg-noise opacity-40 mix-blend-overlay pointer-events-none rounded-lg" />
                             <span className="relative z-10">Analyze Resume</span>
                         </Link>
