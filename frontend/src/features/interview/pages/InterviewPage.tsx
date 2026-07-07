@@ -1,11 +1,13 @@
 import React from 'react'
 import { useState } from 'react'
+import { useNavigate } from 'react-router'
 import Setup from '../components/Setup'
 import Interview from '../components/Interview'
-import Report from '../components/Report'
+
 const InterviewPage = () => {
     const [step, setStep] = useState(1);
-    const [interviewData, setInterviewData] = useState(null);
+    const [interviewData, setInterviewData] = useState<any>(null);
+    const navigate = useNavigate();
 
   return (
       <div className=''>
@@ -14,12 +16,11 @@ const InterviewPage = () => {
           )}
           {step === 2 && (
               <Interview interviewData={interviewData} onFinish={(report) => {
-                  setInterviewData(report); 
-                  setStep(3)
+                  const id = report?.data?._id || interviewData?.interviewId;
+                  if (id) {
+                      navigate(`/app/interview-report/${id}`);
+                  }
               }}/>
-          )}
-          {step === 3 && (
-              <Report report={interviewData}/>
           )}
     </div>
   )

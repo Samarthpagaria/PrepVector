@@ -29,15 +29,15 @@ export const verifyJWT = async (req, res, next) => {
     next();
   } catch (error) {
     if (error.name === "TokenExpiredError") {
-      return res.status(401).json({ message: "Token expired", error: error.message });
+      return res.status(401).json({ message: "Token expired" });
     }
     if (error.name === "JsonWebTokenError") {
-      return res.status(401).json({ message: "Invalid token", error: error.message });
+      return res.status(401).json({ message: "Invalid token" });
     }
     
     console.error("Auth Middleware Error:", error);
     return res
       .status(500)
-      .json({ message: "Internal server error", error: error.message });
+      .json({ message: "Internal server error" });
   }
 };

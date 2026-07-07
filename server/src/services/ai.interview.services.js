@@ -26,9 +26,9 @@ export const askAI = async (messages) => {
         return response.content;
     } catch (error) {
         if (error.response?.status === 429) {
-            throw new Error("Too many requests. Please try again later.quota might be full.");
+            throw new Error("Too many requests. Please try again later. Quota might be full.");
         }
-        console.error("Open router Error:",error.response?.data || error.message || error);
-        throw new Error ("Open router API error",error);
+        console.error("AI Service Error:", error.response?.data || error.message || error);
+        throw new Error("Failed to process request with AI service. Please try again later.");
     }
 }

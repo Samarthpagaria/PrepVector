@@ -68,7 +68,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100">
+    <div className="text-zinc-100">
         <div className='max-w-7xl mx-auto px-4 py-6 lg:py-8'>
             <div className="flex justify-between items-center mb-6">
                 <h1 className='text-2xl font-bold bg-linear-to-r from-green-50 via-emerald-500 to-green-50 bg-clip-text text-transparent'>

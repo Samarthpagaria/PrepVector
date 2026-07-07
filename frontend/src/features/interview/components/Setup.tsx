@@ -65,42 +65,66 @@ const Setup: React.FC<SetupProps> = ({ onStart }) => {
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-4 relative overflow-hidden text-zinc-200">
+    <div className="min-h-[calc(100vh-80px)] flex items-center justify-center p-4 md:p-8 relative overflow-hidden text-zinc-200">
       
-      {/* Background Glows (Optional subtle effects) */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
-
-      <div className="w-full max-w-2xl relative z-10">
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center p-3 bg-zinc-900 border border-zinc-800 rounded-2xl shadow-xl mb-6">
-            <Sparkles className="w-8 h-8 text-emerald-400" />
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-4">
-            Smart Voice Assistant
-          </h1>
-          <p className="text-lg text-zinc-400 max-w-lg mx-auto">
-            Configure your interview parameters. Our AI will tailor the questions specifically to your role, experience level, and resume.
-          </p>
-        </div>
-
-        {error && (
-          <div className="mb-6 p-4 bg-red-950/50 border border-red-500/50 rounded-xl flex items-center gap-3 text-red-200">
-            <Sparkles className="w-5 h-5 text-red-400 flex-shrink-0" />
-            <p className="text-sm font-medium">{error}</p>
-          </div>
-        )}
-
-        <form onSubmit={isAnalyzed ? (e) => { e.preventDefault(); handleStartInterview(); } : handleAnalyze} className="bg-[#121214]/80 backdrop-blur-xl p-8 rounded-3xl shadow-2xl border border-zinc-800/80">
-          <div className="space-y-6">
+      <div className="w-full max-w-6xl mx-auto relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          
+          {/* Left Half: Text Content */}
+          <div className="text-left max-w-xl">
+            <div className="inline-flex items-center justify-center p-3 bg-black border border-neutral-800 rounded-2xl shadow-xl mb-6">
+              <Sparkles className="w-8 h-8 text-emerald-400" />
+            </div>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-6 leading-tight">
+              AI Mock <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-500">Interview</span>
+            </h1>
+            <p className="text-lg text-zinc-400 leading-relaxed mb-8">
+              Experience a hyper-realistic mock interview. Our AI will analyze your resume and tailor questions specifically to your target role and experience level.
+            </p>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Role Input */}
+            <ul className="space-y-4">
+              <li className="flex items-center gap-3 text-zinc-300">
+                <div className="w-6 h-6 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                </div>
+                <span className="text-sm font-medium">Hyper-realistic voice conversations</span>
+              </li>
+              <li className="flex items-center gap-3 text-zinc-300">
+                <div className="w-6 h-6 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                </div>
+                <span className="text-sm font-medium">Questions tailored to your resume</span>
+              </li>
+              <li className="flex items-center gap-3 text-zinc-300">
+                <div className="w-6 h-6 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                </div>
+                <span className="text-sm font-medium">Instant actionable feedback and scoring</span>
+              </li>
+            </ul>
+          </div>
+
+          {/* Right Half: The Form Card */}
+          <div className="w-full max-w-[36rem] mx-auto lg:ml-auto">
+            {error && (
+              <div className="mb-4 p-3 bg-red-950/50 border border-red-500/50 rounded-xl flex items-center gap-2 text-red-200 text-sm">
+                <Sparkles className="w-4 h-4 text-red-400 flex-shrink-0" />
+                <p className="font-medium">{error}</p>
+              </div>
+            )}
+
+            <form onSubmit={isAnalyzed ? (e) => { e.preventDefault(); handleStartInterview(); } : handleAnalyze} className="bg-black p-6 md:p-8 rounded-[1.5rem] shadow-2xl border border-neutral-800 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent opacity-50"></div>
+          
+          <div className="space-y-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {/* Target Role */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-zinc-300 ml-1">Target Role</label>
+                <label className="text-xs font-semibold text-zinc-300 ml-1">Target Role</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Briefcase className="h-5 w-5 text-zinc-500" />
+                    <Briefcase className="h-4 w-4 text-zinc-500" />
                   </div>
                   <input
                     type="text"
@@ -109,17 +133,17 @@ const Setup: React.FC<SetupProps> = ({ onStart }) => {
                     onChange={(e) => setRole(e.target.value)}
                     placeholder="e.g. Frontend Developer"
                     disabled={isAnalyzing || isGenerating || isAnalyzed}
-                    className="w-full pl-10 pr-4 py-3 bg-zinc-900/50 border border-zinc-700/50 rounded-xl text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all disabled:opacity-50"
+                    className="w-full pl-9 pr-3 py-2.5 bg-neutral-900/50 border border-neutral-800 rounded-xl text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-emerald-500 transition-all disabled:opacity-50 text-sm"
                   />
                 </div>
               </div>
 
-              {/* Experience Input */}
+              {/* Experience */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-zinc-300 ml-1">Years of Experience</label>
+                <label className="text-xs font-semibold text-zinc-300 ml-1">Experience</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Clock className="h-5 w-5 text-zinc-500" />
+                    <Clock className="h-4 w-4 text-zinc-500" />
                   </div>
                   <input
                     type="text"
@@ -128,43 +152,43 @@ const Setup: React.FC<SetupProps> = ({ onStart }) => {
                     onChange={(e) => setExperience(e.target.value)}
                     placeholder="e.g. 3 years"
                     disabled={isAnalyzing || isGenerating || isAnalyzed}
-                    className="w-full pl-10 pr-4 py-3 bg-zinc-900/50 border border-zinc-700/50 rounded-xl text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all disabled:opacity-50"
+                    className="w-full pl-9 pr-3 py-2.5 bg-neutral-900/50 border border-neutral-800 rounded-xl text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-emerald-500 transition-all disabled:opacity-50 text-sm"
                   />
                 </div>
               </div>
             </div>
 
-            {/* Interview Type Dropdown */}
+            {/* Interview Type */}
             <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-300 ml-1">Interview Type</label>
+              <label className="text-xs font-semibold text-zinc-300 ml-1">Interview Type</label>
               <div className="relative">
                 <select
                   value={interviewType}
                   onChange={(e) => setInterviewType(e.target.value)}
                   disabled={isAnalyzing || isGenerating || isAnalyzed}
-                  className="w-full appearance-none pl-11 pr-10 py-3 bg-zinc-900/50 hover:bg-zinc-900/80 border border-zinc-700/50 hover:border-zinc-600 rounded-xl text-zinc-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-inner"
+                  className="w-full appearance-none pl-9 pr-8 py-2.5 bg-neutral-900/50 hover:bg-neutral-900 border border-neutral-800 hover:border-neutral-700 rounded-xl text-zinc-100 focus:outline-none focus:border-emerald-500 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-sm"
                 >
-                  <option value="Technical" className="bg-zinc-900 text-zinc-100 py-2">Technical Interview</option>
-                  <option value="HR" className="bg-zinc-900 text-zinc-100 py-2">Behavioral Interview</option>
+                  <option value="Technical" className="bg-neutral-900 text-zinc-100 py-2">Technical Interview</option>
+                  <option value="HR" className="bg-neutral-900 text-zinc-100 py-2">Behavioral Interview</option>
                 </select>
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Briefcase className="h-4 w-4 text-emerald-500/80" />
                 </div>
-                <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-                  <ChevronDown className="h-5 w-5 text-zinc-500" />
+                <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                  <ChevronDown className="h-4 w-4 text-zinc-500" />
                 </div>
               </div>
             </div>
 
-            {/* Resume Upload or Analysis Result */}
-            {!isAnalyzed ? (
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-zinc-300 ml-1">Upload Resume (PDF)</label>
+            {/* Resume Upload / Results */}
+            <div className="space-y-2">
+              <label className="text-xs font-semibold text-zinc-300 ml-1">Resume Input</label>
+              {!isAnalyzed ? (
                 <div 
                   onClick={() => !isAnalyzing && !isGenerating && fileInputRef.current?.click()}
-                  className={`relative border-2 border-dashed rounded-xl p-8 transition-all flex flex-col items-center justify-center text-center
+                  className={`relative border border-dashed rounded-xl p-6 transition-all flex flex-col items-center justify-center text-center group
                     ${isAnalyzing || isGenerating ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-                    ${resume ? 'border-emerald-500/50 bg-emerald-500/5' : 'border-zinc-700/50 hover:border-zinc-600 bg-zinc-900/30'}`}
+                    ${resume ? 'border-emerald-500/50 bg-emerald-500/5' : 'border-neutral-800 hover:border-emerald-500/50 hover:bg-neutral-900/50'}`}
                 >
                   <input 
                     type="file" 
@@ -177,73 +201,85 @@ const Setup: React.FC<SetupProps> = ({ onStart }) => {
                   
                   {resume ? (
                     <>
-                      <div className="w-12 h-12 bg-emerald-500/20 rounded-full flex items-center justify-center mb-3">
-                        <CheckCircle2 className="w-6 h-6 text-emerald-400" />
+                      <div className="w-10 h-10 bg-emerald-500/20 rounded-full flex items-center justify-center mb-2">
+                        <CheckCircle2 className="w-5 h-5 text-emerald-400" />
                       </div>
-                      <p className="text-sm font-medium text-emerald-400 mb-1">Resume Attached Successfully</p>
-                      <p className="text-xs text-zinc-500">{resume.name}</p>
+                      <p className="text-sm font-medium text-emerald-400 mb-0.5">Resume Attached</p>
+                      <p className="text-[11px] text-zinc-500">{resume.name}</p>
                     </>
                   ) : (
                     <>
-                      <div className="w-12 h-12 bg-zinc-800 rounded-full flex items-center justify-center mb-3 shadow-inner">
-                        <Upload className="w-6 h-6 text-zinc-400" />
+                      <div className="w-10 h-10 bg-neutral-900 rounded-full flex items-center justify-center mb-3 shadow-inner border border-neutral-800 group-hover:border-emerald-500/30 transition-colors">
+                        <Upload className="w-5 h-5 text-zinc-500 group-hover:text-emerald-400 transition-colors" />
                       </div>
-                      <p className="text-sm font-medium text-zinc-300 mb-1">Click to browse or drag and drop</p>
-                      <p className="text-xs text-zinc-500">Only PDF files are supported</p>
+                      <p className="text-[13px] font-medium text-zinc-300 mb-0.5">Click to browse (PDF)</p>
                     </>
                   )}
                 </div>
-              </div>
-            ) : (
-              <div className="space-y-4 bg-zinc-900/40 p-5 rounded-2xl border border-zinc-800/80 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                <h3 className="text-lg font-semibold text-zinc-100 border-b border-zinc-800 pb-2">Resume Analysis Result</h3>
-                
-                <div className="space-y-2">
-                  <h4 className="text-sm font-medium text-zinc-400">Projects Detected:</h4>
-                  <ul className="list-disc pl-5 space-y-1">
-                    {resumeData.projects && resumeData.projects.length > 0 ? (
-                      resumeData.projects.map((project, idx) => (
-                        <li key={idx} className="text-sm text-zinc-300">{project}</li>
-                      ))
-                    ) : (
-                      <li className="text-sm text-zinc-500 italic">No projects found.</li>
-                    )}
-                  </ul>
-                </div>
+              ) : (
+                <div className="bg-neutral-900/60 p-5 rounded-xl border border-neutral-800/80 animate-in fade-in slide-in-from-bottom-2 duration-300 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 p-2 opacity-5">
+                    <Sparkles className="w-16 h-16 text-emerald-500" />
+                  </div>
+                  <div className="relative z-10">
+                    <h3 className="text-[11px] font-bold tracking-widest uppercase text-emerald-400 mb-4 flex items-center gap-1.5">
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                      Analysis Complete
+                    </h3>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div className="bg-black/50 p-3 rounded-lg border border-neutral-800">
+                        <h4 className="text-[9px] font-bold tracking-widest text-zinc-500 uppercase mb-2">Key Projects</h4>
+                        <ul className="space-y-1.5">
+                          {resumeData.projects && resumeData.projects.length > 0 ? (
+                            resumeData.projects.map((project, idx) => (
+                              <li key={idx} className="text-[10px] text-zinc-300 flex items-start gap-1.5 leading-tight">
+                                <span className="w-1 h-1 rounded-full bg-emerald-500 mt-1 shrink-0"></span>
+                                {project}
+                              </li>
+                            ))
+                          ) : (
+                            <li className="text-[10px] text-zinc-600 italic">No projects found.</li>
+                          )}
+                        </ul>
+                      </div>
 
-                <div className="space-y-2 pt-2">
-                  <h4 className="text-sm font-medium text-zinc-400">Skills Identified:</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {resumeData.skills && resumeData.skills.length > 0 ? (
-                      resumeData.skills.map((skill, idx) => (
-                        <span key={idx} className="px-2.5 py-1 bg-emerald-950/30 text-emerald-400 border border-emerald-900/50 rounded-md text-xs font-medium">
-                          {skill}
-                        </span>
-                      ))
-                    ) : (
-                      <span className="text-sm text-zinc-500 italic">No skills found.</span>
-                    )}
+                      <div className="bg-black/50 p-3 rounded-lg border border-neutral-800">
+                        <h4 className="text-[9px] font-bold tracking-widest text-zinc-500 uppercase mb-2">Core Skills</h4>
+                        <div className="flex flex-wrap gap-1.5">
+                          {resumeData.skills && resumeData.skills.length > 0 ? (
+                            resumeData.skills.map((skill, idx) => (
+                              <span key={idx} className="px-1.5 py-0.5 bg-black text-zinc-400 border border-neutral-800 rounded text-[9px] font-medium">
+                                {skill}
+                              </span>
+                            ))
+                          ) : (
+                            <span className="text-[10px] text-zinc-600 italic">No skills found.</span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
 
             {/* Submit Button */}
-            <div className="pt-4">
+            <div className="pt-3">
               {!isAnalyzed ? (
                 <button
                   type="submit"
                   disabled={!role || !experience || !resume || isAnalyzing}
-                  className="w-full flex items-center justify-center gap-2 bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 disabled:hover:bg-zinc-800 disabled:cursor-not-allowed text-zinc-100 font-bold py-3.5 px-6 rounded-xl transition-all border border-zinc-700 shadow-sm"
+                  className="w-full flex items-center justify-center gap-2 bg-neutral-900 hover:bg-neutral-800 disabled:opacity-50 disabled:hover:bg-neutral-900 disabled:cursor-not-allowed text-zinc-100 font-bold py-3.5 rounded-xl transition-all border border-neutral-800 shadow-sm text-sm"
                 >
                   {isAnalyzing ? (
                     <>
-                      <Loader2 className="w-5 h-5 animate-spin" />
-                      Analyzing Resume...
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Analyzing...
                     </>
                   ) : (
                     <>
-                      <Sparkles className="w-5 h-5 text-emerald-400" />
+                      <Sparkles className="w-4 h-4 text-emerald-400" />
                       Analyze Resume
                     </>
                   )}
@@ -252,16 +288,16 @@ const Setup: React.FC<SetupProps> = ({ onStart }) => {
                 <button
                   type="submit"
                   disabled={isGenerating}
-                  className="w-full flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 disabled:hover:bg-emerald-500 disabled:cursor-not-allowed text-zinc-950 font-bold py-3.5 px-6 rounded-xl transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] animate-in fade-in slide-in-from-bottom-2 duration-300"
+                  className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 disabled:from-zinc-800 disabled:to-zinc-800 disabled:text-zinc-500 disabled:border-zinc-800 disabled:cursor-not-allowed text-zinc-950 font-bold tracking-wide text-sm py-2.5 rounded-xl transition-all shadow-[0_0_15px_rgba(16,185,129,0.2)] hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] animate-in fade-in slide-in-from-bottom-2 duration-300"
                 >
                   {isGenerating ? (
                     <>
-                      <Loader2 className="w-5 h-5 animate-spin" />
-                      Generating Questions...
+                      <Loader2 className="w-4 h-4 animate-spin text-zinc-500" />
+                      Generating...
                     </>
                   ) : (
                     <>
-                      <Play className="w-5 h-5 fill-current" />
+                      <Play className="w-4 h-4 fill-current" />
                       Start Interview
                     </>
                   )}
@@ -273,6 +309,8 @@ const Setup: React.FC<SetupProps> = ({ onStart }) => {
         </form>
       </div>
     </div>
+  </div>
+</div>
   );
 };
 

@@ -37,7 +37,7 @@ const CircularProgress = ({ value, label, color }: { value: number, label: strin
       ></div>
       
       <div className="relative flex items-center justify-center w-32 h-32 mb-4">
-        <svg className="w-full h-full transform -rotate-90">
+        <svg className="w-full h-full transform -rotate-90 filter drop-shadow-[0_0_8px_currentColor]">
           <circle
             cx="64"
             cy="64"
@@ -45,7 +45,7 @@ const CircularProgress = ({ value, label, color }: { value: number, label: strin
             stroke="currentColor"
             strokeWidth="6"
             fill="transparent"
-            className="text-zinc-800/50"
+            className="text-zinc-800/30"
           />
           <circle
             cx="64"
@@ -60,12 +60,12 @@ const CircularProgress = ({ value, label, color }: { value: number, label: strin
             strokeLinecap="round"
           />
         </svg>
-        <div className="absolute flex flex-col items-center justify-center">
+        <div className="absolute flex flex-col items-center justify-center bg-[#121214] w-[88px] h-[88px] rounded-full shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)]">
           <span className="text-3xl font-extrabold text-white">{(value || 0).toFixed(1)}</span>
           <span className="text-[10px] font-semibold text-zinc-500 uppercase tracking-widest">/ 10</span>
         </div>
       </div>
-      <span className="text-sm font-semibold text-zinc-400 tracking-wide uppercase text-center">{label}</span>
+      <span className="text-sm font-bold text-zinc-300 tracking-wider uppercase text-center">{label}</span>
     </div>
   );
 };
@@ -100,19 +100,19 @@ const QuestionCard = ({ item, index }: { item: QuestionScore, index: number }) =
 
       <div className={`grid transition-all duration-500 ease-in-out ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
         <div className="overflow-hidden">
-          <div className="p-5 md:p-6 border-t border-zinc-800/50 bg-[#0a0a0b]/30">
-            <div className="grid grid-cols-3 gap-3 md:gap-6 mb-8">
-              <div className="p-4 bg-[#121214] rounded-2xl border border-zinc-800/50">
-                <span className="text-[10px] md:text-xs text-zinc-500 block mb-1 uppercase font-bold tracking-widest">Confidence</span>
-                <span className="text-xl md:text-2xl font-black text-blue-400">{(item.confidence || 0).toFixed(1)} <span className="text-xs text-zinc-600 font-semibold">/10</span></span>
+          <div className="p-5 md:p-6 border-t border-zinc-800/50 bg-[#0a0a0c]/80 backdrop-blur-sm">
+            <div className="flex flex-wrap gap-3 md:gap-4 mb-6">
+              <div className="flex items-center gap-2 px-4 py-2 bg-[#121214] rounded-xl border border-zinc-800/80 shadow-sm">
+                <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-widest">Confidence</span>
+                <span className="text-sm font-black text-blue-400">{(item.confidence || 0).toFixed(1)}</span>
               </div>
-              <div className="p-4 bg-[#121214] rounded-2xl border border-zinc-800/50">
-                <span className="text-[10px] md:text-xs text-zinc-500 block mb-1 uppercase font-bold tracking-widest">Communication</span>
-                <span className="text-xl md:text-2xl font-black text-purple-400">{(item.communication || 0).toFixed(1)} <span className="text-xs text-zinc-600 font-semibold">/10</span></span>
+              <div className="flex items-center gap-2 px-4 py-2 bg-[#121214] rounded-xl border border-zinc-800/80 shadow-sm">
+                <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-widest">Communication</span>
+                <span className="text-sm font-black text-purple-400">{(item.communication || 0).toFixed(1)}</span>
               </div>
-              <div className="p-4 bg-[#121214] rounded-2xl border border-zinc-800/50">
-                <span className="text-[10px] md:text-xs text-zinc-500 block mb-1 uppercase font-bold tracking-widest">Correctness</span>
-                <span className="text-xl md:text-2xl font-black text-amber-400">{(item.correctness || 0).toFixed(1)} <span className="text-xs text-zinc-600 font-semibold">/10</span></span>
+              <div className="flex items-center gap-2 px-4 py-2 bg-[#121214] rounded-xl border border-zinc-800/80 shadow-sm">
+                <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-widest">Correctness</span>
+                <span className="text-sm font-black text-amber-400">{(item.correctness || 0).toFixed(1)}</span>
               </div>
             </div>
             
@@ -211,7 +211,7 @@ const Report = ({ report }: ReportProps) => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 md:px-6 py-12 md:py-20 min-h-screen">
+    <div className="max-w-5xl mx-auto px-4 md:px-6 py-12 md:py-20 min-h-[calc(100vh-80px)]">
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
         <div>
           <div className="flex items-center gap-3 mb-4">

@@ -330,7 +330,7 @@ const Interview: React.FC<InterviewProps> = ({ interviewData, onFinish }) => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-zinc-200 p-4 md:p-8 flex flex-col">
+    <div className="min-h-[calc(100vh-80px)] text-zinc-200 p-4 md:p-8 flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between mb-8 max-w-7xl mx-auto w-full">
         <div className="flex items-center gap-3">
@@ -361,22 +361,22 @@ const Interview: React.FC<InterviewProps> = ({ interviewData, onFinish }) => {
         <div className="lg:col-span-4 flex flex-col gap-6">
           
           {/* AI Avatar Display */}
-          <div className="bg-[#121214] border border-zinc-800 rounded-3xl overflow-hidden relative shadow-2xl group">
+          <div className="bg-[#121214]/60 backdrop-blur-xl border border-zinc-800/80 rounded-[2rem] overflow-hidden relative shadow-2xl group">
             {/* Sleek placeholder gradient for the avatar background */}
-            <div className="aspect-[4/3] bg-gradient-to-br from-zinc-800 to-zinc-950 relative flex flex-col items-center justify-center p-6">
+            <div className="aspect-[4/3] bg-gradient-to-br from-[#0a0a0c] via-zinc-900/50 to-zinc-950 relative flex flex-col items-center justify-center p-6">
               
               {/* Animated rings when AI is playing/speaking */}
               {isAiPlaying && (
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-32 h-32 border border-emerald-500/20 rounded-full animate-[ping_3s_cubic-bezier(0,0,0.2,1)_infinite]"></div>
-                  <div className="absolute w-24 h-24 border border-emerald-500/40 rounded-full animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite]"></div>
+                  <div className="w-40 h-40 border border-emerald-500/20 rounded-full animate-[ping_3s_cubic-bezier(0,0,0.2,1)_infinite] shadow-[0_0_30px_rgba(16,185,129,0.2)]"></div>
+                  <div className="absolute w-28 h-28 border-2 border-emerald-500/40 rounded-full animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite] shadow-[0_0_20px_rgba(16,185,129,0.4)]"></div>
                 </div>
               )}
               
               {/* Core Avatar Icon */}
-              <div className={`relative z-10 w-20 h-20 bg-zinc-900 border rounded-full flex items-center justify-center shadow-lg transition-all duration-500
-                ${isAiPlaying ? 'border-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.3)]' : 'border-zinc-700'}`}>
-                 <Bot className={`w-10 h-10 ${isAiPlaying ? 'text-emerald-400' : 'text-zinc-500'}`} />
+              <div className={`relative z-10 w-24 h-24 bg-zinc-950 border rounded-full flex items-center justify-center shadow-xl transition-all duration-500
+                ${isAiPlaying ? 'border-emerald-500 shadow-[0_0_40px_rgba(16,185,129,0.4)] scale-105' : 'border-zinc-800'}`}>
+                 <Bot className={`w-12 h-12 transition-colors duration-500 ${isAiPlaying ? 'text-emerald-400 drop-shadow-[0_0_10px_rgba(16,185,129,0.8)]' : 'text-zinc-600'}`} />
               </div>
               
               <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
@@ -424,7 +424,7 @@ const Interview: React.FC<InterviewProps> = ({ interviewData, onFinish }) => {
                 />
                 <circle 
                   cx="50" cy="50" r="45" 
-                  className={`fill-none ${timeLeft < 60 ? 'stroke-red-500' : 'stroke-emerald-500'} transition-all duration-1000 ease-linear`} 
+                  className={`fill-none ${timeLeft < 60 ? 'stroke-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]' : 'stroke-emerald-500 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]'} transition-all duration-1000 ease-linear`} 
                   strokeWidth="8"
                   strokeDasharray="283"
                   strokeDashoffset={283 - (283 * timeLeft) / (currentQuestion?.timeLimit || 300)}
@@ -458,8 +458,8 @@ const Interview: React.FC<InterviewProps> = ({ interviewData, onFinish }) => {
         <div className="lg:col-span-8 flex flex-col gap-6">
           
           {/* Question Box */}
-          <div className="bg-[#121214] border border-zinc-800 rounded-3xl p-8 shadow-xl relative overflow-hidden transition-all duration-500">
-            <div className={`absolute top-0 left-0 w-1 h-full ${isIntroPhase ? 'bg-zinc-700' : 'bg-emerald-500'}`}></div>
+          <div className="bg-[#121214]/80 backdrop-blur-md border border-zinc-800/80 rounded-[2rem] p-8 shadow-xl relative overflow-hidden transition-all duration-500">
+            <div className={`absolute top-0 left-0 w-1.5 h-full transition-colors duration-500 ${isIntroPhase ? 'bg-zinc-700' : 'bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.5)]'}`}></div>
             <div className="flex items-center gap-2 mb-3">
               <span className={`text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-md ${isIntroPhase ? 'bg-zinc-800 text-zinc-500' : 'text-emerald-400 bg-emerald-500/10'}`}>
                 {isIntroPhase ? 'Preparing' : `Question ${currentIndex + 1} of ${totalQuestions}`}
@@ -476,7 +476,7 @@ const Interview: React.FC<InterviewProps> = ({ interviewData, onFinish }) => {
           </div>
 
           {/* Answer Input Box */}
-          <div className="bg-[#121214] border border-zinc-800 rounded-3xl p-6 shadow-xl flex-1 flex flex-col min-h-[300px]">
+          <div className="bg-[#121214]/60 backdrop-blur-md border border-zinc-800/80 rounded-[2rem] p-6 shadow-xl flex-1 flex flex-col min-h-[300px] transition-all hover:border-zinc-700/80">
             <textarea
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
@@ -518,7 +518,7 @@ const Interview: React.FC<InterviewProps> = ({ interviewData, onFinish }) => {
             <button
               onClick={handleSubmit}
               disabled={!answer.trim() || isSubmitting || isIntroPhase}
-              className="flex-1 bg-emerald-500 hover:bg-emerald-600 disabled:bg-zinc-800 disabled:text-zinc-500 disabled:cursor-not-allowed text-zinc-950 font-bold text-lg h-16 rounded-2xl transition-all flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(16,185,129,0.2)] hover:shadow-[0_0_30px_rgba(16,185,129,0.4)]"
+              className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 disabled:from-zinc-800 disabled:to-zinc-800 disabled:text-zinc-500 disabled:cursor-not-allowed text-zinc-950 font-black tracking-wide text-lg h-16 rounded-[1.5rem] transition-all flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(16,185,129,0.2)] hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] hover:-translate-y-0.5 active:translate-y-0 disabled:transform-none disabled:shadow-none"
             >
               {isSubmitting ? (
                 <>

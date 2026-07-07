@@ -4,6 +4,7 @@ import { useState } from "react";
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import lottieLogoUrl from '../../../assets/prepVectorLogo.lottie?url';
 import { GradientButton } from '../../../components/ui/gradient-button';
+import { useAuthStore } from '../../../store/useAuth.store';
 
 const GithubIcon = ({ className }: { className?: string }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -14,6 +15,7 @@ const GithubIcon = ({ className }: { className?: string }) => (
 
 const Navbar = () => {
     const [isDark, setIsDark] = useState(true); 
+    const { user } = useAuthStore();
 
     return (
         <nav className="sticky top-0 z-50 w-full flex items-center justify-between py-3 px-6 border-b border-zinc-800 bg-black/40 backdrop-blur-md shadow-sm">
@@ -65,16 +67,29 @@ const Navbar = () => {
                         </Link>
                     </GradientButton>
                     
-                    <Link 
-                        to="/sign-in" 
-                        className="relative block overflow-hidden px-4 py-1.5 rounded-full font-bold font-mono text-xs tracking-wide text-emerald-950"
-                    >
-                        <div className="absolute inset-0 bg-gradient-to-r from-emerald-100 via-white to-emerald-200 animate-gradient-x" />
-                        <div className="absolute inset-0 bg-noise opacity-70 mix-blend-overlay pointer-events-none" />
-                        <span className="relative z-10 flex items-center justify-center gap-1">
-                            Sign In
-                        </span>
-                    </Link>
+                    {user ? (
+                        <Link 
+                            to="/app" 
+                            className="relative block overflow-hidden px-4 py-1.5 rounded-full font-bold font-mono text-xs tracking-wide text-emerald-950"
+                        >
+                            <div className="absolute inset-0 bg-gradient-to-r from-emerald-100 via-white to-emerald-200 animate-gradient-x" />
+                            <div className="absolute inset-0 bg-noise opacity-70 mix-blend-overlay pointer-events-none" />
+                            <span className="relative z-10 flex items-center justify-center gap-1">
+                                Dashboard
+                            </span>
+                        </Link>
+                    ) : (
+                        <Link 
+                            to="/sign-in" 
+                            className="relative block overflow-hidden px-4 py-1.5 rounded-full font-bold font-mono text-xs tracking-wide text-emerald-950"
+                        >
+                            <div className="absolute inset-0 bg-gradient-to-r from-emerald-100 via-white to-emerald-200 animate-gradient-x" />
+                            <div className="absolute inset-0 bg-noise opacity-70 mix-blend-overlay pointer-events-none" />
+                            <span className="relative z-10 flex items-center justify-center gap-1">
+                                Sign In
+                            </span>
+                        </Link>
+                    )}
                 </div>
                 </div>
          
