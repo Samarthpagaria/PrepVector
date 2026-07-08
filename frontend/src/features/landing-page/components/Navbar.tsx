@@ -13,6 +13,8 @@ const GithubIcon = ({ className }: { className?: string }) => (
     </svg>
 );
 
+import ViewCounter from "./ViewCounter";
+
 const Navbar = () => {
     const [isDark, setIsDark] = useState(true); 
     const { user } = useAuthStore();
@@ -38,9 +40,11 @@ const Navbar = () => {
 
             {/* Right side */}
             <div className="flex items-center gap-4">
+                <ViewCounter />
+                
                 <div className="flex items-center gap-2 pr-4 border-r border-gray-800">
                     {/* GitHub Icon Button */}
-                    <a href="https://github.com" target="_blank" rel="noreferrer" 
+                    <a href="https://github.com/Samarthpagaria/PrepVector" target="_blank" rel="noreferrer" 
                        className="w-8 h-8 flex items-center justify-center rounded-lg border border-green-500/30 text-white hover:bg-green-500/10 hover:border-green-500 transition-all">
                         <GithubIcon className="w-4 h-4" />
                     </a>

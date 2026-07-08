@@ -21,6 +21,7 @@ export const JobDescription = ({ value, onChange }: JobDescriptionProps) => {
       <div className="flex-1 bg-black border border-neutral-800 rounded-4xl p-3 flex flex-col">
         <textarea 
           value={value}
+           
           onChange={(e) => onChange(e.target.value)}
           maxLength={7000}
           placeholder="Paste the full job description here...&#10;e.g. 'Senior Frontend Engineer at Google requires proficiency in React...'"
